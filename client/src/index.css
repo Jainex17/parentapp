@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root{
+  --background-color: #F9F7F7;
+  --primary-color: #DBE2EF;
+  --secondary-color: #3F72AF;
+  --tertiary-color: #112D4E;
+}
+
+body{
+margin: 0;
+padding: 0;
+font-family: 'Roboto', sans-serif;
+background-color: var(--background-color);
+color: var(--tertiary-color);
+}
