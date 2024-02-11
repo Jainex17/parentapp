@@ -1,25 +1,31 @@
-import "./App.css";
+import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Home } from "./pages/Home";
 import { SideBar } from "./components/SideBar";
+import { Login } from "./components/Login";
 
 function App() {
+  const [isloginpopup, setIsLoginPopup] = useState(false);
+
+  useEffect(() => {
+    document.body.style.overflow = isloginpopup ? "hidden" : "unset";
+  }, [isloginpopup]);
   return (
     <>
       <BrowserRouter>
-        <SideBar />
-        <div className="p-4 sm:ml-64 dark:bg-gray-800 dark:text-white">
-          <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
-            
-              {/* Placeholder grid items */}
+        <SideBar setIsLoginPopup={setIsLoginPopup} />
 
+        {isloginpopup && (
+          <Login setIsLoginPopup={setIsLoginPopup} />
+        )}
+
+        <div className="sm:ml-64 dark:bg-gray-800 dark:text-white">
+          
               <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/login" element={<h1>Login</h1>} />
                 <Route path="*" element={<h1>Not Found</h1>} />
               </Routes>
             
-          </div>
         </div>
       </BrowserRouter>
     </>

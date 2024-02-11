@@ -1,13 +1,16 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 
-export const SideBar = () => {
-  const [isopen, setIsOpen] = useState(false);
+export const SideBar = ({setIsLoginPopup}) => {
+  const [sidebarisopen, setSidebarIsOpen] = useState(false);
+  
   const handleToggle = () => {
     const sidebar = document.getElementById("default-sidebar");
     sidebar.classList.toggle("-translate-x-full");
-    setIsOpen(!isopen);
+    setSidebarIsOpen(!sidebarisopen);
   };
+
 
   return (
     <>
@@ -44,7 +47,7 @@ export const SideBar = () => {
             <h1 className="text-2xl font-semibold text-gray-800 dark:text-white pl-5">
               ParentApp
             </h1>
-            {isopen ? (
+            {sidebarisopen ? (
               <button
                 data-drawer-toggle="default-sidebar"
                 aria-controls="default-sidebar"
@@ -158,7 +161,7 @@ export const SideBar = () => {
             </div>
           </div>
 
-          <div className="fixed bottom-2 sm:w-[100%] w-auto p-4 bg-gray-50 dark:bg-gray-800 border-r border-t border-[#DBE2EF] dark:border-gray-700 cursor-pointer">
+          <div className="fixed bottom-2 w-64 p-4 bg-gray-50 dark:bg-gray-800 border-r border-t border-[#DBE2EF] dark:border-gray-700 cursor-pointer">
             {/* profile */}
             <div className="flex items-center space-x-4">
               <img
@@ -178,7 +181,7 @@ export const SideBar = () => {
 
             {/* signin btn */}
             <div>
-              <button className="bg-[#3F72AF] text-white w-full py-2 mt-4 rounded-lg font-semibold dark:bg-[#3F72AF] dark:text-white">
+              <button className="bg-[#3F72AF] text-white w-full py-2 mt-4 rounded-lg font-semibold dark:bg-[#3F72AF] dark:text-white" onClick={()=>setIsLoginPopup(true)}>
                 SignIn
               </button>
             </div>
@@ -187,4 +190,8 @@ export const SideBar = () => {
       </aside>
     </>
   );
+};
+
+SideBar.propTypes = {
+  setIsLoginPopup: PropTypes.func
 };
