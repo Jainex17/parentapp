@@ -478,22 +478,6 @@ def savepass(usrname,passwd):
         return respo
 
 
-# def clear_temp():
-#     time = datetime.datetime.now()
-#     for file in os.listdir(app.config['TEMP_FOLDER']):
-#         if os.path.isfile(os.path.join(app.config['TEMP_FOLDER'], file)):
-#             creation_time = os.path.getctime(os.path.join(app.config['TEMP_FOLDER'], file))
-#             if (time - creation_time) // (24 * 3600) > 1:
-#                 os.remove(os.path.join(app.config['TEMP_FOLDER'], file))
-#                 print(f"deleted {file}")
-    
-# def clear_temp_daily():
-#     clear_temp()  # Call the clear_temp function
-#     threading.Timer(86400, clear_temp_daily).start()  # Schedule the next execution after 24 hours
-# Start the daily clearing of temp files
-    
-# clear_temp_daily()
-
 
 #main runtime
 if __name__ == '__main__':
