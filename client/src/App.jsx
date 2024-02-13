@@ -15,7 +15,7 @@ function App() {
       <BrowserRouter>
         <SideBar setIsLoginPopup={setIsLoginPopup} />
 
-        {isloginpopup && (
+        {isloginpopup  && (
           <Login setIsLoginPopup={setIsLoginPopup} />
         )}
 
@@ -23,6 +23,7 @@ function App() {
           
               <Routes>
                 <Route path="/" element={<Home />} />
+                <Route path="/home" element={<Home />} />
                 <Route path="*" element={<h1>Not Found</h1>} />
               </Routes>
             

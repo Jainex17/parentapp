@@ -10,6 +10,7 @@ export const Login = ({setIsLoginPopup}) => {
             </h1>  
         </div>
     </div>
+    
   
   </>;
 };
