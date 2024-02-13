@@ -1,8 +1,3 @@
-#cd s:\programming\projects\parentapp-backend;Set-ExecutionPolicy Unrestricted -Scope Process;.\venv\Scripts\Activate.ps1
-# from google.cloud import storage
-# os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r'ServiceKey_GoogleCloud.json'
-# sc = storage.Client()
-# bucket_name = "parent-app"
 import os
 import firebase_admin
 from firebase_admin import credentials
@@ -10,8 +5,6 @@ import pyrebase
 import hashlib
 import json
 import pytz , datetime
-# cred = credentials.Certificate("creds.json")
-# firebase_admin.initialize_app(cred, {'storageBucket': 'parentapp-df60c.appspot.com'} , {'databaseURL':'https://parentapp-df60c-default-rtdb.asia-southeast1.firebasedatabase.app/'})
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = os.path.join(APP_ROOT, 'down_files')
