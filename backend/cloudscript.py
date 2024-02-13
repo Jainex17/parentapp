@@ -86,6 +86,7 @@ def setuser(username,passwd,email,age,gender,tags,bio,profession,pimg):
             # pimg = f"{ident}_pimg"
             profession = str(profession) #string
             posts = [""]
+            likedposts = [""]
             url = load_blob(pimg,ident,"profile_images")
             if url == False:
                 print("photo url error")
@@ -102,7 +103,8 @@ def setuser(username,passwd,email,age,gender,tags,bio,profession,pimg):
                         "bio": bio,
                         "profession": profession,
                         "posts": posts,
-                        "pimg":url}
+                        "pimg":url,
+                        "likedposts":likedposts}
                 # db.child("test1").child("users").child(f'N_usr_{count}').set({"usrname": username, "passwd": passwd})
                 db.child("test1").child("users").child(username).set(jdata)
                 db.child("test1").child("users").child("GLOBALCOUNTER").update({"counter": count})
@@ -131,6 +133,7 @@ def getuser(username):                                   #min : 230 bytes
         profession = info.val().get("profession")
         posts = info.val().get("posts") #list
         url = info.val().get("pimg")
+        likedposts=info.val().get("likedposts")
         # m = ""
         # for i in a:
         #     m+=i+' '
@@ -146,8 +149,9 @@ def getuser(username):                                   #min : 230 bytes
                     "bio": bio,
                     "profession": profession,
                     "posts": posts,
-                    "pimg": url}
-        userinfo = json.loads(str(userinfo).replace("'",'"'))   #fixed error
+                    "pimg": url,
+                    "likedposts":likedposts}
+        #userinfo = json.loads(str(userinfo).replace("'",'"'))   #fixed error
         #userinfo = str(userinfo).replace("'",'"')
         return userinfo  #json
     # print(f"usrname : {usrname} and passwd : {passwd} and id : {ident}")
@@ -174,7 +178,8 @@ def create_post(username,photo,title,disc,ptype,tags):
         ptype = str(ptype)
         if ptype == "post" or ptype == "question":
             tags = str(tags).split(sep=',')   #list of tags
-            likes = {"total": 0}
+            likes = {"total": 0,
+                     "usrnames": [""]}
             comments = {"total": 0, 
                         "usrnames": [""],
                         "comments": [""]}
@@ -299,21 +304,23 @@ def get_all_users():
             bio = user.val().get("bio")
             profession = user.val().get("profession")
             posts = user.val().get("posts")
-
-            userinfo = {"usrname": usrname, 
-                        "passwd": passwd, 
-                        "id": ident, 
-                        "hash": hashid,
-                        "email": email,
-                        "age": age,
-                        'profilepic':profilepic,
-                        "gender": gender,
-                        "tags": tags,
-                        "bio": bio,
-                        "profession": profession,
-                        "posts": posts}
-            
-            users.append(userinfo)
+            if ident:
+                userinfo = {"usrname": usrname, 
+                            "passwd": passwd, 
+                            "id": ident, 
+                            "hash": hashid,
+                            "email": email,
+                            "age": age,
+                            'profilepic':profilepic,
+                            "gender": gender,
+                            "tags": tags,
+                            "bio": bio,
+                            "profession": profession,
+                            "posts": posts,
+                            "pimg": profilepic,
+                            "likedposts":user.val().get("likedposts")}
+                
+                users.append(userinfo)
         return users
 
 def get_all_posts_by_tag(tag):                   #single tag
@@ -358,7 +365,8 @@ def get_all_posts_by_tags(tags):                   #multiple tags
     if allposts.val() == None:
         return False
     else:
-        posts = []
+        posts = [] 
+        cc = []
         for user in allposts.each():
             for post in user.val().values():
                 for tag in taglist:
@@ -386,12 +394,89 @@ def get_all_posts_by_tags(tags):                   #multiple tags
                                     "timestamp": timestamp,
                                     "url" : url}
                         postinfo = json.loads(str(postinfo).replace("'",'"'))   #fixed error
-                        posts.append(postinfo)
+                        if postid not in cc:               #removes duplicate
+                            posts.append(postinfo)
+                            cc.append(postid)
+        # try:
+        #     for i in range(len(posts)):       
+        #         a = posts[i]
+        #         for j in range(i+1,len(posts)):
+        #             b = posts[j]
+        #             if a == b:
+        #                 posts.pop(j)              
+        # except:
+        #     pass
         return posts[::-1]       #reverse list to make it descending order by default
     return False
 
+def get_all_posts_by_user(username):
+    allposts = db.child("test1").child("posts").child(username).get()
+    if allposts.val() == None:
+        return False
+    else:
+        posts = []
+        for post in allposts.each():
+            title = post.val().get("title")
+            disc = post.val().get("disc")
+            usrname = post.val().get("usrname")
+            usrid = post.val().get("usrid")
+            ptype = post.val().get("ptype")
+            tags = post.val().get("tags")
+            likes = post.val().get("like")
+            comments = post.val().get("comment")
+            timestamp = post.val().get("timestamp")
+            url = post.val().get("url")
+            postid = post.val().get("postid")
+            postinfo = {"title": title, 
+                        "disc": disc, 
+                        "usrname": usrname,
+                        "usrid": usrid,
+                        "postid": postid,
+                        "ptype": ptype,
+                        "tags": tags,
+                        "like": likes,
+                        "comment": comments,
+                        "timestamp": timestamp,
+                        "url" : url}
+            postinfo = json.loads(str(postinfo).replace("'",'"'))   #fixed error
+            posts.append(postinfo)
+        return posts[::-1]       #reverse list to make it descending order by default
+    return False
 
-def like_post(username,postid):
+def get_all():
+    all = db.child("test1").get()
+    return all.val()
+
+
+
+#exprimental
+def get_user_info(username):
+    user = db.child("test1").child("users").child(username).get()
+    if user.val() == None:
+        return False
+    else:
+        usrname = user.val().get("usrname")
+        passwd = user.val().get("passwd")
+        ident = user.val().get("id")
+        hashid = user.val().get("hash")
+        email = user.val().get("email")
+        age = user.val().get("age")
+        gender = user.val().get("gender")
+        phone = user.val().get("phone")
+        info = {"usrname": usrname, 
+                "passwd": passwd, 
+                "id": ident, 
+                "hash": hashid,
+                "email": email,
+                "age": age,
+                "gender": gender,
+                "phone": phone}
+        return info
+###
+
+
+
+def like_post(username,postid,uu):
     post = get_post(username,postid)
     if post == False:
         print("post error")
@@ -399,12 +484,37 @@ def like_post(username,postid):
     else:
         likes = post['like']
         total = likes['total']
-        total = int(total) + 1
-        jdata = {"total": total}
-        db.child("test1").child("posts").child(username).child(postid).child("like").update(jdata)
-        return True
+        unames = likes['usrnames']
+        if uu not in unames:
+            total = int(total) + 1
+            unames.append(uu)
+            jdata = {"total": total, "usrnames" : unames}
+            db.child("test1").child("posts").child(username).child(postid).child("like").update(jdata)
+            return True
+        else:
+            print("already liked")
+            return False
+            
+def unlike_post(username,postid,uu):
+    post = get_post(username,postid)
+    if post == False:
+        print("post error")
+        return False
+    else:
+        likes = post['like']
+        total = likes['total']
+        unames = likes['usrnames']
+        if uu in unames:
+            total = int(total) - 1
+            unames.remove(uu)
+            jdata = {"total": total, "usrnames" : unames}
+            db.child("test1").child("posts").child(username).child(postid).child("like").update(jdata)
+            return True
+        else:
+            print("not liked")
+            return False
     
-def unlike_post(username,postid):
+def unlike_post2(username,postid):
     post = get_post(username,postid)
     if post == False:
         print("post error")
