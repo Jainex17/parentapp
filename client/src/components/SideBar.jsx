@@ -1,8 +1,11 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
+
 export const SideBar = ({setIsLoginPopup}) => {
+
+  const navigate = useNavigate();
   const [sidebarisopen, setSidebarIsOpen] = useState(false);
   const [isUserLogin, setIsUserLogin] = useState(false);
   
@@ -11,6 +14,11 @@ export const SideBar = ({setIsLoginPopup}) => {
     sidebar.classList.toggle("-translate-x-full");
     setSidebarIsOpen(!sidebarisopen);
   };
+
+  const handleSidebarSignIn = () => {
+    // setIsLoginPopup(true)
+    navigate("/login");
+  }
 
 
   return (
@@ -184,7 +192,7 @@ export const SideBar = ({setIsLoginPopup}) => {
             ) : (
 
             <div>
-              <button className="bg-[#3F72AF] text-white w-full py-2 mt-4 rounded-lg font-semibold dark:bg-[#3F72AF] dark:text-white" onClick={()=>setIsLoginPopup(true)}>
+              <button className="bg-[#3F72AF] text-white w-full py-2 mt-4 rounded-lg font-semibold dark:bg-[#3F72AF] dark:text-white" onClick={handleSidebarSignIn}>
                 SignIn
               </button>
             </div>

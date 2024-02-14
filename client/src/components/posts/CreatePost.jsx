@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import EmojiPicker from "emoji-picker-react";
 import { toast } from "react-toastify";
 
@@ -7,6 +7,7 @@ export const CreatePost = () => {
   const [emojiPicker, setEmojiPicker] = useState(false);
   const [textareavalue, setTextareavalue] = useState("");
   const [postimages, setPostimages] = useState([]);
+  const [ispostable, setIsPostable] = useState(false);
 
   const fileInputRef = useRef(null);
 
@@ -31,9 +32,26 @@ export const CreatePost = () => {
       setPostimages([...postimages, e.target.files[0]]);
       console.log(postimages);
     }
+
+    const handleCreatePost = (e) => {
+      e.preventDefault();
+      
+      console.log("Post created");
+      setTextareavalue("");
+      setPostimages([]);
+    }
+    
+    useEffect(() => {
+      if(textareavalue.trim() !== "" || postimages.length > 0) {
+        setIsPostable(true);
+      } else {
+        setIsPostable(false);
+      }
+    }, [textareavalue, postimages]);
+
   
   return <>
-    <form className="flex flex-col bg-white border border-grey-light-alt rounded">
+    <form className="flex flex-col bg-white border border-grey-light-alt rounded" onSubmit={handleCreatePost}>
           <label
             className="hover-animation grid w-full grid-cols-[auto,1fr] gap-3 px-4 py-3"
             htmlFor="post-input"
@@ -124,13 +142,13 @@ export const CreatePost = () => {
                     
                   </div>
                   {postimages.length > 0 && (
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 justify-center">
                       {postimages.map((image, index) => (
                         <div key={index} className="relative">
                           <img
                             src={URL.createObjectURL(image)}
                             alt="postimage"
-                            className="w-96 h-64 object-cover rounded-lg"
+                            className="w-[31rem] h-[20rem] object-cover rounded-lg cursor-pointer hover:brightness-75 transition-all duration-300 ease-in-out"
                           />
                           <button
                             type="button"
@@ -178,14 +196,14 @@ export const CreatePost = () => {
                     onClick={() => fileInputRef.current.click()}
                     className="group relative rounded-full p-2 mr-3 hover:bg-gray-100 dark:hover:bg-[#2D3748] active:bg-gray-200 dark:active:bg-[#1F2937]"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" ><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3F72AF" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" ><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
                     <div className="invisible absolute left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-[#666666] px-1 py-0.5 text-xs text-white opacity-0 [transition:visibility_0ms_ease_200ms,opacity_200ms_ease] dark:bg-[#495A69] group-hover:visible group-hover:opacity-100 group-hover:delay-500 group-focus-visible:visible group-focus-visible:opacity-100 translate-y-3">
                       <span>Media</span>
                     </div>
                   </button>
 
                   <button
-                    className="group relative rounded-full p-2 mx-3 hover:bg-gray-100 dark:hover:bg-[#2D3748] active:bg-gray-200 dark:active:bg-[#1F2937]"
+                    className="group relative rounded-full p-2 mx-1 hover:bg-gray-100 dark:hover:bg-[#2D3748] active:bg-gray-200 dark:active:bg-[#1F2937]"
                     type="button"
                     onClick={() => setEmojiPicker(!emojiPicker)}
                   >
@@ -195,7 +213,7 @@ export const CreatePost = () => {
                       height="20"
                       viewBox="0 0 24 24"
                       fill="none"
-                      stroke="currentColor"
+                      stroke="#3F72AF"
                       strokeWidth="1.6"
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -222,9 +240,8 @@ export const CreatePost = () => {
                 </div>
                 <div className="flex items-center gap-4">
                   <button
-                    className={'px-8 py-1.5 font-bold text-white bg-[#3F72AF] rounded-full cursor-pointer '}
+                    className={'px-8 py-1.5 font-bold text-white bg-[#3F72AF] rounded-full' + (ispostable ? ' cursor-pointer' : ' bg-slate-400 cursor-not-allowed')}
                     type="submit"
-                    disabled
                   >
                     Post
                   </button>
