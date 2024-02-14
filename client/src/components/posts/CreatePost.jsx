@@ -1,5 +1,6 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import EmojiPicker from "emoji-picker-react";
+import { toast } from "react-toastify";
 
 export const CreatePost = () => {
     
@@ -10,12 +11,27 @@ export const CreatePost = () => {
   const fileInputRef = useRef(null);
 
     function handletextareavalue(e) {
-        setTextareavalue(e.target.value);
-        e.target.style.height = 'inherit';
-        e.target.style.height = `${Math.min(e.target.scrollHeight, 320)}px`;
+      setTextareavalue(e.target.value);
+      e.target.style.height = 'inherit';
+      e.target.style.height = `${Math.min(e.target.scrollHeight, 320)}px`; 
+      console.log(postimages);
       
-      }
+    }
 
+    const handleimageupload = (e) => {
+      if(e.target.files[0].type !== "image/jpeg" && e.target.files[0].type !== "image/png" && e.target.files[0].type !== "image/jpg") {
+          toast.error("Only jpeg, jpg and png files are allowed");
+          return;
+      }
+      if(e.target.files[0].size > 2000000) {
+          toast.error("File size should be less than 2MB");
+          return;
+      }
+      
+      setPostimages([...postimages, e.target.files[0]]);
+      console.log(postimages);
+    }
+  
   return <>
     <form className="flex flex-col bg-white border border-grey-light-alt rounded">
           <label
@@ -78,7 +94,8 @@ export const CreatePost = () => {
             <div className="flex w-full flex-col gap-4">
               <div className="flex min-h-[48px] w-full flex-col justify-center gap-4">
                 <div className="flex flex-col gap-6">
-                  <button
+                  {/* post privacy */}
+                  {/* <button
                     type="button"
                     className="flex items-center gap-1 self-start border py-0 px-3 rounded-full hover:bg-gray-100 dark:hover:bg-[#2D3748] dark:border-[#2D3748] dark:text-white ml-1"
                     style={{ opacity: 1, transform: "none" }}
@@ -95,8 +112,8 @@ export const CreatePost = () => {
                     >
                       <path d="M19.5 8.25l-7.5 7.5-7.5-7.5"></path>
                     </svg>
-                  </button>
-                  <div className="flex items-center gap-3">
+                  </button> */}
+                  <div className="flex items-center gap-3 pt-2">
                     <textarea
                       className="w-full min-w-0 resize-none bg-transparent text-xl outline-none dark:text-white pl-2 pr-14"
                         placeholder="What's happening?"
@@ -104,7 +121,42 @@ export const CreatePost = () => {
                         value={textareavalue}
                         onChange={handletextareavalue}
                     ></textarea>
+                    
                   </div>
+                  {postimages.length > 0 && (
+                    <div className="flex gap-2">
+                      {postimages.map((image, index) => (
+                        <div key={index} className="relative">
+                          <img
+                            src={URL.createObjectURL(image)}
+                            alt="postimage"
+                            className="w-96 h-64 object-cover rounded-lg"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setPostimages(postimages.filter((_, i) => i !== index))}
+                            className="absolute top-0 right-0 m-2 p-1 bg-black rounded-full"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="20"
+                              height="20"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="white"
+                              strokeWidth="1.6"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <line x1="18" y1="6" x2="6" y2="18" />
+                              <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
                 </div>
               </div>
               <div
@@ -118,19 +170,20 @@ export const CreatePost = () => {
                     className="hidden"
                     type="file"
                     accept="image/*"
-                    multiple
-                    onChange={(e) => setPostimages(e.target.files)}
+                    onChange={handleimageupload}
+                    disabled={postimages.length >= 1 ? true : false}
                   />
                   <button
-                    className="group relative rounded-full p-2 mr-3 hover:bg-gray-100 dark:hover:bg-[#2D3748] active:bg-gray-200 dark:active:bg-[#1F2937]"
                     type="button"
                     onClick={() => fileInputRef.current.click()}
+                    className="group relative rounded-full p-2 mr-3 hover:bg-gray-100 dark:hover:bg-[#2D3748] active:bg-gray-200 dark:active:bg-[#1F2937]"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" ><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
                     <div className="invisible absolute left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-[#666666] px-1 py-0.5 text-xs text-white opacity-0 [transition:visibility_0ms_ease_200ms,opacity_200ms_ease] dark:bg-[#495A69] group-hover:visible group-hover:opacity-100 group-hover:delay-500 group-focus-visible:visible group-focus-visible:opacity-100 translate-y-3">
                       <span>Media</span>
                     </div>
                   </button>
+
                   <button
                     className="group relative rounded-full p-2 mx-3 hover:bg-gray-100 dark:hover:bg-[#2D3748] active:bg-gray-200 dark:active:bg-[#1F2937]"
                     type="button"

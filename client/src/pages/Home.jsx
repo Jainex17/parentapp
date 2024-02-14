@@ -5,7 +5,7 @@ export const Home = () => {
 
   return (
     <>
-      <div className="mx-8 sm:mt-6 mt-2">
+      <div className="mx-8 sm:my-6 my-2">
 
         <div className="flex bg-white border border-grey-light-alt rounded mb-3 cursor-pointer">
           <div className="p-3 w-1/2 text-center hover:bg-[rgb(15,20,25,0.1)] transition-all border-b-2 border-blue-700">
