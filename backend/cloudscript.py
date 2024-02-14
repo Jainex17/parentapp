@@ -1,3 +1,8 @@
+#cd s:\programming\projects\parentapp-backend;Set-ExecutionPolicy Unrestricted -Scope Process;.\venv\Scripts\Activate.ps1
+# from google.cloud import storage
+# os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r'ServiceKey_GoogleCloud.json'
+# sc = storage.Client()
+# bucket_name = "parent-app"
 import os
 import firebase_admin
 from firebase_admin import credentials
@@ -5,6 +10,8 @@ import pyrebase
 import hashlib
 import json
 import pytz , datetime
+# cred = credentials.Certificate("creds.json")
+# firebase_admin.initialize_app(cred, {'storageBucket': 'parentapp-df60c.appspot.com'} , {'databaseURL':'https://parentapp-df60c-default-rtdb.asia-southeast1.firebasedatabase.app/'})
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = os.path.join(APP_ROOT, 'down_files')
@@ -80,6 +87,11 @@ def setuser(username,passwd,email,age,gender,tags,bio,profession,pimg):
             profession = str(profession) #string
             posts = [""]
             likedposts = [""]
+            #follow = {"following": [""], "followers": [""]}
+            following = [""]
+            followers = [""]
+            followingcount = 0
+            followerscount = 0
             url = load_blob(pimg,ident,"profile_images")
             if url == False:
                 print("photo url error")
@@ -97,10 +109,18 @@ def setuser(username,passwd,email,age,gender,tags,bio,profession,pimg):
                         "profession": profession,
                         "posts": posts,
                         "pimg":url,
-                        "likedposts":likedposts}
+                        "likedposts":likedposts,
+                        "following":following,
+                        "followers":followers,
+                        "followingcount":followingcount,
+                        "followerscount":followerscount}
                 # db.child("test1").child("users").child(f'N_usr_{count}').set({"usrname": username, "passwd": passwd})
                 db.child("test1").child("users").child(username).set(jdata)
                 db.child("test1").child("users").child("GLOBALCOUNTER").update({"counter": count})
+                alludict = db.child('test1').child("users").child("GLOBALALLUSERS").get()
+                allulist = alludict.val().get('username')
+                allulist.append(username)
+                db.child("test1").child("users").child("GLOBALALLUSERS").update({"username": allulist})
                 return True
         else:
             print('same email error?')
@@ -127,6 +147,10 @@ def getuser(username):                                   #min : 230 bytes
         posts = info.val().get("posts") #list
         url = info.val().get("pimg")
         likedposts=info.val().get("likedposts")
+        followers=info.val().get("followers")
+        following=info.val().get("following")
+        followingcount=info.val().get("followingcount")
+        followerscount=info.val().get("followerscount")
         # m = ""
         # for i in a:
         #     m+=i+' '
@@ -143,7 +167,11 @@ def getuser(username):                                   #min : 230 bytes
                     "profession": profession,
                     "posts": posts,
                     "pimg": url,
-                    "likedposts":likedposts}
+                    "likedposts":likedposts,
+                    "followers":followers,
+                    "following":following,
+                    "followingcount":followingcount,
+                    "followerscount":followerscount}
         #userinfo = json.loads(str(userinfo).replace("'",'"'))   #fixed error
         #userinfo = str(userinfo).replace("'",'"')
         return userinfo  #json
@@ -200,6 +228,13 @@ def create_post(username,photo,title,disc,ptype,tags):
                 # db.child("test1").child("users").child(username).child('posts').update(past_plist)
                 usr['posts'] = past_plist
                 db.child("test1").child("users").child(username).set(usr)
+                gdict = db.child('test1').child('posts').child('GLOBALALLPOSTS').get()
+                glist = gdict.val().get('list')
+                glist.append(postid)
+                gcount = gdict.val().get('counter')
+                gcount = int(gcount) + 1
+                gdata = {'counter':gcount,'list':glist}
+                db.child('test1').child('posts').child('GLOBALALLPOSTS').update(gdata)
                 return f"{username}**!**{postid}"      #return pid
         else:
             print("ptype error")
@@ -244,38 +279,46 @@ def get_post(username,pid):
         print(e)
         return False
     
-def get_all_posts(username):
-    allposts = db.child("test1").child("posts").child(username).get()
+def get_all_posts():        #re-edited
+    allposts = db.child("test1").child("posts").get()
     if allposts.val() == None:
         return False
+    # for i in allposts.each():
+    # for j in i.val():
+    #     print(i.val()[j])
     else:
         posts = []
-        for post in allposts.each():
-            title = post.val().get("title")
-            disc = post.val().get("disc")
-            usrname = post.val().get("usrname")
-            usrid = post.val().get("usrid")
-            ptype = post.val().get("ptype")
-            tags = post.val().get("tags")
-            likes = post.val().get("like")
-            comments = post.val().get("comment")
-            timestamp = post.val().get("timestamp")
-            url = post.val().get("url")
-            # postid = post.key()
-            postid = post.val().get("postid")
-            postinfo = {"title": title, 
-                        "disc": disc, 
-                        "usrname": usrname,
-                        "usrid": usrid,
-                        "postid": postid,
-                        "ptype": ptype,
-                        "tags": tags,
-                        "like": likes,
-                        "comment": comments,
-                        "timestamp": timestamp,
-                        "url" : url}
-            postinfo = json.loads(str(postinfo).replace("'",'"'))   #fixed error
-            posts.append(postinfo)
+        #uu = []
+        for usr in allposts.each():
+            for post in usr.val():                   #before : post in allposts.each()
+                # usr.val()[post]                     before : post.val()
+                title = usr.val()[post].get("title")
+                disc = usr.val()[post].get("disc")
+                usrname = usr.val()[post].get("usrname")
+                usrid = usr.val()[post].get("usrid")
+                ptype = usr.val()[post].get("ptype")
+                tags = usr.val()[post].get("tags")
+                likes = usr.val()[post].get("like")
+                comments = usr.val()[post].get("comment")
+                timestamp = usr.val()[post].get("timestamp")
+                url = usr.val()[post].get("url")
+                # postid = post.key()
+                postid = usr.val()[post].get("postid")
+                postinfo = {"title": title, 
+                            "disc": disc, 
+                            "usrname": usrname,
+                            "usrid": usrid,
+                            "postid": postid,
+                            "ptype": ptype,
+                            "tags": tags,
+                            "like": likes,
+                            "comment": comments,
+                            "timestamp": timestamp,
+                            "url" : url}
+                postinfo = json.loads(str(postinfo).replace("'",'"'))   #fixed error
+                posts.append(postinfo)
+            #return posts[::-1]       #reverse list to make it descending order by default
+            #uu.append(posts)
         return posts[::-1]       #reverse list to make it descending order by default
 
 def get_all_users():
@@ -297,6 +340,10 @@ def get_all_users():
             bio = user.val().get("bio")
             profession = user.val().get("profession")
             posts = user.val().get("posts")
+            followers = user.val().get("following")
+            following = user.val().get("followers")
+            followingcount = user.val().get("followingcount")
+            followerscount = user.val().get("followerscount")
             if ident:
                 userinfo = {"usrname": usrname, 
                             "passwd": passwd, 
@@ -311,7 +358,11 @@ def get_all_users():
                             "profession": profession,
                             "posts": posts,
                             "pimg": profilepic,
-                            "likedposts":user.val().get("likedposts")}
+                            "likedposts":user.val().get("likedposts"),
+                            "followers":followers,
+                            "following":following,
+                            "followingcount":followingcount,
+                            "followerscount":followerscount}
                 
                 users.append(userinfo)
         return users
@@ -469,8 +520,9 @@ def get_user_info(username):
 
 
 
-def like_post(username,postid,uu):
+def like_post(username,postid,uu):         #added user liked list
     post = get_post(username,postid)
+    usr = getuser(uu)
     if post == False:
         print("post error")
         return False
@@ -483,13 +535,18 @@ def like_post(username,postid,uu):
             unames.append(uu)
             jdata = {"total": total, "usrnames" : unames}
             db.child("test1").child("posts").child(username).child(postid).child("like").update(jdata)
+            likedlistold = usr['likedposts']
+            likedlistold.append(postid)
+            usr['likedposts'] = likedlistold
+            db.child("test1").child("users").child(uu).update(usr)
             return True
         else:
             print("already liked")
             return False
             
-def unlike_post(username,postid,uu):
+def unlike_post(username,postid,uu):           #added user liked list
     post = get_post(username,postid)
+    usr = getuser(uu)
     if post == False:
         print("post error")
         return False
@@ -502,12 +559,16 @@ def unlike_post(username,postid,uu):
             unames.remove(uu)
             jdata = {"total": total, "usrnames" : unames}
             db.child("test1").child("posts").child(username).child(postid).child("like").update(jdata)
+            likedlistold = usr['likedposts']
+            likedlistold.remove(postid)
+            usr['likedposts'] = likedlistold
+            db.child("test1").child("users").child(uu).update(usr)
             return True
         else:
             print("not liked")
             return False
     
-def unlike_post2(username,postid):
+def unlike_post2(username,postid):             #not use experimental
     post = get_post(username,postid)
     if post == False:
         print("post error")
@@ -521,7 +582,7 @@ def unlike_post2(username,postid):
         db.child("test1").child("posts").child(username).child(postid).child("like").update(jdata)
         return True
 
-def comment_post(username,postid,comment,comment_user):
+def comment_post(username,postid,comment,comment_user):                  
     post = get_post(username,postid)
     if post == False:
         print("post error")
@@ -548,6 +609,7 @@ def delete_post(username, postid):
     else:
         db.child("test1").child("posts").child(username).child(postid).remove()
         return True
+
 def search_posts_by_keyword(keyword):
     allposts = db.child("test1").child("posts").get()
     if allposts.val() == None:
@@ -560,7 +622,7 @@ def search_posts_by_keyword(keyword):
                     posts.append(post)
         return posts[::-1]  # reverse list to make it descending order by default
 
-def delete_comment(username, postid, commentdata):
+def delete_comment(username, postid, commentdata):   #optimise by sending comment_user instead of comment_data
     post = get_post(username, postid)
     if post == False:
         print("post error")
