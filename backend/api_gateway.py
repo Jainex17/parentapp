@@ -1,3 +1,4 @@
+#cd s:\programming\projects\parentapp-backend;Set-ExecutionPolicy Unrestricted -Scope Process;.\venv\Scripts\Activate.ps1
 from flask import *
 from flask import request, jsonify
 from werkzeug.utils import secure_filename
@@ -8,6 +9,8 @@ import cloudscript as cs
 import pytz
 from time import ctime
 import datetime
+import time
+import threading
 #logging
 IST = pytz.timezone('Asia/Kolkata')
 ii = datetime.datetime.now(IST)
@@ -122,15 +125,47 @@ def recievetest():
     else:
         return jsonify("ERROR : contact the correct endpoint or method - post for the API")
 
-@app.route('/api/getusr',methods=['GET'])
+@app.route('/api/getusr',methods=['GET'])          #name = username & client
 def api_getusr():
     uname = request.args.get('username')
     client = request.args.get('client')
     jres = cs.getuser(uname)
-    lwll()
-    lwa(f"GETUSR::{uname}",client)
-    lwll()
-    return jsonify(jres)
+    if jres:
+        lwll()
+        lwa(f"GETUSR::{uname}",client)
+        lwll()
+        return jsonify(jres)
+    else:
+        lwll()
+        lwa(f"ERROR:User not found > GETUSR::{uname}",client)
+        lwll()
+        return make_response(jsonify("User not found"),400)
+
+@app.route('/api/verifyusr',methods=['GET'])          #username = username & client , password=usrpasswd
+def matchpass():
+    uname = request.args.get('username')
+    passwd = request.args.get('password')
+    client = request.args.get('client')
+    jres = cs.getuser(uname)
+    if jres:
+        hashuid = jres['hash']
+        newhash=hashlib.md5(passwd.encode()).hexdigest()
+        if hashuid == newhash:
+            lwll()
+            lwa(f"VERIFYPASS::{uname} :: SUCCESS",client)
+            lwll()
+            return make_response(jsonify("User password matched"),200)
+        else:
+            lwll()
+            lwa(f"VERIFYPASS::{uname} :: FAIL",client)
+            lwll()
+            return make_response(jsonify("User password not matched"),400)
+    else:
+        lwll()
+        lwa(f"ERROR:User not found > VERIFYUSR::{uname}",client)
+        lwll()
+        return make_response(jsonify("User not found"),400)
+        
 
 @app.route('/api/loadblob',methods=['GET','POST'])        #name = userid & client
 def load_blob():
@@ -170,7 +205,7 @@ def load_blob():
         respo = make_response(jsonify("ERROR : contact the correct endpoint or method - post for the API"),400)
         return respo
 
-@app.route('/api/setusr',methods=['GET','POST'])
+@app.route('/api/setusr',methods=['GET','POST'])           #JSON : username,password,client,email,age,gender,tags,bio,profession,pimg
 def api_setusr():
     if request.method ==  'POST':
         uname = request.json['username']
@@ -203,19 +238,233 @@ def api_setusr():
         respo = make_response(jsonify("ERROR : contact the correct endpoint or method - post for the API"),400)
         return respo
 
-
-
-
-
-
-def matchpass(uid , passwd):
-    #get hash from sql to uid -> hashuid
-    hashuid = ""
-    newhash=hashlib.md5(passwd.encode()).hexdigest()
-    if hashuid == newhash:
-        return True
+@app.route('/api/createpost',methods=['GET','POST'])            #JSON : username,client,tags,desc,title,photo,ptype
+def api_createpost():
+    if request.method ==  'POST':
+        username = request.json['username']
+        #print(uname)
+        title = request.json['title']
+        disc = request.json['disc']
+        #post = request.json['post']
+        client = request.json['client']
+        tags = request.json['tags']
+        photo = request.json['photo']
+        ptype = request.json['ptype']
+        jres = cs.create_post(username,photo,title,disc,ptype,tags)
+        if jres:
+            lwll()
+            lwa(f"CREATEPOST::{username}",client)
+            lwll()
+            return make_response(jsonify("New post created successfully"),200)
+        else:
+            lwll()
+            lwa(f"ERROR:Cloud error > CREATEPOST::{username}",client)
+            lwll()
+            return make_response(jsonify("ERROR : New post not created"),400)
     else:
-        return False
+        client = request.args.get('client')
+        uname = request.args.get('user')
+        lwll()
+        lwa(f"ERROR:GET req > CREATEPOST::{uname}",client)
+        lwll()
+        respo = make_response(jsonify("ERROR : contact the correct endpoint or method - post for the API"),400)
+        return respo
+
+@app.route('/api/getpost',methods=['GET'])        # username = username & client , pid
+def api_getpost():
+    username = request.args.get('username')
+    client = request.args.get('client')
+    pid = request.args.get('pid')
+    if (pid and username):
+        jres = cs.get_post(username,pid)
+        if jres:
+            lwll()
+            lwa(f"GETPOST::{username}::{pid}",client)
+            lwll()
+            return jsonify(jres)
+        else:
+            lwll()
+            lwa(f"ERROR:User not found > GETPOST::{username}::{pid}",client)
+            lwll()
+            return make_response(jsonify("User not found"),400)
+    else:
+        lwll()
+        lwa(f"ERROR:No pid or username > GETPOST",client)
+        lwll()
+        return make_response(jsonify("ERROR : No pid or username given"),400)
+
+@app.route('/api/getallposts',methods=['GET'])        # username = username & client
+def api_getallposts():
+    username = request.args.get('username')
+    client = request.args.get('client')
+    
+    if (username):
+        jres = cs.get_all_posts(username)
+        if jres:
+            lwll()
+            lwa(f"GETALLPOSTS::{username}",client)
+            lwll()
+            return jsonify(jres)
+        else:
+            lwll()
+            lwa(f"ERROR:User not found > GETALLPOSTS::{username}",client)
+            lwll()
+            return make_response(jsonify("User not found"),400)
+    else:
+        lwll()
+        lwa(f"ERROR:No username > GETALLPOSTS",client)
+        lwll()
+        return make_response(jsonify("ERROR : No username given"),400)
+
+@app.route('/api/getallusers',methods=['GET'])        # client
+def api_getallusers():
+    #username = request.args.get('username')
+    client = request.args.get('client')
+    
+    if (True):
+        jres = cs.get_all_users()
+        if jres:
+            lwll()
+            lwa(f"GETALLUSERS::",client)
+            lwll()
+            return jsonify(jres)
+        else:
+            lwll()
+            lwa(f"ERROR:Users not found > GETALLUSERS::",client)
+            lwll()
+            return make_response(jsonify("Users not found"),400)
+    else:
+        lwll()
+        lwa(f"ERROR:No username > GETALLPOSTS",client)
+        lwll()
+        return make_response(jsonify("ERROR : No username given"),400)
+
+
+@app.route('/api/getallpostsbytag',methods=['GET'])        # tag = single tag & client
+def api_getallpostsbytag():
+    tag = request.args.get('tag')
+    client = request.args.get('client')
+    
+    if (tag):
+        jres = cs.get_all_posts_by_tag(tag)
+        if jres:
+            lwll()
+            lwa(f"GETALLPOSTSBYTAG::{tag}",client)
+            lwll()
+            return jsonify(jres)
+        else:
+            lwll()
+            lwa(f"ERROR:Posts not found > GETALLPOSTSBYTAG::{tag}",client)
+            lwll()
+            return make_response(jsonify("Posts not found"),400)
+    else:
+        lwll()
+        lwa(f"ERROR:No tag > GETALLPOSTSBYTAG",client)
+        lwll()
+        return make_response(jsonify("ERROR : No tag given"),400)
+
+
+@app.route('/api/getallpostsbytags',methods=['GET'])        # tags = multiple tag & client
+def api_getallpostsbytags():
+    tags = request.args.get('tags')
+    client = request.args.get('client')
+    
+    if (tags):
+        jres = cs.get_all_posts_by_tags(tags)
+        if jres:
+            lwll()
+            lwa(f"GETALLPOSTSBYTAGS::{tags}",client)
+            lwll()
+            return jsonify(jres)
+        else:
+            lwll()
+            lwa(f"ERROR:Posts not found > GETALLPOSTSBYTAGS::{tags}",client)
+            lwll()
+            return make_response(jsonify("Posts not found"),400)
+    else:
+        lwll()
+        lwa(f"ERROR:No tag > GETALLPOSTSBYTAGS",client)
+        lwll()
+        return make_response(jsonify("ERROR : No tag given"),400)
+
+@app.route('/api/getallpostsbyuser',methods=['GET'])        # username = username & client
+def api_getallpostsbyuser():
+    username = request.args.get('username')
+    client = request.args.get('client')
+    
+    if (username):
+        jres = cs.get_all_posts_by_user(username)
+        if jres:
+            lwll()
+            lwa(f"GETALLPOSTSBYUSER::{username}",client)
+            lwll()
+            return jsonify(jres)
+        else:
+            lwll()
+            lwa(f"ERROR:Posts not found > GETALLPOSTSBYUSER::{username}",client)
+            lwll()
+            return make_response(jsonify("Posts not found"),400)
+    else:
+        lwll()
+        lwa(f"ERROR:No username > GETALLPOSTSBYUSER",client)
+        lwll()
+        return make_response(jsonify("ERROR : No username given"),400)
+
+@app.route('/api/likepost',methods=['GET'])        # username = post_username & client , pid uu = liking_username
+def api_likepost():
+    username = request.args.get('username')
+    client = request.args.get('client')
+    pid = request.args.get('pid')
+    uu  = request.args.get('uu')   # user who is doing the action
+    if (pid and username):
+        jres = cs.like_post(username,pid,uu)
+        if jres:
+            lwll()
+            lwa(f"LIKEPOST::{username}::{pid}",client)
+            lwll()
+            return make_response(jsonify(jres),200)
+        else:
+            lwll()
+            lwa(f"ERROR:User not found or post liked by user> LIKEPOST::{username}::{pid}",client)
+            lwll()
+            return make_response(jsonify("User not found or post liked by user"),400)
+    else:
+        lwll()
+        lwa(f"ERROR:No pid or username > LIKEPOST",client)
+        lwll()
+        return make_response(jsonify("ERROR : No pid or username given"),400)
+
+@app.route('/api/unlikepost',methods=['GET'])        # username = post_username & client , pid uu = liking_username
+def api_unlikepost():
+    username = request.args.get('username')
+    client = request.args.get('client')
+    pid = request.args.get('pid')
+    uu  = request.args.get('uu')   # user who is doing the action
+    if (pid and username):
+        jres = cs.unlike_post(username,pid,uu)
+        if jres:
+            lwll()
+            lwa(f"UNLIKEPOST::{username}::{pid}",client)
+            lwll()
+            return make_response(jsonify(jres),200)
+        else:
+            lwll()
+            lwa(f"ERROR:User not found or post not liked by user> UNLIKEPOST::{username}::{pid}",client)
+            lwll()
+            return make_response(jsonify("User not found or post not liked by user"),400)
+    else:
+        lwll()
+        lwa(f"ERROR:No pid or username > UNLIKEPOST")
+        lwll()
+        return make_response(jsonify("ERROR : No pid or username given"),400)
+
+@app.route('/api/alldb', methods=["GET"])
+def alldb():
+    jres = cs.get_all()
+    return jsonify(jres)
+
+
+
 def savepass(usrname,passwd):
     #save passwd hash into sql
     hashid = hashlib.md5(passwd.encode()).hexdigest()
@@ -229,6 +478,21 @@ def savepass(usrname,passwd):
         return respo
 
 
+# def clear_temp():
+#     time = datetime.datetime.now()
+#     for file in os.listdir(app.config['TEMP_FOLDER']):
+#         if os.path.isfile(os.path.join(app.config['TEMP_FOLDER'], file)):
+#             creation_time = os.path.getctime(os.path.join(app.config['TEMP_FOLDER'], file))
+#             if (time - creation_time) // (24 * 3600) > 1:
+#                 os.remove(os.path.join(app.config['TEMP_FOLDER'], file))
+#                 print(f"deleted {file}")
+    
+# def clear_temp_daily():
+#     clear_temp()  # Call the clear_temp function
+#     threading.Timer(86400, clear_temp_daily).start()  # Schedule the next execution after 24 hours
+# Start the daily clearing of temp files
+    
+# clear_temp_daily()
 
 
 #main runtime
