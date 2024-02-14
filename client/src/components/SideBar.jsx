@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 
 export const SideBar = ({setIsLoginPopup}) => {
   const [sidebarisopen, setSidebarIsOpen] = useState(false);
+  const [isUserLogin, setIsUserLogin] = useState(false);
   
   const handleToggle = () => {
     const sidebar = document.getElementById("default-sidebar");
@@ -162,7 +163,9 @@ export const SideBar = ({setIsLoginPopup}) => {
           </div>
 
           <div className="fixed bottom-2 w-64 p-4 bg-gray-50 dark:bg-gray-800 border-r border-t border-[#DBE2EF] dark:border-gray-700 cursor-pointer">
-            {/* profile */}
+
+            {isUserLogin ? (
+
             <div className="flex items-center space-x-4">
               <img
                 src="	https://randomuser.me/api/portraits/men/32.jpg"
@@ -178,13 +181,14 @@ export const SideBar = ({setIsLoginPopup}) => {
                 </p>
               </div>
             </div>
+            ) : (
 
-            {/* signin btn */}
             <div>
               <button className="bg-[#3F72AF] text-white w-full py-2 mt-4 rounded-lg font-semibold dark:bg-[#3F72AF] dark:text-white" onClick={()=>setIsLoginPopup(true)}>
                 SignIn
               </button>
             </div>
+            )}
           </div>
         </div>
       </aside>
