@@ -298,16 +298,16 @@ def api_getallposts():
     username = request.args.get('username')
     client = request.args.get('client')
     
-    if (username):
-        jres = cs.get_all_posts(username)
+    if (True):
+        jres = cs.get_all_posts()
         if jres:
             lwll()
-            lwa(f"GETALLPOSTS::{username}",client)
+            lwa(f"GETALLPOSTS::",client)
             lwll()
             return jsonify(jres)
         else:
             lwll()
-            lwa(f"ERROR:User not found > GETALLPOSTS::{username}",client)
+            lwa(f"ERROR:User not found > GETALLPOSTS::",client)
             lwll()
             return make_response(jsonify("User not found"),400)
     else:
@@ -464,6 +464,63 @@ def alldb():
     return jsonify(jres)
 
 
+@app.route('/api/commentpost',methods=['GET','POST'])        # username = post_username & client , pid ,uu = cmt_username , comment = comment data
+def api_commentpost():
+    if request.method ==  'POST':
+        username = request.json['username']
+        cmtdata = request.json['comment']
+        client = request.json['client']
+        pid = request.json['pid']
+        uu  = request.json['uu']   # user who is doing the action
+        if (pid and username):
+            jres = cs.comment_post(username,pid,cmtdata,uu)
+            if jres:
+                lwll()
+                lwa(f"CMTPOST::{username}::{pid}",client)
+                lwll()
+                return make_response(jsonify(jres),200)
+            else:
+                lwll()
+                lwa(f"ERROR:User not found or post cmt by user> CMTPOST::{username}::{pid}",client)
+                lwll()
+                return make_response(jsonify("User not found or post liked by user"),400)
+        else:
+            lwll()
+            lwa(f"ERROR:No pid or username > CMTPOST",client)
+            lwll()
+            return make_response(jsonify("ERROR : No pid or username given"),400)
+    else:
+        lwll()
+        lwa(f"ERROR:GET req > CMTPOST",client)
+        lwll()
+        respo = make_response(jsonify("ERROR : contact the correct endpoint or method - post for the API"),400)
+        return respo
+
+@app.route("/api/deletepost",methods=['GET'])        # username = post_username & client , pid
+def api_deletepost():
+    username = request.args.get('username')
+    client = request.args.get('client')
+    pid = request.args.get('pid')
+    if (pid and username):
+        jres = cs.delete_post(username,pid)
+        if jres:
+            lwll()
+            lwa(f"DELETEPOST::{username}::{pid}",client)
+            lwll()
+            return make_response(jsonify(jres),200)
+        else:
+            lwll()
+            lwa(f"ERROR:User not found or post not there > DELETEPOST::{username}::{pid}",client)
+            lwll()
+            return make_response(jsonify("User not found or post not there"),400)
+    else:
+        lwll()
+        lwa(f"ERROR:No pid or username > DELETEPOST",client)
+        lwll()
+        return make_response(jsonify("ERROR : No pid or username given"),400)
+
+
+
 
 def savepass(usrname,passwd):
     #save passwd hash into sql
@@ -478,6 +535,34 @@ def savepass(usrname,passwd):
         return respo
 
 
+# import os
+# import schedule
+# import time
+
+# def delete_temp_files():
+#     temp_folder = 'TEMP_FOLDER'  # replace with your actual temp folder path
+#     for filename in os.listdir(temp_folder):
+#         file_path = os.path.join(temp_folder, filename)
+#         try:
+#             if os.path.isfile(file_path) or os.path.islink(file_path):
+#                 os.unlink(file_path)
+#             elif os.path.isdir(file_path):
+#                 shutil.rmtree(file_path)
+#         except Exception as e:
+#             print(f'Failed to delete {file_path}. Reason: {e}')
+
+# # Schedule the function to run once every day
+# schedule.every().day.at("00:00").do(delete_temp_files)
+
+# # Start an infinite loop, checking for pending tasks every minute
+# while True:
+#     schedule.run_pending()
+#     time.sleep(60)
+
+
+#daksh : all posts data : {postid,totllikecount,users_liked,title,desc,tags} :: getallposts
+     #  : all users data : {uid , tags , likes}                              :: getallusers   
+ 
 
 #main runtime
 if __name__ == '__main__':
