@@ -10,6 +10,7 @@ import { Home } from "./pages/Home";
 import { Login } from "./pages/Login";
 import { Signup } from "./pages/Signup";
 import { DetailsPost } from "./DetailsPost";
+import { ProfileComp } from "./components/ProfileComp";
 
 function App() {
   const [isloginpopup, setIsLoginPopup] = useState(false);
@@ -39,6 +40,7 @@ function App() {
                 <Route path="/home" element={<Home />} />
                 <Route path="/explore" element={<h1>Explore</h1>} />
                 <Route path="/post/*" element={<DetailsPost />} />
+                <Route path="/user/*" element={<ProfileComp />} />
               </Routes>
             
         </div>
