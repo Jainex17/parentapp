@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Home } from "./pages/Home";
 import { Login } from "./pages/Login";
 import { Signup } from "./pages/Signup";
+import { DetailsPost } from "./DetailsPost";
 
 function App() {
   const [isloginpopup, setIsLoginPopup] = useState(false);
@@ -16,9 +17,12 @@ function App() {
   useEffect(() => {
     document.body.style.overflow = isloginpopup ? "hidden" : "unset";
   }, [isloginpopup]);
+
   return (
     <>
       <BrowserRouter>
+      
+      <div className="dark:bg-gray-800 dark:text-white">
         <Routes>
           <Route path="/*" element={<SideBar setIsLoginPopup={setIsLoginPopup} />} />
           <Route path="/" element={<Login />} />
@@ -26,6 +30,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           {/* <Route path="*" element={<h1>Not Found</h1>} /> */}
         </Routes>
+      </div>
 
         <div className="sm:ml-64 dark:bg-gray-800 dark:text-white">
           
@@ -33,7 +38,7 @@ function App() {
                 {/* <Route path="/" element={<Home />} /> */}
                 <Route path="/home" element={<Home />} />
                 <Route path="/explore" element={<h1>Explore</h1>} />
-                
+                <Route path="/post/*" element={<DetailsPost />} />
               </Routes>
             
         </div>

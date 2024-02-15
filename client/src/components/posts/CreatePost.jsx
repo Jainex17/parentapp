@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import EmojiPicker from "emoji-picker-react";
 import { toast } from "react-toastify";
 
-export const CreatePost = () => {
+export const CreatePost = ({iscommnents, handlepost}) => {
     
   const [emojiPicker, setEmojiPicker] = useState(false);
   const [textareavalue, setTextareavalue] = useState("");
@@ -32,14 +32,6 @@ export const CreatePost = () => {
       setPostimages([...postimages, e.target.files[0]]);
       console.log(postimages);
     }
-
-    const handleCreatePost = (e) => {
-      e.preventDefault();
-      
-      console.log("Post created");
-      setTextareavalue("");
-      setPostimages([]);
-    }
     
     useEffect(() => {
       if(textareavalue.trim() !== "" || postimages.length > 0) {
@@ -51,7 +43,8 @@ export const CreatePost = () => {
 
   
   return <>
-    <form className="flex flex-col bg-white border border-grey-light-alt rounded" onSubmit={handleCreatePost}>
+    <form className="flex flex-col bg-white border border-gray-300 rounded dark:bg-gray-800 dark:border-gray-700" 
+    onSubmit={handlepost}>
           <label
             className="hover-animation grid w-full grid-cols-[auto,1fr] gap-3 px-4 py-3"
             htmlFor="post-input"
@@ -133,15 +126,18 @@ export const CreatePost = () => {
                   </button> */}
                   <div className="flex items-center gap-3 pt-2">
                     <textarea
-                      className="w-full min-w-0 resize-none bg-transparent text-xl outline-none dark:text-white pl-2 pr-14"
-                        placeholder="What's happening?"
+                       className="w-full min-w-0 resize-none bg-transparent text-xl outline-none dark:text-white pl-2 pr-14"
+                        placeholder={iscommnents ? "Write a comment..." : "What's on your mind?"}
                         style={{ height: "px !important" }}
                         value={textareavalue}
                         onChange={handletextareavalue}
                     ></textarea>
                     
                   </div>
-                  {postimages.length > 0 && (
+
+                  {!iscommnents && 
+
+                  postimages.length > 0 && (
                     <div className="flex gap-2 justify-center">
                       {postimages.map((image, index) => (
                         <div key={index} className="relative">
@@ -175,13 +171,18 @@ export const CreatePost = () => {
                     </div>
                   )}
 
+                  
                 </div>
               </div>
+
+             
               <div
                 className="flex justify-between"
                 data-projection-id="120"
                 style={{ opacity: 1 }}
               >
+                 {!iscommnents &&
+
                 <div className="flex text-main-accent xs:[&>button:nth-child(n+6)]:hidden md:[&>button]:!block [&>button:nth-child(n+4)]:hidden">
                   <input
                     ref={fileInputRef}
@@ -203,7 +204,7 @@ export const CreatePost = () => {
                   </button>
 
                   <button
-                    className="group relative rounded-full p-2 mx-1 hover:bg-gray-100 dark:hover:bg-[#2D3748] active:bg-gray-200 dark:active:bg-[#1F2937]"
+                    className="group relative rounded-full p-2 mx-1 hover:bg-gray-100 dark:hover:bg-[#2D3748] active:bg-gray-200 dark:active:bg-[#1F2937] hidden sm:block"
                     type="button"
                     onClick={() => setEmojiPicker(!emojiPicker)}
                   >
@@ -230,6 +231,7 @@ export const CreatePost = () => {
                       <span>Eomji</span>
                     </div>
                   </button>
+
                   <div className="flex items-center gap-3 absolute ml-14 mt-10 z-10">
                   <EmojiPicker
                     open={emojiPicker}
@@ -238,15 +240,17 @@ export const CreatePost = () => {
                     /> 
                     </div>
                 </div>
+                }
                 <div className="flex items-center gap-4">
                   <button
                     className={'px-8 py-1.5 font-bold text-white bg-[#3F72AF] rounded-full' + (ispostable ? ' cursor-pointer' : ' bg-slate-400 cursor-not-allowed')}
                     type="submit"
                   >
-                    Post
+                    {iscommnents ? "Comment" : "Post"}
                   </button>
                 </div>
               </div>
+              
             </div>
           </label>
         </form>
