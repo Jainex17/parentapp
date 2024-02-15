@@ -136,7 +136,7 @@ export const SideBar = ({setIsLoginPopup}) => {
               </li>
             </ul>
 
-            <div className="mt-8">
+            {/* <div className="mt-8">
               <h3 className="px-3 text-xs text-gray-500 uppercase dark:text-gray-400 font-semibold">
                 Some Title
               </h3>
@@ -167,7 +167,7 @@ export const SideBar = ({setIsLoginPopup}) => {
                   </Link>
                 </li>
               </ul>
-            </div>
+            </div> */}
           </div>
 
           <div className="fixed bottom-2 w-64 p-4 bg-white dark:bg-gray-800 border-r border-t border-[#DBE2EF] dark:border-gray-700 cursor-pointer">

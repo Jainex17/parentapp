@@ -1,14 +1,21 @@
+import { Link } from 'react-router-dom'
+
 export const Post = ({
+  postId,
   username,
   userImage,
   postTime,
   postTitle,
   postContent,
   postimage,
-  postTag
+  postTag,
+  postLikescount,
+  postcommentscount,
+  isPostLiked
 }) => {
   return (
-    <article className="flex border border-grey-light-alt rounded bg-white cursor-pointer mb-2 px-5 sm:px-10">
+    <article className="flex border border-gray-300 rounded bg-white cursor-pointer mb-2 px-5 sm:px-10 dark:bg-gray-800 dark:border-gray-700">
+      <Link to={"/post/"+postId}>
       <div className=" pt-3">
         <div className="flex items-center text-xs mb-2">
           <a
@@ -22,9 +29,9 @@ export const Post = ({
             />
             <span className="ml-2">{username}</span>
           </a>
-          <span className="text-grey-light mx-1 text-xxs">•</span>
-          <span className="text-grey">Posted</span>
-          <span className="text-grey pl-1">{postTime}</span>
+          <span className="text-gray-700 mx-1 text-xxs">•</span>
+          <span className="text-gray-700">Posted</span>
+          <span className="text-gray-700 pl-1">{postTime}</span>
         </div>
         <div>
           <h2 className="text-lg font-bold mb-1 text-black dark:text-white">
@@ -35,7 +42,7 @@ export const Post = ({
           </span>
           }
           </h2>
-          <p className="text-grey-darker text-sm mt-2">{postContent}</p>
+          <p className="text-gray-300-darker text-sm mt-2">{postContent}</p>
           <div className="flex justify-center">
             {postimage && (
               <img
@@ -47,13 +54,13 @@ export const Post = ({
           </div>
         </div>
         <div className="inline-flex items-center my-3">
-          <div className="flex p-2 items-center hover:bg-gray-200 rounded-lg">
+          <div className="flex p-2 items-center hover:bg-gray-200 rounded-lg">    {/* add onclick to handle likes */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
               height="20"
               viewBox="0 0 24 24"
-              fill="none"
+              fill={isPostLiked ? "red" : "none"}
               stroke="rgb(107 114 128)"
               strokeWidth="2"
               strokeLinecap="round"
@@ -62,7 +69,7 @@ export const Post = ({
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
             </svg>
             <span className="ml-2 text-xs font-semibold text-gray-500">
-              31 Likes
+              {postLikescount} Likes
             </span>
           </div>
           <div className="flex p-2 items-center hover:bg-gray-200 rounded-lg ml-2">
@@ -80,7 +87,7 @@ export const Post = ({
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
             </svg>
             <span className="ml-2 text-xs font-semibold text-gray-500">
-              31 Comments
+              {postcommentscount} Comments
             </span>
           </div>
           <div className="flex p-2 items-center hover:bg-gray-200 rounded-lg ml-2">
@@ -105,6 +112,7 @@ export const Post = ({
           </div>
         </div>
       </div>
+      </Link>
     </article>
   );
 };
