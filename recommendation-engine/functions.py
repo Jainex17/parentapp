@@ -20,11 +20,24 @@ def external_sourcing(internal_post_list): # 50%
     external_source_posts = all_posts_list - internal_post_list
     pass
 
-def json_to_df(all_posts_json):
+def json_to_df(all_posts_json, all_users_json):
     # take all post json/dictionary and create necessary df
 
-    collab_df = pd.DataFrame(columns=['post_id', 'total_like_count', 'liked', 'user_id'])
-    content_df = pd.DataFrame(columns=['post_id', 'total_like_count','overview'])
+    collab_df_data = []
+    content_df_data = []
+
+    for post in all_posts_json:
+        post_id = post["postid"]
+        total_like_count = post["like"]["total"]
+
+        collab_df_data.append({"post_id": post_id, "total_like_count": total_like_count})
+        # integrate feature to connect users that liked the posts
+
+        overview = " ".join(post["tags"] + [post["disc"], post["title"]])
+        content_df_data.append({"post_id": post_id, "total_like_count": total_like_count, "overview": overview})
+
+    collab_df = pd.DataFrame(collab_df_data, columns=["post_id", "total_like_count", "liked", "user_id"])
+    content_df = pd.DataFrame(content_df_data, columns=["post_id", "total_like_count", "overview"])
 
     return collab_df, content_df
 
@@ -32,12 +45,6 @@ def post_user_dataset_model(df):
     '''Create pivot table of all posts, users and fill with user likes (1/0). 
         Add threshold based on total like count for each post if required. Train and save model.'''
     # notes: optimize variable allocation, implement exception handling
-
-    # data will come in format:
-    # [{},{}]
-    
-    # extract data and store in python dataframe
-    df = pd.DataFrame(columns=['post_id', 'total_like_count', 'liked', 'user_id']) # sample df
 
     like_threshold = 10 # minimum number of likes to consider 
     threshold_df = df.query('total_like_count >= @like_threshold')
@@ -62,10 +69,6 @@ def post_user_dataset_model(df):
 
 def post_dataset(df):
     # Create a post dataset storing post id, title, description and tags
-
-    # extract data and store in python dataframe
-    #  extract 'title', 'description', 'tags' and concatenate them for each post into overview
-    df = pd.DataFrame(columns=['post_id', 'total_like_count','overview']) # sample df
 
     like_threshold = 2 # minimum number of likes to consider 
     threshold_df = df.query('total_like_count >= @like_threshold')
@@ -93,7 +96,7 @@ def post_dataset(df):
     
     pass
 
-def user_preference_filtering(user_tags, post_list, min_num_common_tags = 2):
+def user_preference_filtering(user_tags, post_list_json, min_num_common_tags = 2):
     # List of posts filtered from external sourcing list that have tags similar to those set by user in their preferences
     # from dictionary
     # [(postid,[]),(postid,[])] m 
@@ -101,7 +104,12 @@ def user_preference_filtering(user_tags, post_list, min_num_common_tags = 2):
     user_tags = ['help','welp'] # sample
     user_tags = set(user_tags)
 
-    post_list = [(1,['help']),(2,['no help'])] #sample
+    post_list = []
+
+    for post in post_list_json:
+        post_id = post["postid"]
+        tags = post["tags"]
+        post_list.append((post_id, tags))
 
     filtered_post_list = [post[0] for post in post_list if len(set(post[1]).intersection(user_tags)) >= min_num_common_tags]
     
@@ -183,8 +191,28 @@ def mixing(internal_content_based_list, external_content_based_list, collaborati
 
 # api will send call to 2 functions - user_recommendation and every_n_hours
 
-def user_recommendation(internally_sourced_list, externally_sourced_list, user_tags, not_seen_post_list, recently_liked_posts):
-    external_pref_list = user_preference_filtering(user_tags, post_list= externally_sourced_list)
+def user_recommendation(all_post_json_list, all_user_json_list, user_json):
+
+    # internally_sourced_list
+    following_set = set(user_json.get("following", []))
+    internally_sourced_set = set()
+
+    for user in all_user_json_list:
+        if user["id"] in following_set:
+            liked_posts = user.get("likedposts", [])
+            internally_sourced_set.update(liked_posts)
+
+    internally_sourced_list = list(internally_sourced_set)
+
+    externally_sourced_list = list({post["postid"] for post in all_post_json_list} - internally_sourced_set)
+
+    user_tags = user_json.get("tags", [])
+
+    not_seen_post_list = list({post["postid"] for post in all_post_json_list} - (internally_sourced_set.union(externally_sourced_list)))
+
+    recently_liked_posts = user_json.get("likedposts", [])[::-1][0:11]
+
+    external_pref_list = user_preference_filtering(user_tags, post_list_json= externally_sourced_list)
     internal_unseen_list = common_filter_not_seen(not_seen_posts = not_seen_post_list,filter_list = internally_sourced_list)
     external_unseen_list = common_filter_not_seen(not_seen_posts = not_seen_post_list,filter_list = external_pref_list)
 
@@ -202,8 +230,8 @@ def user_recommendation(internally_sourced_list, externally_sourced_list, user_t
 
     return final_post_list
 
-def every_n_hours(all_post_json_list):
-    collab_df, content_df = json_to_df(all_posts_json = all_post_json_list)
+def every_n_hours(all_post_json_list, all_user_json_list):
+    collab_df, content_df = json_to_df(all_posts_json = all_post_json_list, all_users_json=all_user_json_list)
     post_user_dataset_model(collab_df)
     post_dataset(content_df)
     return True
