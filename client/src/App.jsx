@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SideBar } from "./components/SideBar";
-import { LoginPopup } from "./components/auth/LoginPopup";
 
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
@@ -13,11 +12,6 @@ import { DetailsPost } from "./DetailsPost";
 import { Profile } from "./pages/Profile";
 
 function App() {
-  const [isloginpopup, setIsLoginPopup] = useState(false);
-
-  useEffect(() => {
-    document.body.style.overflow = isloginpopup ? "hidden" : "unset";
-  }, [isloginpopup]);
 
   return (
     <>
@@ -25,7 +19,7 @@ function App() {
       
       <div className="dark:bg-gray-800 dark:text-white">
         <Routes>
-          <Route path="/*" element={<SideBar setIsLoginPopup={setIsLoginPopup} />} />
+          <Route path="/*" element={<SideBar />} />
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
@@ -45,10 +39,6 @@ function App() {
             
         </div>
       </BrowserRouter>
-    
-      {isloginpopup  && (
-          <LoginPopup setIsLoginPopup={setIsLoginPopup} />
-      )}
       
       <ToastContainer
         position="top-right"

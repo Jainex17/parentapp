@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ProfileComp } from "../components/ProfileComp";
 
 export const Profile = () => {
@@ -41,7 +41,13 @@ export const Profile = () => {
     }
   ];
 
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, []);
+
   return <>
-    <ProfileComp posts={MyPosts} />
+    <div>
+      <ProfileComp posts={MyPosts} />
+    </div>
   </>;
 };

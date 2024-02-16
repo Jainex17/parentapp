@@ -16,3 +16,8 @@ font-family: 'Roboto', sans-serif;
 background-color: var(--background-color);
 color: var(--tertiary-color);
 }
+
+.dark{
+  background-color: rgb(31 41 55);
+  color: #DBE2EF;
+}
