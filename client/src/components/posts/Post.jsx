@@ -15,11 +15,11 @@ export const Post = ({
 }) => {
   return (
     <article className="flex border border-gray-300 rounded bg-white cursor-pointer mb-2 px-5 sm:px-10 dark:bg-gray-800 dark:border-gray-700">
-      <Link to={"/post/"+postId}>
-      <div className=" pt-3">
+      <Link to={"/post/"+postId} className='w-full'>
+      <div className="pt-3">
         <div className="flex items-center text-xs mb-2">
-          <a
-            href="#"
+          <Link
+            to={"/user/"+postId}
             className="font-semibold no-underline hover:underline text-black flex items-center"
           >
             <img
@@ -28,7 +28,7 @@ export const Post = ({
               alt="User Avatar"
             />
             <span className="ml-2">{username}</span>
-          </a>
+          </Link>
           <span className="text-gray-700 mx-1 text-xxs">•</span>
           <span className="text-gray-700">Posted</span>
           <span className="text-gray-700 pl-1">{postTime}</span>
@@ -49,6 +49,7 @@ export const Post = ({
                 className="rounded-lg mt-3 h-auto xs:w-64 xs:h-auto md:w-[35rem]"
                 src={postimage}
                 alt="post image"
+                loading="lazy"
               />
             )}
           </div>
