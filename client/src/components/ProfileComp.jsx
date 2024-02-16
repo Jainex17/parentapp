@@ -5,9 +5,9 @@ import { Post } from "./posts/Post";
 export const ProfileComp = ({ posts }) => {
   return (
     <>
-      <div className="bg-white dark:bg-gray-800 dark:text-white">
-        <div className="flex items-center gap-2 border-b border-gray-300 p-2">
-          <Link to={"/home"} className="hover:bg-gray-300 rounded-full p-2">
+      <div className="bg-white dark:bg-neutral-900 dark:text-white">
+        <div className="flex items-center gap-2 border-b border-gray-300 dark:border-gray-600 p-3">
+          <Link to={"/home"} className="hover:bg-gray-300 dark:bg-opacity-40 rounded-full p-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="28"
@@ -44,7 +44,7 @@ export const ProfileComp = ({ posts }) => {
           </div>
 
           <div className="flex items-center justify-end gap-3 lg:mr-20 mr-5">
-            <button className="bg-white text-black font-bold py-2 px-2 rounded-full mt-5 border-2 border-gray-200 hover:bg-gray-200">
+            <button className="bg-white dark:bg-neutral-900 text-black dark:text-white font-bold py-2 px-2 rounded-full mt-5 border border-gray-200 hover:bg-gray-200">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -71,7 +71,7 @@ export const ProfileComp = ({ posts }) => {
           <h2 className="sm:text-2xl font-bold text-black dark:text-white">
             UserName
           </h2>
-          <p className="text-gray-500">
+          <p className="text-gray-500 dark:text-gray-300 mt-1">
             Lorem ipsum dolor sit amet consectetur adipisicing elit.
           </p>
 
@@ -94,7 +94,7 @@ export const ProfileComp = ({ posts }) => {
                   ></path>
                 </svg>
              
-              <button class="hover:underline group relative">
+              <button class="hover:underline group relative dark:text-gray-400">
                 Joined February 2024
               </button>
             </div>

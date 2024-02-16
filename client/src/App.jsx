@@ -13,11 +13,15 @@ import { Profile } from "./pages/Profile";
 
 function App() {
 
+  // useEffect(() => {
+  //   document.body.classList.add('dark');
+  // }, []);
+
   return (
     <>
       <BrowserRouter>
       
-      <div className="dark:bg-gray-800 dark:text-white">
+      <div className="dark:bg-black dark:text-white">
         <Routes>
           <Route path="/*" element={<SideBar />} />
           <Route path="/" element={<Login />} />
@@ -27,7 +31,7 @@ function App() {
         </Routes>
       </div>
 
-        <div className="sm:ml-64 dark:bg-gray-800 dark:text-white">
+        <div className="sm:ml-64 dark:bg-black dark:text-white">
           
               <Routes>
                 {/* <Route path="/" element={<Home />} /> */}

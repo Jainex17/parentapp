@@ -51,7 +51,7 @@ export const CreatePost = ({iscommnents, handlepost}) => {
 
   
   return <>
-    <form className="flex flex-col bg-white border border-gray-300 rounded dark:bg-gray-800 dark:border-gray-700" 
+    <form className="flex flex-col bg-white border border-gray-300 rounded dark:bg-neutral-900 dark:border-gray-700 mb-5" 
     onSubmit={handlepost}>
           <label
             className="hover-animation grid w-full grid-cols-[auto,1fr] gap-3 px-4 py-3"

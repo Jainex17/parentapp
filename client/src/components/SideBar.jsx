@@ -50,7 +50,7 @@ export const SideBar = () => {
         className="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
         aria-label="Sidebar"
       >
-        <div className="h-full overflow-y-auto bg-white dark:bg-gray-800 border border-[#DBE2EF] dark:border-gray-700 py-8">
+        <div className="h-full overflow-y-auto bg-white dark:bg-neutral-900 border border-[#DBE2EF] dark:border-gray-700 py-8">
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-2xl font-semibold text-gray-800 dark:text-white pl-5">
               ParentApp
@@ -180,7 +180,7 @@ export const SideBar = () => {
             </div> */}
           </div>
 
-          <div className="fixed bottom-2 w-64 p-4 bg-white dark:bg-gray-800 border-r border-t border-[#DBE2EF] dark:border-gray-700 cursor-pointer">
+          <div className="fixed bottom-2 w-64 p-4 bg-white dark:bg-neutral-900 border-r border-t border-[#DBE2EF] dark:border-gray-700 cursor-pointer">
 
             {isUserLogin ? (
 

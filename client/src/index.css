@@ -18,6 +18,6 @@ color: var(--tertiary-color);
 }
 
 .dark{
-  background-color: rgb(31 41 55);
+  background-color: #030303;
   color: #DBE2EF;
 }

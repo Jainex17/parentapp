@@ -116,7 +116,7 @@ export const Home = () => {
   return (
     <>
       <div className="mx-8 sm:my-6 my-2 mr-20">
-        <div className="flex bg-white border border-gray-300 rounded mb-3 cursor-pointer dark:bg-gray-800 dark:border-gray-700">
+        <div className="flex bg-white border border-gray-300 rounded mb-5 cursor-pointer dark:bg-neutral-900 dark:border-gray-700">
           <div
             className={
               "p-3 w-1/2 text-center hover:bg-[rgb(15,20,25,0.1)] transition-all " +

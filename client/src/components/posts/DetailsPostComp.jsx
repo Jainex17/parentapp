@@ -23,10 +23,10 @@ export const DetailsPostComp = () => {
  
   return (
     <>
-      <div className="flex bg-white border border-gray-200 rounded mb-3 dark:bg-gray-800 dark:border-gray-700">
+      <div className="flex bg-white border border-gray-200 rounded mb-3 dark:bg-neutral-900 dark:border-gray-700">
         <div className="flex flex-col justify-between p-6 w-full">
-          <div className="mb-5 flex items-center sm:gap-5 gap-2 border-b border-gray-300 pb-4">
-            <Link to={"/home"} className="hover:bg-gray-300 p-2 rounded-full">
+          <div className="mb-5 flex items-center sm:gap-5 gap-2 border-b border-gray-300 pb-4 dark:border-gray-600">
+            <Link to={"/home"} className="hover:bg-gray-300 p-2 rounded-full dark:hover:bg-opacity-50">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="28"
@@ -61,12 +61,12 @@ export const DetailsPostComp = () => {
             <div className="flex items-center">
               <h2 className="sm:text-2xl font-bold mb-1 mt-4 text-gray-800 dark:text-white">
                 Tips for a Productive Workday
-                <span className="sm:text-sm text-xs bg-[#DBE2EF] text-gray-700 sm:px-2.5 px-1 sm:py-1.5 py-1 ml-2 rounded-full">
+                <span className="sm:text-sm text-xs bg-[#DBE2EF] dark:bg-blue-600 dark:text-gray-100 text-gray-700 sm:px-2.5 px-1 sm:py-1.5 py-1 ml-2 rounded-full">
                   Productivity
                 </span>
               </h2>
             </div>
-            <p className="text-gray-300-darker text-base mt-2">
+            <p className="dark:text-gray-300 text-gray-800 text-base mt-2">
               As someone who works from home, I've learned a few tips and tricks
               to stay productive throughout the day. One thing that has really
               helped me is creating a dedicated workspace free from

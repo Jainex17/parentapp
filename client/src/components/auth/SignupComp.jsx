@@ -29,13 +29,13 @@ export const SignupComp = () => {
 
   return (
     <>
-      <section className="flex w-full max-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800 lg:max-w-4xl xs:mt-20 md:mt-20 dark:shadow-sm dark:shadow-gray-600">
+      <section className="flex w-full max-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-lg dark:bg-neutral-900 lg:max-w-4xl xs:mt-20 md:mt-20 dark:shadow-sm dark:shadow-gray-600">
         <div className="w-full px-6 py-8 md:px-8 lg:w-1/2">
           <p className=" text-xl text-center text-gray-600 dark:text-gray-200">
             Create an account
           </p>
 
-          <button className="flex items-center justify-center mt-4 text-gray-600 transition-colors duration-300 transform border rounded-lg dark:border-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 w-full" onClick={handlegooglesignupbtn}>
+          <button className="flex items-center justify-center mt-4 text-gray-600 transition-colors duration-300 transform border rounded-lg dark:border-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-neutral-800 w-full" onClick={handlegooglesignupbtn}>
             <div className="px-4 py-2">
               <svg className="w-6 h-6" viewBox="0 0 40 40">
                 <path
@@ -82,7 +82,7 @@ export const SignupComp = () => {
               </label>
               <input
                 id="LoggingEmailAddress"
-                className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300"
+                className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-neutral-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-gray-300 focus:outline-none focus:ring focus:ring-gray-300"
                 type="email"
               />
             </div>
@@ -96,7 +96,7 @@ export const SignupComp = () => {
 
               <label
                 htmlFor="dropzone-file"
-                className="flex items-center px-3 py-3 mx-auto text-center bg-white border-2 border-dashed rounded-lg cursor-pointer dark:border-gray-600 dark:bg-gray-800"
+                className="flex items-center px-3 py-3 mx-auto text-center bg-white border-2 border-dashed rounded-lg cursor-pointer dark:border-gray-600 dark:dark:bg-neutral-800"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -131,7 +131,7 @@ export const SignupComp = () => {
 
               <input
                 id="loggingPassword"
-                className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300"
+                className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:dark:bg-neutral-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300"
                 type="password"
               />
             </div>
@@ -139,7 +139,7 @@ export const SignupComp = () => {
             <div className="mt-6">
               <button
                 type="submit"
-                className="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-[#3F72AF] rounded-lg hover:bg-gray-800 dark:hover:bg-blue-700 focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-50"
+                className="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform rounded-lg focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-50 bg-[#3F72AF] dark:bg-[#3F72AF] hover:bg-[#2E5C8B] dark:hover:bg-[#2E5C8B]"
               >
                 sign up
               </button>
