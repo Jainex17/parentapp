@@ -1,6 +1,17 @@
 import { Post } from "./Post";
 
 export const Posts = ({ posts }) => {
+
+  function isThisPostLiked(postId) {
+    // check if this post is liked by the user
+
+    // fake logic
+    if (postId === "1") {
+      return true;
+    }
+    return false;
+  }
+
   
   return (
     <>
@@ -18,7 +29,7 @@ export const Posts = ({ posts }) => {
             postTag={post.postTag}
             postLikescount={post.likescount}
             postcommentscount={post.commentscount}
-            isPostLiked={true} // isPostLiked={userId === post.likes.find((like) => like === userId)} check if user has liked the post
+            isPostLiked={isThisPostLiked(post._id)} 
           />
         ))}
       </section>

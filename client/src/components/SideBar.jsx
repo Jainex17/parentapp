@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
 
-export const SideBar = ({setIsLoginPopup}) => {
+export const SideBar = () => {
 
   const navigate = useNavigate();
   const [sidebarisopen, setSidebarIsOpen] = useState(false);
@@ -16,7 +16,6 @@ export const SideBar = ({setIsLoginPopup}) => {
   };
 
   const handleSidebarSignIn = () => {
-    // setIsLoginPopup(true)
     navigate("/login");
   }
 
@@ -134,6 +133,17 @@ export const SideBar = ({setIsLoginPopup}) => {
                   </span>
                 </Link>
               </li>
+              <li>
+                <Link
+                  to={"/user/32"}
+                  className="flex items-center p-3 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group pl-3"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                  <span className="flex-1 ms-3 whitespace-nowrap pl-2 font-bold">
+                    Profile
+                  </span>
+                </Link>
+              </li>
             </ul>
 
             {/* <div className="mt-8">
@@ -202,8 +212,4 @@ export const SideBar = ({setIsLoginPopup}) => {
       </aside>
     </>
   );
-};
-
-SideBar.propTypes = {
-  setIsLoginPopup: PropTypes.func
 };

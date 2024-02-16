@@ -42,6 +42,13 @@ export const CreatePost = ({iscommnents, handlepost}) => {
       }
     }, [textareavalue, postimages]);
 
+    const [theme, setTheme] = useState("light");
+    useEffect(()=>{
+      if(document.body.classList.contains('dark')){
+        setTheme("dark")
+      }
+    })
+
   
   return <>
     <form className="flex flex-col bg-white border border-gray-300 rounded dark:bg-gray-800 dark:border-gray-700" 
@@ -106,25 +113,6 @@ export const CreatePost = ({iscommnents, handlepost}) => {
             <div className="flex w-full flex-col gap-4">
               <div className="flex min-h-[48px] w-full flex-col justify-center gap-4">
                 <div className="flex flex-col gap-6">
-                  {/* post privacy */}
-                  {/* <button
-                    type="button"
-                    className="flex items-center gap-1 self-start border py-0 px-3 rounded-full hover:bg-gray-100 dark:hover:bg-[#2D3748] dark:border-[#2D3748] dark:text-white ml-1"
-                    style={{ opacity: 1, transform: "none" }}
-                  >
-                    <p className="font-bold">Everyone</p>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="currentColor"
-                      aria-hidden="true"
-                      className="h-4 w-4"
-                    >
-                      <path d="M19.5 8.25l-7.5 7.5-7.5-7.5"></path>
-                    </svg>
-                  </button> */}
                   <div className="flex items-center gap-3 pt-2">
                     <textarea
                        className="w-full min-w-0 resize-none bg-transparent text-xl outline-none dark:text-white pl-2 pr-14"
@@ -238,13 +226,14 @@ export const CreatePost = ({iscommnents, handlepost}) => {
                     open={emojiPicker}
                     onEmojiClick={(e, emoji) => setTextareavalue(textareavalue + e.emoji)}
                     emojiStyle="native"
+                    theme={theme}
                     /> 
                     </div>
                 </div>
                 }
                 <div className="flex items-center gap-4">
                   <button
-                    className={'px-8 py-1.5 font-bold text-white bg-[#3F72AF] rounded-full' + (ispostable ? ' cursor-pointer' : ' bg-slate-400 cursor-not-allowed')}
+                    className={'px-8 py-1.5 font-bold text-white bg-[#3F72AF] rounded-full' + (ispostable ? ' cursor-pointer' : ' bg-slate-500 cursor-not-allowed')}
                     type="submit"
                   >
                     {iscommnents ? "Comment" : "Post"}

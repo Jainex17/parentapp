@@ -6,8 +6,8 @@ export const ProfileComp = ({ posts }) => {
   return (
     <>
       <div className="bg-white dark:bg-gray-800 dark:text-white">
-        <div className="flex items-center gap-2 border-b border-gray-300">
-          <Link to={"/home"} className="hover:bg-gray-300 rounded-full p-4">
+        <div className="flex items-center gap-2 border-b border-gray-300 p-2">
+          <Link to={"/home"} className="hover:bg-gray-300 rounded-full p-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="28"

@@ -1,8 +1,25 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 export const DetailsPostComp = () => {
 
+  const [likeCount, setLikeCount] = useState(23); //23 replace with actual like count
+  const [isThisPostLiked, setIsThisPostLiked] = useState(false); // false replace with actual like status
+
+  function handlePostLike(postId, isPostLiked, userId) {
+    if (isPostLiked) {
+      // unlike post
+      setLikeCount(likeCount - 1);
+      setIsThisPostLiked(false);
+    } else {
+      // like post
+      setLikeCount(likeCount + 1);
+      setIsThisPostLiked(true);
+    }
+  }
+
+  const userId  = "1"; // fake user id and user id
+  const postId  = "1"; // fake user id and post id
  
   return (
     <>
@@ -70,13 +87,13 @@ export const DetailsPostComp = () => {
             </div>
           </div>
           <div className="inline-flex items-center my-3">
-          <div className="flex p-2 items-center hover:bg-gray-200 rounded-lg cursor-pointer">    {/* add onclick to handle likes */}
+          <div className="flex p-2 items-center hover:bg-gray-200 rounded-lg cursor-pointer" onClick={()=> handlePostLike(postId,isThisPostLiked,userId)}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
               height="20"
               viewBox="0 0 24 24"
-              fill={true ? "red" : "none"}
+              fill={isThisPostLiked ? "red" : "none"}
               stroke="rgb(107 114 128)"
               strokeWidth="2"
               strokeLinecap="round"
@@ -84,8 +101,8 @@ export const DetailsPostComp = () => {
             >
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
             </svg>
-            <span className="ml-2 text-xs font-semibold text-gray-500">
-              54 Likes
+            <span className="ml-2 text-xs font-semibold text-gray-500 select-none">
+              {likeCount} Likes
             </span>
           </div>
           <div className="flex p-2 items-center hover:bg-gray-200 rounded-lg ml-2 cursor-pointer">
@@ -102,7 +119,7 @@ export const DetailsPostComp = () => {
             >
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
             </svg>
-            <span className="ml-2 text-xs font-semibold text-gray-500">
+            <span className="ml-2 text-xs font-semibold text-gray-500 select-none">
               23 Comments
             </span>
           </div>
@@ -122,7 +139,7 @@ export const DetailsPostComp = () => {
               <circle cx="19" cy="12" r="1"></circle>
               <circle cx="5" cy="12" r="1"></circle>
             </svg>
-            <span className="ml-2 text-xs font-semibold text-gray-500">
+            <span className="ml-2 text-xs font-semibold text-gray-500 select-none">
               More
             </span>
           </div>
