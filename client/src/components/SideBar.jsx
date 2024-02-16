@@ -86,7 +86,7 @@ export const SideBar = ({setIsLoginPopup}) => {
             <ul className="space-y-2 font-medium mt-7">
               <li>
                 <Link
-                  to={"/"}
+                  to={"/home"}
                   className="flex items-center text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group p-3"
                 >
                   <svg

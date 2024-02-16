@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import EmojiPicker from "emoji-picker-react";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 export const CreatePost = ({iscommnents, handlepost}) => {
     
@@ -49,7 +50,7 @@ export const CreatePost = ({iscommnents, handlepost}) => {
             className="hover-animation grid w-full grid-cols-[auto,1fr] gap-3 px-4 py-3"
             htmlFor="post-input"
           >
-            <a className="blur-picture flex self-start cursor-pointer">
+            <Link to={"/user/12"} className="blur-picture flex self-start cursor-pointer">
               <figure style={{ width: "48px" }}>
                 <span
                   style={{
@@ -101,7 +102,7 @@ export const CreatePost = ({iscommnents, handlepost}) => {
                   ></img>
                 </span>
               </figure>
-            </a>
+            </Link>
             <div className="flex w-full flex-col gap-4">
               <div className="flex min-h-[48px] w-full flex-col justify-center gap-4">
                 <div className="flex flex-col gap-6">

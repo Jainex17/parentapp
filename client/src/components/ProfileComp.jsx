@@ -1,7 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { Post } from "./posts/Post";
 
-export const ProfileComp = () => {
+export const ProfileComp = ({ posts }) => {
   return (
     <>
       <div className="bg-white dark:bg-gray-800 dark:text-white">
@@ -98,8 +99,13 @@ export const ProfileComp = () => {
               </button>
             </div>
           </div>
+          {/* tags */}
+          {/* <div class="flex items-center gap-2 mt-4">
+            <span className="py-1 px-3 bg-gray-500 rounded-full text-white">SomeTag</span>
+            <span className="py-1 px-3 bg-gray-500 rounded-full text-white">SomeTag</span>
+          </div> */}
 
-          <div className="flex items-center gap-3 mt-5">
+          <div className="flex items-center gap-3 mt-4">
             <div>
               <h2 className="font-bold text-black dark:text-white">
                 10
@@ -113,6 +119,32 @@ export const ProfileComp = () => {
             </div>
           </div>
         </div>
+        
+        {/* posts */}
+        <div className="mt-10 mx-10">
+          
+          
+          {posts.map((post, index) => (
+          <Post
+            key={index}
+            postId={post._id}
+            username={post.username}
+            userImage={post.userImage}
+            postTime={post.postTime}
+            postTitle={post.postTitle}
+            postContent={post.postContent}
+            postimage={post.postimage}
+            postTag={post.postTag}
+            postLikescount={post.likescount}
+            postcommentscount={post.commentscount}
+            isPostLiked={true} // isPostLiked={userId === post.likes.find((like) => like === userId)} check if user has liked the post
+          />
+        ))}
+        </div>
+       
+
+
+
       </div>
     </>
   );
