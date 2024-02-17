@@ -1,4 +1,4 @@
-#cd s:\programming\projects\parentapp-backend;Set-ExecutionPolicy Unrestricted -Scope Process;.\venv\Scripts\Activate.ps1
+
 from flask import *
 from flask import request, jsonify
 from werkzeug.utils import secure_filename
@@ -533,37 +533,7 @@ def savepass(usrname,passwd):
     else:
         respo = make_response("username already taken",400)
         return respo
-
-
-# import os
-# import schedule
-# import time
-
-# def delete_temp_files():
-#     temp_folder = 'TEMP_FOLDER'  # replace with your actual temp folder path
-#     for filename in os.listdir(temp_folder):
-#         file_path = os.path.join(temp_folder, filename)
-#         try:
-#             if os.path.isfile(file_path) or os.path.islink(file_path):
-#                 os.unlink(file_path)
-#             elif os.path.isdir(file_path):
-#                 shutil.rmtree(file_path)
-#         except Exception as e:
-#             print(f'Failed to delete {file_path}. Reason: {e}')
-
-# # Schedule the function to run once every day
-# schedule.every().day.at("00:00").do(delete_temp_files)
-
-# # Start an infinite loop, checking for pending tasks every minute
-# while True:
-#     schedule.run_pending()
-#     time.sleep(60)
-
-
-#daksh : all posts data : {postid,totllikecount,users_liked,title,desc,tags} :: getallposts
-     #  : all users data : {uid , tags , likes}                              :: getallusers   
- 
-
+                    
 #main runtime
 if __name__ == '__main__':
     app.run(debug=True)

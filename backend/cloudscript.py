@@ -1,8 +1,4 @@
-#cd s:\programming\projects\parentapp-backend;Set-ExecutionPolicy Unrestricted -Scope Process;.\venv\Scripts\Activate.ps1
-# from google.cloud import storage
-# os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r'ServiceKey_GoogleCloud.json'
-# sc = storage.Client()
-# bucket_name = "parent-app"
+
 import os
 import firebase_admin
 from firebase_admin import credentials
@@ -10,8 +6,6 @@ import pyrebase
 import hashlib
 import json
 import pytz , datetime
-# cred = credentials.Certificate("creds.json")
-# firebase_admin.initialize_app(cred, {'storageBucket': 'parentapp-df60c.appspot.com'} , {'databaseURL':'https://parentapp-df60c-default-rtdb.asia-southeast1.firebasedatabase.app/'})
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = os.path.join(APP_ROOT, 'down_files')
@@ -34,8 +28,6 @@ firebase = pyrebase.initialize_app(config)
 storage = firebase.storage()
 db = firebase.database()
 
-# storage.child('post_images/test1.jpg').put(os.path.join(UPLOAD_FOLDER,'test.jpg'))   upload img
-# storage.child("post_images/").download("test1.jpg","testimg.jpg")                    dowmload img
 
 #load media
 
@@ -292,33 +284,36 @@ def get_all_posts():        #re-edited
         for usr in allposts.each():
             for post in usr.val():                   #before : post in allposts.each()
                 # usr.val()[post]                     before : post.val()
-                title = usr.val()[post].get("title")
-                disc = usr.val()[post].get("disc")
-                usrname = usr.val()[post].get("usrname")
-                usrid = usr.val()[post].get("usrid")
-                ptype = usr.val()[post].get("ptype")
-                tags = usr.val()[post].get("tags")
-                likes = usr.val()[post].get("like")
-                comments = usr.val()[post].get("comment")
-                timestamp = usr.val()[post].get("timestamp")
-                url = usr.val()[post].get("url")
-                # postid = post.key()
-                postid = usr.val()[post].get("postid")
-                postinfo = {"title": title, 
-                            "disc": disc, 
-                            "usrname": usrname,
-                            "usrid": usrid,
-                            "postid": postid,
-                            "ptype": ptype,
-                            "tags": tags,
-                            "like": likes,
-                            "comment": comments,
-                            "timestamp": timestamp,
-                            "url" : url}
-                postinfo = json.loads(str(postinfo).replace("'",'"'))   #fixed error
-                posts.append(postinfo)
-            #return posts[::-1]       #reverse list to make it descending order by default
-            #uu.append(posts)
+                if post=='counter' or post=='list':
+                    continue
+                else:
+                    title = usr.val()[post].get("title")
+                    disc = usr.val()[post].get("disc")
+                    usrname = usr.val()[post].get("usrname")
+                    usrid = usr.val()[post].get("usrid")
+                    ptype = usr.val()[post].get("ptype")
+                    tags = usr.val()[post].get("tags")
+                    likes = usr.val()[post].get("like")
+                    comments = usr.val()[post].get("comment")
+                    timestamp = usr.val()[post].get("timestamp")
+                    url = usr.val()[post].get("url")
+                    # postid = post.key()
+                    postid = usr.val()[post].get("postid")
+                    postinfo = {"title": title, 
+                                "disc": disc, 
+                                "usrname": usrname,
+                                "usrid": usrid,
+                                "postid": postid,
+                                "ptype": ptype,
+                                "tags": tags,
+                                "like": likes,
+                                "comment": comments,
+                                "timestamp": timestamp,
+                                "url" : url}
+                    postinfo = json.loads(str(postinfo).replace("'",'"'))   #fixed error
+                    posts.append(postinfo)
+                #return posts[::-1]       #reverse list to make it descending order by default
+                #uu.append(posts)
         return posts[::-1]       #reverse list to make it descending order by default
 
 def get_all_users():
@@ -374,58 +369,22 @@ def get_all_posts_by_tag(tag):                   #single tag
     else:
         posts = []
         for user in allposts.each():
-            for post in user.val().values():
-                if tag in post['tags']:
-                    title = post.get("title")
-                    disc = post.get("disc")
-                    usrname = post.get("usrname")
-                    usrid = post.get("usrid")
-                    ptype = post.get("ptype")
-                    tags = post.get("tags")
-                    likes = post.get("like")
-                    comments = post.get("comment")
-                    timestamp = post.get("timestamp")
-                    url = post.get("url")
-                    postid = post.get("postid")
-                    postinfo = {"title": title, 
-                                "disc": disc, 
-                                "usrname": usrname,
-                                "usrid": usrid,
-                                "postid": postid,
-                                "ptype": ptype,
-                                "tags": tags,
-                                "like": likes,
-                                "comment": comments,
-                                "timestamp": timestamp,
-                                "url" : url}
-                    postinfo = json.loads(str(postinfo).replace("'",'"'))   #fixed error
-                    posts.append(postinfo)
-        return posts[::-1]       #reverse list to make it descending order by default
-    return False
-
-def get_all_posts_by_tags(tags):                   #multiple tags
-    taglist = tags.split(sep=',')
-    allposts = db.child("test1").child("posts").get()
-    if allposts.val() == None:
-        return False
-    else:
-        posts = [] 
-        cc = []
-        for user in allposts.each():
-            for post in user.val().values():
-                for tag in taglist:
-                    if tag in post['tags']:
-                        title = post.get("title")
-                        disc = post.get("disc")
-                        usrname = post.get("usrname")
-                        usrid = post.get("usrid")
-                        ptype = post.get("ptype")
-                        tags = post.get("tags")
-                        likes = post.get("like")
-                        comments = post.get("comment")
-                        timestamp = post.get("timestamp")
-                        url = post.get("url")
-                        postid = post.get("postid")
+            for post in user.val():
+                if post=='counter' or post=='list':
+                    continue
+                else:
+                    if tag in user.val()[post]['tags']:
+                        title = user.val()[post].get("title")
+                        disc = user.val()[post].get("disc")
+                        usrname = user.val()[post].get("usrname")
+                        usrid = user.val()[post].get("usrid")
+                        ptype = user.val()[post].get("ptype")
+                        tags = user.val()[post].get("tags")
+                        likes = user.val()[post].get("like")
+                        comments = user.val()[post].get("comment")
+                        timestamp = user.val()[post].get("timestamp")
+                        url = user.val()[post].get("url")
+                        postid = user.val()[post].get("postid")
                         postinfo = {"title": title, 
                                     "disc": disc, 
                                     "usrname": usrname,
@@ -438,9 +397,51 @@ def get_all_posts_by_tags(tags):                   #multiple tags
                                     "timestamp": timestamp,
                                     "url" : url}
                         postinfo = json.loads(str(postinfo).replace("'",'"'))   #fixed error
-                        if postid not in cc:               #removes duplicate
-                            posts.append(postinfo)
-                            cc.append(postid)
+                        posts.append(postinfo)
+        return posts[::-1]       #reverse list to make it descending order by default
+    return False
+
+def get_all_posts_by_tags(tags):                   #multiple tags
+    taglist = tags.split(sep=',')
+    allposts = db.child("test1").child("posts").get()
+    if allposts.val() == None:
+        return False
+    else:
+        posts = [] 
+        cc = []
+        for user in allposts.each():
+            for post in user.val():
+                if post=='counter' or post=='list':
+                    continue
+                else:
+                    for tag in taglist:
+                        if tag in user.val()[post]['tags']:
+                            title = user.val()[post].get("title")
+                            disc = user.val()[post].get("disc")
+                            usrname = user.val()[post].get("usrname")
+                            usrid = user.val()[post].get("usrid")
+                            ptype = user.val()[post].get("ptype")
+                            tags = user.val()[post].get("tags")
+                            likes = user.val()[post].get("like")
+                            comments = user.val()[post].get("comment")
+                            timestamp = user.val()[post].get("timestamp")
+                            url = user.val()[post].get("url")
+                            postid = user.val()[post].get("postid")
+                            postinfo = {"title": title, 
+                                        "disc": disc, 
+                                        "usrname": usrname,
+                                        "usrid": usrid,
+                                        "postid": postid,
+                                        "ptype": ptype,
+                                        "tags": tags,
+                                        "like": likes,
+                                        "comment": comments,
+                                        "timestamp": timestamp,
+                                        "url" : url}
+                            postinfo = json.loads(str(postinfo).replace("'",'"'))   #fixed error
+                            if postid not in cc:               #removes duplicate
+                                posts.append(postinfo)
+                                cc.append(postid)
         # try:
         #     for i in range(len(posts)):       
         #         a = posts[i]
@@ -520,7 +521,7 @@ def get_user_info(username):
 
 
 
-def like_post(username,postid,uu):         #added user liked list
+def like_post(username,postid,uu):         #added user liked list    #working
     post = get_post(username,postid)
     usr = getuser(uu)
     if post == False:
@@ -645,6 +646,8 @@ def delete_comment(username, postid, commentdata):   #optimise by sending commen
             print("comment not found")
             return False
 
-
+#experimental
 def update_user(username,passwd,email,age,gender,tags,bio,profession,pimg):
+    pass
+def update_passwdorforget_passwd(username,verification_status:bool):
     pass
