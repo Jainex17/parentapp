@@ -13,7 +13,7 @@ export const CommentsComp = () => {
       <div className="mt-5">
         <CreatePost iscommnents={true} handlepost={handleCommentbtn} />
 
-        <div className="flex flex-col items-center border border-gray-300 rounded bg-white dark:bg-gray-800 mt-10">
+        <div className="flex flex-col items-center border border-gray-300 rounded bg-white dark:bg-neutral-900 mt-10 dark:border-gray-700">
           <Comment />
           <Comment />
           <Comment />

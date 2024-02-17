@@ -24,7 +24,7 @@ export const LoginComp = () => {
 
   return (
     <>
-      <section className="flex w-full max-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800 lg:max-w-4xl xs:mt-20 md:mt-28 dark:shadow-sm dark:shadow-gray-600">
+      <section className="flex w-full max-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-lg dark:bg-neutral-900 lg:max-w-4xl xs:mt-20 md:mt-28 dark:shadow-sm dark:shadow-gray-600">
         <div className="hidden bg-cover lg:block lg:w-1/2 bg-[url(https://images.unsplash.com/photo-1506836467174-27f1042aa48c?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1575&q=80)]"></div>
 
         <div className="w-full px-6 py-8 md:px-8 lg:w-1/2">
@@ -33,7 +33,7 @@ export const LoginComp = () => {
           </p>
 
           <button
-            className="flex items-center justify-center mt-4 text-gray-600 transition-colors duration-300 transform border rounded-lg dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 w-full hover:bg-gray-100 focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-50"
+            className="flex items-center justify-center mt-4 text-gray-600 transition-colors duration-300 transform border rounded-lg dark:border-gray-700 dark:text-gray-200 dark:hover:bg-neutral-800 w-full hover:bg-gray-100 focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-50"
             onClick={handlegoogleSignInBtn}
           >
             <div className="px-4 py-2">
@@ -81,7 +81,7 @@ export const LoginComp = () => {
             </label>
             <input
               id="LoggingEmailAddress"
-              className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300"
+              className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-neutral-800 dark:text-gray-600 dark:border-gray-600 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-gray-300 focus:outline-none focus:ring focus:ring-gray-600"
               type="email"
             />
           </div>
@@ -98,13 +98,13 @@ export const LoginComp = () => {
 
             <input
               id="loggingPassword"
-              className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300"
+              className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-neutral-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-gray-300 focus:outline-none focus:ring focus:ring-gray-600"
               type="password"
             />
           </div>
 
           <div className="mt-6">
-            <button type="submit" className="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-[#3F72AF] rounded-lg hover:bg-gray-700 dark:hover:bg-blue-700 focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-50">
+            <button type="submit" className="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform rounded-lg focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-50 bg-[#3F72AF] dark:bg-[#3F72AF] hover:bg-[#2E5C8B] dark:hover:bg-[#2E5C8B]">
               Sign In
             </button>
           </div>

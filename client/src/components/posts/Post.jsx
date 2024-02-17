@@ -40,7 +40,7 @@ export const Post = ({
   const userId = "1"; // fake user id
   
   return (
-    <article id="post" className="flex border border-gray-300 rounded bg-white cursor-pointer mb-2 px-5 sm:px-10 dark:bg-gray-800 dark:border-gray-700">
+    <article id="post" className="flex border border-gray-300 rounded bg-white cursor-pointer mb-2 px-5 sm:px-10 dark:bg-neutral-900 dark:border-gray-700">
       <div className='w-full'>
       <div className="pt-3">
         <div className="flex items-center text-xs mb-2">
@@ -68,7 +68,7 @@ export const Post = ({
           </span>
           }
           </h2>
-          <p className="text-gray-300-darker text-sm mt-2">{postContent}</p>
+          <p className="text-gray-700 dark:text-gray-300 text-base mt-2">{postContent}</p>
           <div className="flex justify-center">
             {postimage && (
               ispostsloading ? (
@@ -84,14 +84,14 @@ export const Post = ({
           </div>
         </Link>
         <div className="inline-flex items-center my-3">
-          <div className="flex p-2 items-center hover:bg-gray-200 rounded-lg" onClick={()=> handlePostLike(postId,isThisPostLiked,userId)}>    
+          <div className="flex p-2 items-center hover:bg-gray-200 dark:hover:bg-neutral-800 rounded-lg" onClick={()=> handlePostLike(postId,isThisPostLiked,userId)}>    
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
               height="20"
               viewBox="0 0 24 24"
               fill={isThisPostLiked ? "red" : "none"}
-              stroke="rgb(107 114 128)"
+              stroke={isThisPostLiked ? "red" : "rgb(107 114 128)"}
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -102,7 +102,7 @@ export const Post = ({
               {likeCount} Likes
             </span>
           </div>
-          <Link to={"/post/"+postId} className="flex p-2 items-center hover:bg-gray-200 rounded-lg ml-2">
+          <Link to={"/post/"+postId} className="flex p-2 items-center hover:bg-gray-200 dark:hover:bg-neutral-800 rounded-lg ml-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
@@ -120,7 +120,7 @@ export const Post = ({
               {postcommentscount} Comments
             </span>
           </Link>
-          <div className="flex p-2 items-center hover:bg-gray-200 rounded-lg ml-2">
+          <div className="flex p-2 items-center hover:bg-gray-200 dark:hover:bg-neutral-800 rounded-lg ml-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
