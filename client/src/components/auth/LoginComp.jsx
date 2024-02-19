@@ -19,7 +19,7 @@ export const LoginComp = () => {
     console.log("Email: ", e.target[0].value);
     console.log("Password: ", e.target[1].value);
     
-    navigateTo("/home");
+    navigateTo("/");
   }
 
   return (

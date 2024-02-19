@@ -101,7 +101,7 @@ export const SideBar = () => {
             <ul className="space-y-2 font-medium mt-7">
               <li>
                 <Link
-                  to={"/home"}
+                  to={"/"}
                   className="flex items-center text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group p-3"
                 >
                   <svg
@@ -204,7 +204,7 @@ export const SideBar = () => {
               <ul className="mt-3 space-y-2">
                 <li>
                   <Link
-                    to={"/login"}
+                    to={"/"}
                     className="flex items-center p-3 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group pl-3"
                   >
                     <svg

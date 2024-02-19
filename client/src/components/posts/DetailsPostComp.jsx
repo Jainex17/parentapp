@@ -26,7 +26,7 @@ export const DetailsPostComp = () => {
       <div className="flex bg-white border border-gray-200 rounded mb-3 dark:bg-neutral-900 dark:border-gray-700">
         <div className="flex flex-col justify-between p-6 w-full">
           <div className="mb-5 flex items-center sm:gap-5 gap-2 border-b border-gray-300 pb-4 dark:border-gray-600">
-            <Link to={"/home"} className="hover:bg-gray-300 p-2 rounded-full dark:hover:bg-opacity-50">
+            <Link to={"/"} className="hover:bg-gray-300 p-2 rounded-full dark:hover:bg-opacity-50">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="28"
