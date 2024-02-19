@@ -1,17 +1,5 @@
 import { createReducer } from "@reduxjs/toolkit";
-
-// Action creator types
-export const signUpRequest = {
-    type: 'signUpRequest'
-};
-
-export const signUpSuccess = {
-    type: 'signUpSuccess'
-};
-
-export const signUpFail = {
-    type: 'signUpFail'
-};
+import { signUpRequest, signUpSuccess, signUpFail, loginRequest, loginSuccess, loginFail } from "../actions/actionTypes";
 
 const initialState = {
   isAuthenticated: false,
@@ -31,6 +19,18 @@ export const userReducer = createReducer(initialState, (builder) => {
       state.user = action.payload;
     })
     .addCase(signUpFail.type, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    })
+    .addCase(loginRequest.type, (state, action) => {
+      state.loading = true;
+    })
+    .addCase(loginSuccess.type, (state, action) => {
+      state.loading = false;
+      state.isAuthenticated = true;
+      state.user = action.payload;
+    })
+    .addCase(loginFail.type, (state, action) => {
       state.loading = false;
       state.error = action.payload;
     });

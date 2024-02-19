@@ -1,6 +1,5 @@
 import React from "react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { SignupComp } from "../components/auth/SignupComp";
 
@@ -12,7 +11,6 @@ export const Signup = () => {
 
   const { loading } = useSelector((state) => state.user);
 
-  const navigateTo = useNavigate();
   const dispatch = useDispatch();
 
   const handleSignupSubmit = (e) => {
