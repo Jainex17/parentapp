@@ -1,5 +1,6 @@
 import { server } from '../store';
 import axios from 'axios';
+import { signUpRequest, signUpSuccess, signUpFail, loginRequest, loginSuccess, loginFail } from './actionTypes';
 
 export const signup = ({ username, password, email, pfpimage }) => async (dispatch) => {
     try {
@@ -27,25 +28,21 @@ export const signup = ({ username, password, email, pfpimage }) => async (dispat
         }
 
         const { data } = await axios.post(`${server}/setusr`, rawdata);
-        console.log("data: ", data);
-        
-        console.log("end");
         
         dispatch({ type: signUpSuccess.type, payload: data }); 
     } catch (error) {
-        dispatch({ type: signUpFail.type, payload: error.response.data.message }); 
+        dispatch({ type: signUpFail.type, payload: error.response.data }); 
     }
 };
 
-// Action creator types
-export const signUpRequest = {
-    type: 'signUpRequest'
-};
+export const login = ({ username, password }) => async (dispatch) => {
+    try {
+        dispatch({ type: loginRequest.type });
+        const { data } = await axios.get(`${server}/verifyusr?username=${username}&password=${password}&client=kadia`);
+        
+        dispatch({ type: loginSuccess.type, payload: data });
+    } catch (error) {
+        dispatch({ type: loginFail.type, payload: error.response.data });
+    }
+}
 
-export const signUpSuccess = {
-    type: 'signUpSuccess'
-};
-
-export const signUpFail = {
-    type: 'signUpFail'
-};
