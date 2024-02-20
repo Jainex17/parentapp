@@ -1,54 +1,16 @@
 import { useEffect, useState } from "react";
 import { CreatePost } from "../components/posts/CreatePost.jsx";
 import { Posts } from "../components/posts/Posts.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import { getallposts } from "../../redux/actions/userAction.js";
 
 export const Home = () => {
   const [PostsTab, setPostsTab] = useState(0);
   const [ispostsloading, setIsPostsLoading] = useState(true);
+  const [ForYouPosts, setForYouPosts] = useState([]);
 
-  const ForYouPosts = [
-    {
-      _id: "1",
-      username: "John Doe",
-      userImage: "https://randomuser.me/api/portraits/women/2.jpg",
-      postTime: "2 hours ago",
-      postTitle:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse tempor placerat turpis eu semper.",
-      postContent:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse tempor placerat turpis eu semper. Nullam nec erat id tortor aliquet gravida. Donec eget odio in justo congue. loreLorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse tempor placerat turpis eu semper. Nullam nec erat id tortor aliquet gravida. Donec eget odio in justo congue. loreLorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse tempor placerat turpis eu semper. Nullam nec erat id tortor aliquet gravida. Donec eget odio in justo congue. loreLorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse tempor placerat turpis eu semper. Nullam nec erat id tortor aliquet gravida. Donec eget odio in justo congue.",
-      postimage:
-        "https://plus.unsplash.com/premium_photo-1680720885676-81e3bdee4237?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      postTag: "React",
-      likescount: 10,
-      commentscount: 5,
-    },
-    {
-      _id: "2",
-      username: "Test User",
-      userImage: "https://randomuser.me/api/portraits/women/32.jpg",
-      postTime: "5 hours ago",
-      postTitle: "why do we use it?",
-      postContent:
-        "react is a javascript library for building user interfaces. It is maintained by facebook and a community of individual developers and companies. React can be used as a base in the development of single-page or mobile applications, as it is optimal for fetching rapidly changing data that needs to be recorded. However, fetching data is only the beginning of what happens on a web page, which is why we're building a new kind of a component. It's a component that is aware of the loading state, and it knows how to fetch data. It's called a query component, and it's the first of its kind in the react ecosystem. It's a component that is aware of the loading state, and it knows how to fetch data. It's called a query component, and it's the first of its kind in the react ecosystem.",
-      postTag: "question",
-      likescount: 5,
-      commentscount: 2,
-    },
-    {
-      _id: "3",
-      username: "Jetha Gada",
-      userImage: "https://randomuser.me/api/portraits/women/12.jpg",
-      postTime: "1 day ago",
-      postTitle: "My Elctronic Shop",
-      postContent:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse tempor placerat turpis eu semper. Nullam nec erat id tortor aliquet gravida. Donec eget odio in justo congue. loreLorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse tempor placerat turpis eu semper. Nullam nec erat id tortor aliquet gravida. Donec eget odio in justo congue. loreLorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse tempor placerat turpis eu semper. Nullam nec erat id tortor aliquet gravida. Donec eget odio in justo congue. loreLorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse tempor placerat turpis eu semper. Nullam nec erat id tortor aliquet gravida. Donec eget odio in justo congue.",
-      postimage:
-        "https://images.unsplash.com/photo-1503431153573-96e959f4d9b7?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      postTag: "Shop",
-      likescount: 20,
-      commentscount: 8,
-    },
-  ];
+  const dispatch = useDispatch();
+  const { isAuthenticated, user, postsloading, posts } = useSelector((state) => state.user);
 
   const FollowingPosts = [
     {
@@ -107,12 +69,18 @@ export const Home = () => {
   }
 
   useEffect(() => {
-    // fack loading will be removed after integrating with backend
-    setTimeout(() => {
+    if (!postsloading) {
       setIsPostsLoading(false);
-    }, 2000);
-  }, []);
+      setForYouPosts(posts);
+    }
+  }, [postsloading]);
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(getallposts());
+    }
+  }, [isAuthenticated]);
+  
   return (
     <>
       <div className="mx-8 sm:my-6 my-2 mr-20">
@@ -141,7 +109,7 @@ export const Home = () => {
           </div>
         </div>
 
-        <CreatePost handlepost={handlepostbtn} />
+        <CreatePost handlepost={handlepostbtn} user={user} />
 
         {ispostsloading ? (
           <div className="flex items-center justify-center mt-20">

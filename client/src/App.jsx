@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SideBar } from "./components/SideBar";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ProtectedRoute } from "./components/ProtectedRoute/ProtectedRoute.jsx";
 
 import { ToastContainer } from "react-toastify";
@@ -12,9 +12,12 @@ import { Login } from "./pages/Login";
 import { Signup } from "./pages/Signup";
 import { DetailsPost } from "./DetailsPost";
 import { Profile } from "./pages/Profile";
+import { getuser, verifyuser } from "../redux/actions/userAction.js";
 
 function App() {
-  const { isAuthenticated } = useSelector((state) => state.user);
+  const { isAuthenticated, user } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
   useEffect(() => {
     const theme = localStorage.getItem("theme");
     if (theme == "dark") {
@@ -22,11 +25,23 @@ function App() {
     }
   }, []);
 
+  useEffect(() => {
+    if(localStorage.getItem("token")) {
+      dispatch(verifyuser());
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(getuser(localStorage.getItem("username")));
+    }
+  }, [isAuthenticated]);
+
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/*" element={<SideBar />} />
+          <Route path="/*" element={<SideBar user={user} />} />
           
           <Route element={<ProtectedRoute isAuthenticated={!isAuthenticated} redirect={"/"} />}>
             <Route path="/login" element={<Login />} />

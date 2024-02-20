@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Model } from "./Model";
 
-export const SideBar = () => {
+export const SideBar = ({user}) => {
   const navigate = useNavigate();
   const [sidebarisopen, setSidebarIsOpen] = useState(false);
   const [isUserLogin, setIsUserLogin] = useState(true);
@@ -235,16 +235,16 @@ export const SideBar = () => {
             {isUserLogin ? (
               <div className="flex items-center space-x-4">
                 <img
-                  src="	https://randomuser.me/api/portraits/men/32.jpg"
+                  src={user?.pimg || "https://randomuser.me/api/portraits/men/1.jpg"}
                   alt="profile"
-                  className="w-10 h-10 rounded-full"
+                  className="w-12 h-12 rounded-full object-cover"
                 />
                 <div>
                   <h4 className="font-semibold text-gray-800 dark:text-white">
-                    Jetha Gada
+                    {user?.usrname || "username"}
                   </h4>
                   <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                    jetha43@gmail.com
+                    {user?.email || "email"}
                   </p>
                 </div>
               </div>

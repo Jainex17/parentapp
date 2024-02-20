@@ -3,7 +3,7 @@ import EmojiPicker from "emoji-picker-react";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 
-export const CreatePost = ({iscommnents, handlepost}) => {
+export const CreatePost = ({iscommnents, handlepost, user}) => {
     
   const [emojiPicker, setEmojiPicker] = useState(false);
   const [textareavalue, setTextareavalue] = useState("");
@@ -88,7 +88,7 @@ export const CreatePost = ({iscommnents, handlepost}) => {
                     }}
                   ></span>
                   <img
-                    src="https://randomuser.me/api/portraits/men/32.jpg"
+                    src={ user?.pimg || "https://randomuser.me/api/portraits/men/32.jpg"}
                     alt="profile"
                     className="rounded-full object-cover"
                     style={{
