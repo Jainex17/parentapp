@@ -8,6 +8,7 @@ import cloudscript as cs
 import pytz
 from time import ctime
 import datetime
+from flask_cors import CORS
 #logging
 IST = pytz.timezone('Asia/Kolkata')
 ii = datetime.datetime.now(IST)
@@ -75,6 +76,7 @@ def lwll():
 
 
 app = Flask(__name__)
+CORS(app)
 app.secret_key =  "PRARENT_792739"
 #app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=360000)
 #app.config['SESSION_PERMANENT']=True
@@ -124,6 +126,7 @@ def recievetest():
 
         return jsonify("File recieved successfully")
     else:
+        client = request.args.get('client')
         return jsonify("ERROR : contact the correct endpoint or method - post for the API")
 
 @app.route('/api/getusr',methods=['GET'])
@@ -158,24 +161,26 @@ def load_blob():
                 return make_response(jsonify(secure_filename(fname)),201)
             else:
                 lwll()
-                lwa(f'ERROR:No file upload > Load Blob::{fname}',client)
+                lwa(f'ERROR:No file upload > Load Blob::',client)
                 lwll()
                 respo = make_response(jsonify("no file uploaded"),400)
                 return respo
         else:
+            client = request.args.get('client')
             lwll()
-            lwa(f'ERROR:No filename args > Load Blob::{fname}',client)
+            lwa(f'ERROR:No filename args > Load Blob::',client)
             lwll()
             respo = make_response(jsonify("no filename args"),400)
             return respo
     else:
+        client = request.args.get('client')
         lwll()
-        lwa(f'ERROR:GET req > Load Blob::{fname}',client)
+        lwa(f'ERROR:GET req > Load Blob::{client}',client)
         lwll()
         respo = make_response(jsonify("ERROR : contact the correct endpoint or method - post for the API"),400)
         return respo
 
-@app.route('/api/setusr',methods=['GET','POST'])
+@app.route('/api/setusr',methods=['GET','POST'])           #JSON : username,password,client,email,age,gender,tags,bio,profession,pimg
 def api_setusr():
     if request.method ==  'POST':
         uname = request.json['username']
@@ -191,11 +196,13 @@ def api_setusr():
         pimg = request.json['pimg']
 
         jres = cs.setuser(uname,passwd,email,age,gender,tags,bio,profession,pimg)
-        if jres == True:
+        if jres:
+            jdata = {'jwt':cs.createjwt(uname)}
             lwll()
             lwa(f"SETUSR::{uname}",client)
             lwll()
-            return make_response(jsonify("New user created successfully"),200)
+
+            return make_response(jsonify(jdata),200)
         else:
             lwll()
             lwa(f"ERROR:Cloud error > SETUSR::{uname}",client)
@@ -223,7 +230,10 @@ def matchpass():
             lwll()
             lwa(f"VERIFYPASS::{uname} :: SUCCESS",client)
             lwll()
-            return make_response(jsonify("User password matched"),200)
+            token = cs.createjwt(uname)
+            jdata = {'jwt':token}
+            return make_response(jsonify(jdata),200)
+
         else:
             lwll()
             lwa(f"VERIFYPASS::{uname} :: FAIL",client)
@@ -533,6 +543,45 @@ def alldb():
     lwll()
     jres = cs.get_all()
     return jsonify(jres)
+
+###jwt:
+
+@app.route('/api/verifyjwt',methods=['GET'])          #username = username & client , jwt=usrjwt
+def verifyjwt():
+    uname = request.args.get('username')
+    jwt = request.args.get('jwt')
+    client = request.args.get('client')
+    djwt = cs.fetchjwt(uname)
+    if djwt:
+        if djwt==jwt :
+            jres = cs.checkjwt(jwt)
+            if jres:
+                jname = jres['user']
+                if jname == uname:
+                    lwll()
+                    lwa(f"VERIFYJWT::{uname} :: SUCCESS",client)
+                    lwll()
+                    return make_response(jsonify("User jwt matched"),200)
+                else:
+                    lwll()
+                    lwa(f"VERIFYJWT::{uname} :: FAIL",client)
+                    lwll()
+                    return make_response(jsonify("User jwt not matched"),400)
+            else:
+                lwll()
+                lwa(f"ERROR:User jwt not matched > VERIFYJWT::{uname}",client)
+                lwll()
+                return make_response(jsonify("User jwt not matched"),400)
+        else:
+            lwll()
+            lwa(f"ERROR:User jwt old or incorrect > VERIFYJWT::{uname}",client)
+            lwll()
+            return make_response(jsonify("User jwt old or incorrect"),400)
+    else:
+        lwll()
+        lwa(f"ERROR:User jwt not found in db > VERIFYJWT::{uname}",client)
+        lwll()
+        return make_response(jsonify("User jwt not found in db"),400)
 
 
 

@@ -6,6 +6,7 @@ import pyrebase
 import hashlib
 import json
 import pytz , datetime
+import jwt
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = os.path.join(APP_ROOT, 'down_files')
@@ -28,6 +29,42 @@ firebase = pyrebase.initialize_app(config)
 storage = firebase.storage()
 db = firebase.database()
 
+# storage.child('post_images/test1.jpg').put(os.path.join(UPLOAD_FOLDER,'test.jpg'))   upload img
+# storage.child("post_images/").download("test1.jpg","testimg.jpg")                    dowmload img
+
+### create jwt token
+
+secret_key = "PRARENT_792739"
+
+def fetchjwt(username):                                       #load jwt from db
+    token = db.child("test1").child("jwt").child(username).get()
+    return token.val().get('token')
+
+def checkjwt(token,secret_key=secret_key):                        #verify the jwt token
+    try:
+        
+        token=str(token)                                               #cheks time var and returns json
+        nowj = jwt.encode({"exp": datetime.datetime.now()}, secret_key,algorithm="HS256")
+        nowd = jwt.decode(nowj, secret_key,algorithms=['HS256'],leeway=10) 
+        tnow = nowd['exp']
+        deco = jwt.decode(token,secret_key,algorithms=['HS256'])
+        if deco['exp'] > tnow:
+            return deco
+        else:
+            return False
+    except:
+        return False
+
+def createjwt(username,secret_key=secret_key):               #create and save jwt token in db
+    jdata = {'user': username, 'exp' : (datetime.datetime.now() + datetime.timedelta(days=7))}
+    token = jwt.encode(jdata, key=secret_key,algorithm="HS256")
+    db.child("test1").child("jwt").child(username).set({"token": token})
+    return token
+
+
+def deletejwt(username):                                       #delete jwt from db
+    db.child("test1").child("jwt").child(username).remove()
+    return True
 
 #load media
 
@@ -113,7 +150,9 @@ def setuser(username,passwd,email,age,gender,tags,bio,profession,pimg):
                 allulist = alludict.val().get('username')
                 allulist.append(username)
                 db.child("test1").child("users").child("GLOBALALLUSERS").update({"username": allulist})
-                return True
+                token = createjwt(username)
+                #saves jwt in db : {test1{jwt{username{token}}}
+                return token
         else:
             print('same email error?')
             return False
@@ -651,3 +690,5 @@ def update_user(username,passwd,email,age,gender,tags,bio,profession,pimg):
     pass
 def update_passwdorforget_passwd(username,verification_status:bool):
     pass
+
+
