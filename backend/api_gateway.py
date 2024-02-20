@@ -1,539 +1,699 @@
-
-from flask import *
-from flask import request, jsonify
-from werkzeug.utils import secure_filename
-import datetime
+#cd s:\programming\projects\parentapp-backend;Set-ExecutionPolicy Unrestricted -Scope Process;.\venv\Scripts\Activate.ps1
+# from google.cloud import storage
+# os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r'ServiceKey_GoogleCloud.json'
+# sc = storage.Client()
+# bucket_name = "parent-app"
 import os
+import firebase_admin
+from firebase_admin import credentials
+import pyrebase
 import hashlib
-import cloudscript as cs
-import pytz
-from time import ctime
-import datetime
-import time
-import threading
-#logging
-IST = pytz.timezone('Asia/Kolkata')
-ii = datetime.datetime.now(IST)
-tii = ii.strftime('%Y/%m/%d  %H:%M:%S')
-daylist = ctime().split()
-day = daylist[0]
-month = daylist[1]
-#ti = f'{day} {month} {tii}'
-#ti = ctime()
-servertime = ctime()
+import json
+import pytz , datetime
+import jwt
+# cred = credentials.Certificate("creds.json")
+# firebase_admin.initialize_app(cred, {'storageBucket': 'parentapp-df60c.appspot.com'} , {'databaseURL':'https://parentapp-df60c-default-rtdb.asia-southeast1.firebasedatabase.app/'})
 
-global log
-
-#log = open('App Logs.txt','+a')
-#log.seek(0,2)
-
-def lw(statement):
-    #global log
-    IST = pytz.timezone('Asia/Kolkata')
-    ii = datetime.datetime.now(IST)
-    tii = ii.strftime('%d/%m/%Y  %H:%M:%S')
-    daylist = ctime().split()
-    day = daylist[0]
-    month = daylist[1]
-    ti = f'{day} {month} {tii}'
-
-    log = open('App Logs.txt','+a')
-    log.seek(0,2)
-    state = str(statement)
-    log.write(f'[{ti}]  >  {state} \n')
-    log.close()
-
-def lwa(statement,client):
-    #global log
-    IST = pytz.timezone('Asia/Kolkata')
-    ii = datetime.datetime.now(IST)
-    tii = ii.strftime('%d/%m/%Y  %H:%M:%S')
-    daylist = ctime().split()
-    day = daylist[0]
-    month = daylist[1]
-    ti = f'{day} {month} {tii}'
-
-    log = open('API Logs.txt','+a')
-    log.seek(0,2)
-    state = str(statement)
-    log.write(f'[{ti}]  >  API : {client}  >  {state} \n')
-    log.close()
-
-
-def lwl():
-    #global log
-    log = open('App Logs.txt','+a')
-    log.seek(0,2)
-    log.write('\n')
-    log.close()
-
-def lwll():
-    log = open('API Logs.txt','+a')
-    log.seek(0,2)
-    #log.write('\n')
-    log.write("====================================================================")
-    log.write('\n')
-    log.close()
-
-
-
-app = Flask(__name__)
-app.secret_key =  "PRARENT_792739"
-#app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=360000)
-#app.config['SESSION_PERMANENT']=True
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = os.path.join(APP_ROOT, 'down_files')
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 TEMP_FOLDER = os.path.join(APP_ROOT, 'temp_files')
-app.config['TEMP_FOLDER'] = TEMP_FOLDER
 
-@app.route('/')
-def home():
-    #return redirect(url_for('intro'))
-    return jsonify("ERROR : contact the correct endpoint for the API")
+config = {
+  "apiKey": "AIzaSyDa5R_ayaijAtGa5ADZ8f8IzShkH37ABb4",
+  "authDomain": "parentapp-df60c.firebaseapp.com",
+  "databaseURL": "https://parentapp-df60c-default-rtdb.asia-southeast1.firebasedatabase.app",
+  "projectId": "parentapp-df60c",
+  "storageBucket": "parentapp-df60c.appspot.com",
+  "messagingSenderId": "327020414484",
+  "appId": "1:327020414484:web:3be14f20affb92760d8901",
+  "measurementId": "G-FERY2B8V79",
+  "serviceAccount": "creds.json",
+  "databaseURL": "https://parentapp-df60c-default-rtdb.asia-southeast1.firebasedatabase.app/"
+}
 
-@app.route('/api/testfile')
-def sendtest():
-    return send_file("ServiceKey_GoogleCloud.json",as_attachment=True)
+firebase = pyrebase.initialize_app(config)
+storage = firebase.storage()
+db = firebase.database()
 
-@app.route('/api/recievefile',methods=['POST', 'GET'])
-def recievetest():
-    if request.method == 'POST':
-        #raw = request.get_data()
-        # with open("rawdata1.txt", "wb") as f:
-        #     f.write(raw)
-        # f.close()
-        # send the file name in args :: ?name=<photoname>
-        #r = requests.post('http://127.0.0.1:5000/api/recievefile?name=test.jpg',files={'image' : a})
-        #j = request.json
-        #print(request.files)
-        if request.files:
-            f = request.files['image']
-            fname = request.args.get('name')
-            print(fname)
-            f.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(fname)))
-        #fname = j['name']
-        #jdata = request.get_json()
-        fn = request.json['name']
-        print("jdata = ",fn)
+# storage.child('post_images/test1.jpg').put(os.path.join(UPLOAD_FOLDER,'test.jpg'))   upload img
+# storage.child("post_images/").download("test1.jpg","testimg.jpg")                    dowmload img
 
+### create jwt token
 
-        # fname = fn
-        # f.save(secure_filename(fname))
+secret_key = "PRARENT_792739"
 
-        return jsonify("File recieved successfully")
-    else:
-        return jsonify("ERROR : contact the correct endpoint or method - post for the API")
+def fetchjwt(username):                                       #load jwt from db
+    token = db.child("test1").child("jwt").child(username).get()
+    return token.val().get('token')
 
-@app.route('/api/getusr',methods=['GET'])          #name = username & client
-def api_getusr():
-    uname = request.args.get('username')
-    client = request.args.get('client')
-    jres = cs.getuser(uname)
-    if jres:
-        lwll()
-        lwa(f"GETUSR::{uname}",client)
-        lwll()
-        return jsonify(jres)
-    else:
-        lwll()
-        lwa(f"ERROR:User not found > GETUSR::{uname}",client)
-        lwll()
-        return make_response(jsonify("User not found"),400)
-
-@app.route('/api/verifyusr',methods=['GET'])          #username = username & client , password=usrpasswd
-def matchpass():
-    uname = request.args.get('username')
-    passwd = request.args.get('password')
-    client = request.args.get('client')
-    jres = cs.getuser(uname)
-    if jres:
-        hashuid = jres['hash']
-        newhash=hashlib.md5(passwd.encode()).hexdigest()
-        if hashuid == newhash:
-            lwll()
-            lwa(f"VERIFYPASS::{uname} :: SUCCESS",client)
-            lwll()
-            return make_response(jsonify("User password matched"),200)
-        else:
-            lwll()
-            lwa(f"VERIFYPASS::{uname} :: FAIL",client)
-            lwll()
-            return make_response(jsonify("User password not matched"),400)
-    else:
-        lwll()
-        lwa(f"ERROR:User not found > VERIFYUSR::{uname}",client)
-        lwll()
-        return make_response(jsonify("User not found"),400)
+def checkjwt(token,secret_key=secret_key):                        #verify the jwt token
+    try:
         
+        token=str(token)                                               #cheks time var and returns json
+        nowj = jwt.encode({"exp": datetime.datetime.now()}, secret_key,algorithm="HS256")
+        nowd = jwt.decode(nowj, secret_key,algorithms=['HS256'],leeway=10) 
+        tnow = nowd['exp']
+        deco = jwt.decode(token,secret_key,algorithms=['HS256'])
+        if deco['exp'] > tnow:
+            return deco
+        else:
+            return False
+    except:
+        return False
 
-@app.route('/api/loadblob',methods=['GET','POST'])        #name = userid & client
-def load_blob():
-    if request.method == 'POST':
-        blobname = request.args.get('name')
-        client = request.args.get('client')
+def createjwt(username,secret_key=secret_key):               #create and save jwt token in db
+    jdata = {'user': username, 'exp' : (datetime.datetime.now() + datetime.timedelta(days=7))}
+    token = jwt.encode(jdata, key=secret_key,algorithm="HS256")
+    db.child("test1").child("jwt").child(username).set({"token": token})
+    return token
 
-        if blobname:
-            if request.files:
-                f = request.files['image']
-                #g = request.form.get('name')
-                #print("form in data : " , g)
-                fname = blobname
-                print(fname)
-                f.save(os.path.join(app.config['TEMP_FOLDER'], secure_filename(fname)))
-                #jres = cs.load_blob(blobname,os.path.join(app.config['TEMP_FOLDER'], secure_filename(fname)),)
-                lwll()
-                lwa(f'Load Blob::{fname}',client)
-                lwll()
-                return make_response(jsonify(secure_filename(fname)),201)
+
+def deletejwt(username):                                       #delete jwt from db
+    db.child("test1").child("jwt").child(username).remove()
+    return True
+
+#load media
+
+def load_blob(blob_path,blob_name,server_path,easypath=True):  #temp-name , id-name , folder-name
+    if easypath:
+        spath = f"{server_path}/{blob_name}"
+        ppath = os.path.join(TEMP_FOLDER,blob_path)
+        try:
+            storage.child(spath).put(ppath)
+            url = storage.child(spath).get_url(None)
+        except:
+            return False
+        return url
+    else:
+        spath = f"{server_path}/{blob_name}"
+        ppath = blob_path
+        try:
+            storage.child(spath).put(ppath)
+            url = storage.child(spath).get_url(None)
+        except:
+            return False
+
+###userset
+def setuser(username,passwd,email,age,gender,tags,bio,profession,pimg):
+    c = db.child("test1").child("users").child("GLOBALCOUNTER").get()
+    all = db.child("test1").child("users").get()
+    allusr = all.val().get(username)
+    
+    if allusr==None:
+        f = False
+        for usr in all.each():
+            e = usr.val().get("email")
+            if e == email:
+                print("same email error")
+                return False
             else:
-                lwll()
-                lwa(f'ERROR:No file upload > Load Blob::{fname}',client)
-                lwll()
-                respo = make_response(jsonify("no file uploaded"),400)
-                return respo
-        else:
-            lwll()
-            lwa(f'ERROR:No filename args > Load Blob::{fname}',client)
-            lwll()
-            respo = make_response(jsonify("no filename args"),400)
-            return respo
-    else:
-        lwll()
-        lwa(f'ERROR:GET req > Load Blob::{fname}',client)
-        lwll()
-        respo = make_response(jsonify("ERROR : contact the correct endpoint or method - post for the API"),400)
-        return respo
-
-@app.route('/api/setusr',methods=['GET','POST'])           #JSON : username,password,client,email,age,gender,tags,bio,profession,pimg
-def api_setusr():
-    if request.method ==  'POST':
-        uname = request.json['username']
-        #print(uname)
-        passwd = request.json['password']
-        client = request.json['client']
-        email = request.json['email']
-        age = request.json['age']
-        gender =  request.json['gender']
-        tags = request.json['tags']
-        bio = request.json['bio']
-        profession = request.json['profession']
-        pimg = request.json['pimg']
-
-        jres = cs.setuser(uname,passwd,email,age,gender,tags,bio,profession,pimg)
-        if jres == True:
-            lwll()
-            lwa(f"SETUSR::{uname}",client)
-            lwll()
-            return make_response(jsonify("New user created successfully"),200)
-        else:
-            lwll()
-            lwa(f"ERROR:Cloud error > SETUSR::{uname}",client)
-            lwll()
-            return make_response(jsonify("ERROR : New user not created"),400)
-    else:
-        lwll()
-        lwa(f"ERROR:GET req > SETUSR::{uname}",client)
-        lwll()
-        respo = make_response(jsonify("ERROR : contact the correct endpoint or method - post for the API"),400)
-        return respo
-
-@app.route('/api/createpost',methods=['GET','POST'])            #JSON : username,client,tags,desc,title,photo,ptype
-def api_createpost():
-    if request.method ==  'POST':
-        username = request.json['username']
-        #print(uname)
-        title = request.json['title']
-        disc = request.json['disc']
-        #post = request.json['post']
-        client = request.json['client']
-        tags = request.json['tags']
-        photo = request.json['photo']
-        ptype = request.json['ptype']
-        jres = cs.create_post(username,photo,title,disc,ptype,tags)
-        if jres:
-            lwll()
-            lwa(f"CREATEPOST::{username}",client)
-            lwll()
-            return make_response(jsonify("New post created successfully"),200)
-        else:
-            lwll()
-            lwa(f"ERROR:Cloud error > CREATEPOST::{username}",client)
-            lwll()
-            return make_response(jsonify("ERROR : New post not created"),400)
-    else:
-        client = request.args.get('client')
-        uname = request.args.get('user')
-        lwll()
-        lwa(f"ERROR:GET req > CREATEPOST::{uname}",client)
-        lwll()
-        respo = make_response(jsonify("ERROR : contact the correct endpoint or method - post for the API"),400)
-        return respo
-
-@app.route('/api/getpost',methods=['GET'])        # username = username & client , pid
-def api_getpost():
-    username = request.args.get('username')
-    client = request.args.get('client')
-    pid = request.args.get('pid')
-    if (pid and username):
-        jres = cs.get_post(username,pid)
-        if jres:
-            lwll()
-            lwa(f"GETPOST::{username}::{pid}",client)
-            lwll()
-            return jsonify(jres)
-        else:
-            lwll()
-            lwa(f"ERROR:User not found > GETPOST::{username}::{pid}",client)
-            lwll()
-            return make_response(jsonify("User not found"),400)
-    else:
-        lwll()
-        lwa(f"ERROR:No pid or username > GETPOST",client)
-        lwll()
-        return make_response(jsonify("ERROR : No pid or username given"),400)
-
-@app.route('/api/getallposts',methods=['GET'])        # username = username & client
-def api_getallposts():
-    username = request.args.get('username')
-    client = request.args.get('client')
-    
-    if (True):
-        jres = cs.get_all_posts()
-        if jres:
-            lwll()
-            lwa(f"GETALLPOSTS::",client)
-            lwll()
-            return jsonify(jres)
-        else:
-            lwll()
-            lwa(f"ERROR:User not found > GETALLPOSTS::",client)
-            lwll()
-            return make_response(jsonify("User not found"),400)
-    else:
-        lwll()
-        lwa(f"ERROR:No username > GETALLPOSTS",client)
-        lwll()
-        return make_response(jsonify("ERROR : No username given"),400)
-
-@app.route('/api/getallusers',methods=['GET'])        # client
-def api_getallusers():
-    #username = request.args.get('username')
-    client = request.args.get('client')
-    
-    if (True):
-        jres = cs.get_all_users()
-        if jres:
-            lwll()
-            lwa(f"GETALLUSERS::",client)
-            lwll()
-            return jsonify(jres)
-        else:
-            lwll()
-            lwa(f"ERROR:Users not found > GETALLUSERS::",client)
-            lwll()
-            return make_response(jsonify("Users not found"),400)
-    else:
-        lwll()
-        lwa(f"ERROR:No username > GETALLPOSTS",client)
-        lwll()
-        return make_response(jsonify("ERROR : No username given"),400)
-
-
-@app.route('/api/getallpostsbytag',methods=['GET'])        # tag = single tag & client
-def api_getallpostsbytag():
-    tag = request.args.get('tag')
-    client = request.args.get('client')
-    
-    if (tag):
-        jres = cs.get_all_posts_by_tag(tag)
-        if jres:
-            lwll()
-            lwa(f"GETALLPOSTSBYTAG::{tag}",client)
-            lwll()
-            return jsonify(jres)
-        else:
-            lwll()
-            lwa(f"ERROR:Posts not found > GETALLPOSTSBYTAG::{tag}",client)
-            lwll()
-            return make_response(jsonify("Posts not found"),400)
-    else:
-        lwll()
-        lwa(f"ERROR:No tag > GETALLPOSTSBYTAG",client)
-        lwll()
-        return make_response(jsonify("ERROR : No tag given"),400)
-
-
-@app.route('/api/getallpostsbytags',methods=['GET'])        # tags = multiple tag & client
-def api_getallpostsbytags():
-    tags = request.args.get('tags')
-    client = request.args.get('client')
-    
-    if (tags):
-        jres = cs.get_all_posts_by_tags(tags)
-        if jres:
-            lwll()
-            lwa(f"GETALLPOSTSBYTAGS::{tags}",client)
-            lwll()
-            return jsonify(jres)
-        else:
-            lwll()
-            lwa(f"ERROR:Posts not found > GETALLPOSTSBYTAGS::{tags}",client)
-            lwll()
-            return make_response(jsonify("Posts not found"),400)
-    else:
-        lwll()
-        lwa(f"ERROR:No tag > GETALLPOSTSBYTAGS",client)
-        lwll()
-        return make_response(jsonify("ERROR : No tag given"),400)
-
-@app.route('/api/getallpostsbyuser',methods=['GET'])        # username = username & client
-def api_getallpostsbyuser():
-    username = request.args.get('username')
-    client = request.args.get('client')
-    
-    if (username):
-        jres = cs.get_all_posts_by_user(username)
-        if jres:
-            lwll()
-            lwa(f"GETALLPOSTSBYUSER::{username}",client)
-            lwll()
-            return jsonify(jres)
-        else:
-            lwll()
-            lwa(f"ERROR:Posts not found > GETALLPOSTSBYUSER::{username}",client)
-            lwll()
-            return make_response(jsonify("Posts not found"),400)
-    else:
-        lwll()
-        lwa(f"ERROR:No username > GETALLPOSTSBYUSER",client)
-        lwll()
-        return make_response(jsonify("ERROR : No username given"),400)
-
-@app.route('/api/likepost',methods=['GET'])        # username = post_username & client , pid uu = liking_username
-def api_likepost():
-    username = request.args.get('username')
-    client = request.args.get('client')
-    pid = request.args.get('pid')
-    uu  = request.args.get('uu')   # user who is doing the action
-    if (pid and username):
-        jres = cs.like_post(username,pid,uu)
-        if jres:
-            lwll()
-            lwa(f"LIKEPOST::{username}::{pid}",client)
-            lwll()
-            return make_response(jsonify(jres),200)
-        else:
-            lwll()
-            lwa(f"ERROR:User not found or post liked by user> LIKEPOST::{username}::{pid}",client)
-            lwll()
-            return make_response(jsonify("User not found or post liked by user"),400)
-    else:
-        lwll()
-        lwa(f"ERROR:No pid or username > LIKEPOST",client)
-        lwll()
-        return make_response(jsonify("ERROR : No pid or username given"),400)
-
-@app.route('/api/unlikepost',methods=['GET'])        # username = post_username & client , pid uu = liking_username
-def api_unlikepost():
-    username = request.args.get('username')
-    client = request.args.get('client')
-    pid = request.args.get('pid')
-    uu  = request.args.get('uu')   # user who is doing the action
-    if (pid and username):
-        jres = cs.unlike_post(username,pid,uu)
-        if jres:
-            lwll()
-            lwa(f"UNLIKEPOST::{username}::{pid}",client)
-            lwll()
-            return make_response(jsonify(jres),200)
-        else:
-            lwll()
-            lwa(f"ERROR:User not found or post not liked by user> UNLIKEPOST::{username}::{pid}",client)
-            lwll()
-            return make_response(jsonify("User not found or post not liked by user"),400)
-    else:
-        lwll()
-        lwa(f"ERROR:No pid or username > UNLIKEPOST")
-        lwll()
-        return make_response(jsonify("ERROR : No pid or username given"),400)
-
-@app.route('/api/alldb', methods=["GET"])
-def alldb():
-    jres = cs.get_all()
-    return jsonify(jres)
-
-
-@app.route('/api/commentpost',methods=['GET','POST'])        # username = post_username & client , pid ,uu = cmt_username , comment = comment data
-def api_commentpost():
-    if request.method ==  'POST':
-        username = request.json['username']
-        cmtdata = request.json['comment']
-        client = request.json['client']
-        pid = request.json['pid']
-        uu  = request.json['uu']   # user who is doing the action
-        if (pid and username):
-            jres = cs.comment_post(username,pid,cmtdata,uu)
-            if jres:
-                lwll()
-                lwa(f"CMTPOST::{username}::{pid}",client)
-                lwll()
-                return make_response(jsonify(jres),200)
+                f = True
+        if f:
+            count = c.val().get('counter')
+            count = int(count) +1
+            ident = f'N_usr_{count}'
+            hashid = str(hashlib.md5(passwd.encode()).hexdigest())
+            email = str(email) #string
+            age = int(age)     #integer
+            gender = str(gender) #string 
+            tags = str(tags).split(sep=',')   #list of tags
+            bio = str(bio)  #string
+            # pimg = f"{ident}_pimg"
+            profession = str(profession) #string
+            posts = [""]
+            likedposts = [""]
+            #follow = {"following": [""], "followers": [""]}
+            following = [""]
+            followers = [""]
+            followingcount = 0
+            followerscount = 0
+            url = load_blob(pimg,ident,"profile_images")
+            if url == False:
+                print("photo url error")
+                return False
             else:
-                lwll()
-                lwa(f"ERROR:User not found or post cmt by user> CMTPOST::{username}::{pid}",client)
-                lwll()
-                return make_response(jsonify("User not found or post liked by user"),400)
+                jdata = {"usrname": username, 
+                        "passwd": passwd, 
+                        "id": ident, 
+                        "hash": hashid,
+                        "email": email,
+                        "age": age,
+                        "gender": gender,
+                        "tags": tags,
+                        "bio": bio,
+                        "profession": profession,
+                        "posts": posts,
+                        "pimg":url,
+                        "likedposts":likedposts,
+                        "following":following,
+                        "followers":followers,
+                        "followingcount":followingcount,
+                        "followerscount":followerscount}
+                # db.child("test1").child("users").child(f'N_usr_{count}').set({"usrname": username, "passwd": passwd})
+                db.child("test1").child("users").child(username).set(jdata)
+                db.child("test1").child("users").child("GLOBALCOUNTER").update({"counter": count})
+                alludict = db.child('test1').child("users").child("GLOBALALLUSERS").get()
+                allulist = alludict.val().get('username')
+                allulist.append(username)
+                db.child("test1").child("users").child("GLOBALALLUSERS").update({"username": allulist})
+                token = createjwt(username)
+                #saves jwt in db : {test1{jwt{username{token}}}
+                return token
         else:
-            lwll()
-            lwa(f"ERROR:No pid or username > CMTPOST",client)
-            lwll()
-            return make_response(jsonify("ERROR : No pid or username given"),400)
+            print('same email error?')
+            return False
     else:
-        lwll()
-        lwa(f"ERROR:GET req > CMTPOST",client)
-        lwll()
-        respo = make_response(jsonify("ERROR : contact the correct endpoint or method - post for the API"),400)
-        return respo
+        print('same username error')
+        return False
 
-@app.route("/api/deletepost",methods=['GET'])        # username = post_username & client , pid
-def api_deletepost():
-    username = request.args.get('username')
-    client = request.args.get('client')
-    pid = request.args.get('pid')
-    if (pid and username):
-        jres = cs.delete_post(username,pid)
-        if jres:
-            lwll()
-            lwa(f"DELETEPOST::{username}::{pid}",client)
-            lwll()
-            return make_response(jsonify(jres),200)
+def getuser(username):                                   #min : 230 bytes
+    info = db.child("test1").child("users").child(username).get()
+    if info.val()==None:
+        return False
+    else:
+        passwd = info.val().get("passwd")
+        usrname = info.val().get("usrname")
+        ident = info.val().get("id")
+        hashid = info.val().get("hash")
+        email = info.val().get("email")
+        age = info.val().get("age")
+        gender = info.val().get("gender")
+        tags = info.val().get("tags")   #list
+        bio = info.val().get("bio")
+        profession = info.val().get("profession")
+        posts = info.val().get("posts") #list
+        url = info.val().get("pimg")
+        likedposts=info.val().get("likedposts")
+        followers=info.val().get("followers")
+        following=info.val().get("following")
+        followingcount=info.val().get("followingcount")
+        followerscount=info.val().get("followerscount")
+        # m = ""
+        # for i in a:
+        #     m+=i+' '
+
+        userinfo = {"usrname": usrname, 
+                    "passwd": passwd, 
+                    "id": ident, 
+                    "hash": hashid,
+                    "email": email,
+                    "age": age,
+                    "gender": gender,
+                    "tags": tags,
+                    "bio": bio,
+                    "profession": profession,
+                    "posts": posts,
+                    "pimg": url,
+                    "likedposts":likedposts,
+                    "followers":followers,
+                    "following":following,
+                    "followingcount":followingcount,
+                    "followerscount":followerscount}
+        #userinfo = json.loads(str(userinfo).replace("'",'"'))   #fixed error
+        #userinfo = str(userinfo).replace("'",'"')
+        return userinfo  #json
+    # print(f"usrname : {usrname} and passwd : {passwd} and id : {ident}")
+
+
+
+def create_post(username,photo,title,disc,ptype,tags):
+    usr = getuser(username)
+    if usr == False:
+        print("username error")
+        return False
+    else:
+        usrid = usr['id']
+        past_plist = usr['posts']
+        p = db.child("test1").child("users").child("GLOBALPOST").get()
+        pno = p.val().get('counter')
+        pno = int(pno) + 1
+        postid = f'U_post_{pno}'
+        title = str(title)
+        disc = str(disc)
+        IST = pytz.timezone('Asia/Kolkata')
+        ii = datetime.datetime.now(IST)
+        timestamp = ii.strftime('%d/%m/%Y_%H:%M:%S')
+        ptype = str(ptype)
+        if ptype == "post" or ptype == "question":
+            tags = str(tags).split(sep=',')   #list of tags
+            likes = {"total": 0,
+                     "usrnames": [""]}
+            comments = {"total": 0, 
+                        "usrnames": [""],
+                        "comments": [""]}
+            
+            url = load_blob(photo,postid,"post_images")
+            if url == False:
+                print("photo url error")
+                return False
+            else:
+                jdata = {"title": title,  
+                        "disc": disc, 
+                        "usrname": username,
+                        "usrid": usrid,
+                        "postid": postid,
+                        "ptype": ptype,
+                        "tags": tags,
+                        "like": likes,
+                        "comment": comments,
+                        "timestamp": timestamp,
+                        "url" : url}               #11 elements
+                
+                db.child("test1").child("posts").child(username).child(postid).set(jdata)
+                db.child("test1").child("users").child("GLOBALPOST").update({"counter": pno})
+                past_plist.append(postid)
+                # db.child("test1").child("users").child(username).child('posts').update(past_plist)
+                usr['posts'] = past_plist
+                db.child("test1").child("users").child(username).set(usr)
+                gdict = db.child('test1').child('posts').child('GLOBALALLPOSTS').get()
+                glist = gdict.val().get('list')
+                glist.append(postid)
+                gcount = gdict.val().get('counter')
+                gcount = int(gcount) + 1
+                gdata = {'counter':gcount,'list':glist}
+                db.child('test1').child('posts').child('GLOBALALLPOSTS').update(gdata)
+                return f"{username}**!**{postid}"      #return pid
         else:
-            lwll()
-            lwa(f"ERROR:User not found or post not there > DELETEPOST::{username}::{pid}",client)
-            lwll()
-            return make_response(jsonify("User not found or post not there"),400)
+            print("ptype error")
+            return False
+        # storage.child(f"post_images/{postid}.jpg").put(photopath)
+        # url = storage.child(f"post_images/{postid}.jpg").get_url(None)
+        # d={"title":title,"disc":disc,"photo":url}
+        # db.child("test1").child("users").child("GLOBALPOST").update({"counter": pno+1})
+        # db.child("test1").child("users").child(f"usr_{usrid}").child("posts").update({postid:d})
+
+def get_post(username,pid):
+    # username = pid.split(sep='**!**')[0]
+    # postid = pid.split(sep="**!**")[1]
+    postid = pid
+    try:
+        post = db.child("test1").child("posts").child(username).child(postid).get()
+
+        title = post.val().get("title")
+        disc = post.val().get("disc")
+        usrname = post.val().get("usrname")
+        usrid = post.val().get("usrid")
+        ptype = post.val().get("ptype")
+        tags = post.val().get("tags")
+        likes = post.val().get("like")
+        comments = post.val().get("comment")
+        timestamp = post.val().get("timestamp")
+        url = post.val().get("url")
+        postinfo = {"title": title, 
+                    "disc": disc, 
+                    "usrname": usrname,
+                    "usrid": usrid,
+                    "postid": postid,
+                    "ptype": ptype,
+                    "tags": tags,
+                    "like": likes,
+                    "comment": comments,
+                    "timestamp": timestamp,
+                    "url" : url}
+        postinfo = json.loads(str(postinfo).replace("'",'"'))   #fixed error
+        return postinfo
+    except Exception as e:
+        print(e)
+        return False
+    
+def get_all_posts():        #re-edited
+    allposts = db.child("test1").child("posts").get()
+    if allposts.val() == None:
+        return False
+    # for i in allposts.each():
+    # for j in i.val():
+    #     print(i.val()[j])
     else:
-        lwll()
-        lwa(f"ERROR:No pid or username > DELETEPOST",client)
-        lwll()
-        return make_response(jsonify("ERROR : No pid or username given"),400)
+        posts = []
+        #uu = []
+        for usr in allposts.each():
+            for post in usr.val():                   #before : post in allposts.each()
+                # usr.val()[post]                     before : post.val()
+                if post=='counter' or post=='list':
+                    continue
+                else:
+                    title = usr.val()[post].get("title")
+                    disc = usr.val()[post].get("disc")
+                    usrname = usr.val()[post].get("usrname")
+                    usrid = usr.val()[post].get("usrid")
+                    ptype = usr.val()[post].get("ptype")
+                    tags = usr.val()[post].get("tags")
+                    likes = usr.val()[post].get("like")
+                    comments = usr.val()[post].get("comment")
+                    timestamp = usr.val()[post].get("timestamp")
+                    url = usr.val()[post].get("url")
+                    # postid = post.key()
+                    postid = usr.val()[post].get("postid")
+                    postinfo = {"title": title, 
+                                "disc": disc, 
+                                "usrname": usrname,
+                                "usrid": usrid,
+                                "postid": postid,
+                                "ptype": ptype,
+                                "tags": tags,
+                                "like": likes,
+                                "comment": comments,
+                                "timestamp": timestamp,
+                                "url" : url}
+                    postinfo = json.loads(str(postinfo).replace("'",'"'))   #fixed error
+                    posts.append(postinfo)
+                #return posts[::-1]       #reverse list to make it descending order by default
+                #uu.append(posts)
+        return posts[::-1]       #reverse list to make it descending order by default
 
-
-
-
-def savepass(usrname,passwd):
-    #save passwd hash into sql
-    hashid = hashlib.md5(passwd.encode()).hexdigest()
-    #save the hashid in sql with corresponding uid
-    res = cs.setuser(usrname,passwd)
-    if res:
-        respo = make_response("sucess",201)
-        return respo
+def get_all_users():
+    allusers = db.child("test1").child("users").get()
+    if allusers.val() == None:
+        return False
     else:
-        respo = make_response("username already taken",400)
-        return respo
-                    
-#main runtime
-if __name__ == '__main__':
-    app.run(debug=True)
+        users = []
+        for user in allusers.each():
+            usrname = user.val().get("usrname")
+            passwd = user.val().get("passwd")
+            ident = user.val().get("id")
+            hashid = user.val().get("hash")
+            email = user.val().get("email")
+            age = user.val().get("age")
+            gender = user.val().get("gender")
+            profilepic=user.val().get('pimg')
+            tags = user.val().get("tags")
+            bio = user.val().get("bio")
+            profession = user.val().get("profession")
+            posts = user.val().get("posts")
+            followers = user.val().get("following")
+            following = user.val().get("followers")
+            followingcount = user.val().get("followingcount")
+            followerscount = user.val().get("followerscount")
+            if ident:
+                userinfo = {"usrname": usrname, 
+                            "passwd": passwd, 
+                            "id": ident, 
+                            "hash": hashid,
+                            "email": email,
+                            "age": age,
+                            'profilepic':profilepic,
+                            "gender": gender,
+                            "tags": tags,
+                            "bio": bio,
+                            "profession": profession,
+                            "posts": posts,
+                            "pimg": profilepic,
+                            "likedposts":user.val().get("likedposts"),
+                            "followers":followers,
+                            "following":following,
+                            "followingcount":followingcount,
+                            "followerscount":followerscount}
+                
+                users.append(userinfo)
+        return users
+
+def get_all_posts_by_tag(tag):                   #single tag
+    allposts = db.child("test1").child("posts").get()
+    if allposts.val() == None:
+        return False
+    else:
+        posts = []
+        for user in allposts.each():
+            for post in user.val():
+                if post=='counter' or post=='list':
+                    continue
+                else:
+                    if tag in user.val()[post]['tags']:
+                        title = user.val()[post].get("title")
+                        disc = user.val()[post].get("disc")
+                        usrname = user.val()[post].get("usrname")
+                        usrid = user.val()[post].get("usrid")
+                        ptype = user.val()[post].get("ptype")
+                        tags = user.val()[post].get("tags")
+                        likes = user.val()[post].get("like")
+                        comments = user.val()[post].get("comment")
+                        timestamp = user.val()[post].get("timestamp")
+                        url = user.val()[post].get("url")
+                        postid = user.val()[post].get("postid")
+                        postinfo = {"title": title, 
+                                    "disc": disc, 
+                                    "usrname": usrname,
+                                    "usrid": usrid,
+                                    "postid": postid,
+                                    "ptype": ptype,
+                                    "tags": tags,
+                                    "like": likes,
+                                    "comment": comments,
+                                    "timestamp": timestamp,
+                                    "url" : url}
+                        postinfo = json.loads(str(postinfo).replace("'",'"'))   #fixed error
+                        posts.append(postinfo)
+        return posts[::-1]       #reverse list to make it descending order by default
+    return False
+
+def get_all_posts_by_tags(tags):                   #multiple tags
+    taglist = tags.split(sep=',')
+    allposts = db.child("test1").child("posts").get()
+    if allposts.val() == None:
+        return False
+    else:
+        posts = [] 
+        cc = []
+        for user in allposts.each():
+            for post in user.val():
+                if post=='counter' or post=='list':
+                    continue
+                else:
+                    for tag in taglist:
+                        if tag in user.val()[post]['tags']:
+                            title = user.val()[post].get("title")
+                            disc = user.val()[post].get("disc")
+                            usrname = user.val()[post].get("usrname")
+                            usrid = user.val()[post].get("usrid")
+                            ptype = user.val()[post].get("ptype")
+                            tags = user.val()[post].get("tags")
+                            likes = user.val()[post].get("like")
+                            comments = user.val()[post].get("comment")
+                            timestamp = user.val()[post].get("timestamp")
+                            url = user.val()[post].get("url")
+                            postid = user.val()[post].get("postid")
+                            postinfo = {"title": title, 
+                                        "disc": disc, 
+                                        "usrname": usrname,
+                                        "usrid": usrid,
+                                        "postid": postid,
+                                        "ptype": ptype,
+                                        "tags": tags,
+                                        "like": likes,
+                                        "comment": comments,
+                                        "timestamp": timestamp,
+                                        "url" : url}
+                            postinfo = json.loads(str(postinfo).replace("'",'"'))   #fixed error
+                            if postid not in cc:               #removes duplicate
+                                posts.append(postinfo)
+                                cc.append(postid)
+        # try:
+        #     for i in range(len(posts)):       
+        #         a = posts[i]
+        #         for j in range(i+1,len(posts)):
+        #             b = posts[j]
+        #             if a == b:
+        #                 posts.pop(j)              
+        # except:
+        #     pass
+        return posts[::-1]       #reverse list to make it descending order by default
+    return False
+
+def get_all_posts_by_user(username):
+    allposts = db.child("test1").child("posts").child(username).get()
+    if allposts.val() == None:
+        return False
+    else:
+        posts = []
+        for post in allposts.each():
+            title = post.val().get("title")
+            disc = post.val().get("disc")
+            usrname = post.val().get("usrname")
+            usrid = post.val().get("usrid")
+            ptype = post.val().get("ptype")
+            tags = post.val().get("tags")
+            likes = post.val().get("like")
+            comments = post.val().get("comment")
+            timestamp = post.val().get("timestamp")
+            url = post.val().get("url")
+            postid = post.val().get("postid")
+            postinfo = {"title": title, 
+                        "disc": disc, 
+                        "usrname": usrname,
+                        "usrid": usrid,
+                        "postid": postid,
+                        "ptype": ptype,
+                        "tags": tags,
+                        "like": likes,
+                        "comment": comments,
+                        "timestamp": timestamp,
+                        "url" : url}
+            postinfo = json.loads(str(postinfo).replace("'",'"'))   #fixed error
+            posts.append(postinfo)
+        return posts[::-1]       #reverse list to make it descending order by default
+    return False
+
+def get_all():
+    all = db.child("test1").get()
+    return all.val()
+
+
+
+#exprimental
+def get_user_info(username):
+    user = db.child("test1").child("users").child(username).get()
+    if user.val() == None:
+        return False
+    else:
+        usrname = user.val().get("usrname")
+        passwd = user.val().get("passwd")
+        ident = user.val().get("id")
+        hashid = user.val().get("hash")
+        email = user.val().get("email")
+        age = user.val().get("age")
+        gender = user.val().get("gender")
+        phone = user.val().get("phone")
+        info = {"usrname": usrname, 
+                "passwd": passwd, 
+                "id": ident, 
+                "hash": hashid,
+                "email": email,
+                "age": age,
+                "gender": gender,
+                "phone": phone}
+        return info
+###
+
+
+
+def like_post(username,postid,uu):         #added user liked list    #working
+    post = get_post(username,postid)
+    usr = getuser(uu)
+    if post == False:
+        print("post error")
+        return False
+    else:
+        likes = post['like']
+        total = likes['total']
+        unames = likes['usrnames']
+        if uu not in unames:
+            total = int(total) + 1
+            unames.append(uu)
+            jdata = {"total": total, "usrnames" : unames}
+            db.child("test1").child("posts").child(username).child(postid).child("like").update(jdata)
+            likedlistold = usr['likedposts']
+            likedlistold.append(postid)
+            usr['likedposts'] = likedlistold
+            db.child("test1").child("users").child(uu).update(usr)
+            return True
+        else:
+            print("already liked")
+            return False
+            
+def unlike_post(username,postid,uu):           #added user liked list
+    post = get_post(username,postid)
+    usr = getuser(uu)
+    if post == False:
+        print("post error")
+        return False
+    else:
+        likes = post['like']
+        total = likes['total']
+        unames = likes['usrnames']
+        if uu in unames:
+            total = int(total) - 1
+            unames.remove(uu)
+            jdata = {"total": total, "usrnames" : unames}
+            db.child("test1").child("posts").child(username).child(postid).child("like").update(jdata)
+            likedlistold = usr['likedposts']
+            likedlistold.remove(postid)
+            usr['likedposts'] = likedlistold
+            db.child("test1").child("users").child(uu).update(usr)
+            return True
+        else:
+            print("not liked")
+            return False
+    
+def unlike_post2(username,postid):             #not use experimental
+    post = get_post(username,postid)
+    if post == False:
+        print("post error")
+        return False
+    else:
+        likes = post['like']
+        total = likes['total']
+        total = int(total) - 1
+        # likes['total'] = total
+        jdata = {"total": total}
+        db.child("test1").child("posts").child(username).child(postid).child("like").update(jdata)
+        return True
+
+def comment_post(username,postid,comment,comment_user):                  
+    post = get_post(username,postid)
+    if post == False:
+        print("post error")
+        return False
+    else:
+        comments = post['comment']
+        total = comments['total']
+        total = int(total) + 1
+        usrnames = comments['usrnames']
+        usrnames.append(comment_user)
+        comments2 = comments['comments']
+        comments2.append(comment)
+        jdata = {"total": total,
+                "usrnames": usrnames,
+                "comments": comments2}
+        db.child("test1").child("posts").child(username).child(postid).child("comment").update(jdata)
+        return True
+
+def delete_post(username, postid):
+    post = get_post(username, postid)
+    if post == False:
+        print("post error")
+        return False
+    else:
+        db.child("test1").child("posts").child(username).child(postid).remove()
+        return True
+
+def search_posts_by_keyword(keyword):
+    allposts = db.child("test1").child("posts").get()
+    if allposts.val() == None:
+        return False
+    else:
+        posts = []
+        for user in allposts.each():
+            for post in user.val().values():
+                if keyword.lower() in post['title'].lower() or keyword.lower() in post['disc'].lower():
+                    posts.append(post)
+        return posts[::-1]  # reverse list to make it descending order by default
+
+def delete_comment(username, postid, commentdata):   #optimise by sending comment_user instead of comment_data
+    post = get_post(username, postid)
+    if post == False:
+        print("post error")
+        return False
+    else:
+        comments = post['comment']
+        comments2 = comments['comments']
+        usrnames = comments['usrnames']
+        if commentdata in comments2:
+            index = comments2.index(commentdata)
+            comments2.pop(index)
+            usrnames.pop(index)
+            total = int(comments['total']) - 1
+            jdata = {"total": total,
+                    "usrnames": usrnames,
+                    "comments": comments2}
+            db.child("test1").child("posts").child(username).child(postid).child("comment").update(jdata)
+            return True
+        else:
+            print("comment not found")
+            return False
+
+#experimental
+def update_user(username,passwd,email,age,gender,tags,bio,profession,pimg):
+    pass
+def update_passwdorforget_passwd(username,verification_status:bool):
+    pass
+
