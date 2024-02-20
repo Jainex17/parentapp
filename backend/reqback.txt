@@ -1,4 +1,4 @@
-﻿asttokens==2.4.1
+asttokens==2.4.1
 blinker==1.7.0
 CacheControl==0.14.0
 cachetools==5.3.2
@@ -14,6 +14,7 @@ decorator==5.1.1
 executing==2.0.1
 firebase-admin==6.4.0
 Flask==3.0.2
+Flask-Cors==4.0.0
 gcloud==0.18.3
 google-api-core==2.17.0
 google-api-python-client==2.117.0
@@ -68,6 +69,7 @@ pyzmq==25.1.2
 requests==2.29.0
 requests-toolbelt==0.10.1
 rsa==4.9
+schedule==1.2.1
 six==1.16.0
 stack-data==0.6.3
 tornado==6.4
@@ -78,4 +80,3 @@ uritemplate==4.1.1
 urllib3==1.26.18
 wcwidth==0.2.13
 Werkzeug==3.0.1
-Flask-Cors==4.0.0
