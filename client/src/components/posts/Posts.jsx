@@ -12,7 +12,14 @@ export const Posts = ({ posts }) => {
     return false;
   }
 
+  // samole timestamp 17/02/2024_19:42:19
+  const findPostTime = (timestamp) => {
+    var date = timestamp.split("_")[0];
+    return date
+  }
+
   
+
   return (
     <>
       <section className="mt-2">
@@ -20,15 +27,15 @@ export const Posts = ({ posts }) => {
           <Post
             key={index}
             postId={post._id}
-            username={post.username}
+            username={post.usrname}
             userImage={post.userImage}
-            postTime={post.postTime}
-            postTitle={post.postTitle}
-            postContent={post.postContent}
-            postimage={post.postimage}
-            postTag={post.postTag}
-            postLikescount={post.likescount}
-            postcommentscount={post.commentscount}
+            postTime={findPostTime(post.timestamp)}
+            postTitle={post.title}
+            postContent={post.disc}
+            postimage={post.url}
+            postTag={post.tags[0]}
+            postLikescount={post.like.total}
+            postcommentscount={post.comment.total}
             isPostLiked={isThisPostLiked(post._id)} 
           />
         ))}
