@@ -3,7 +3,7 @@ import EmojiPicker from "emoji-picker-react";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { createpost, getallposts } from "../../../redux/actions/userAction";
+import { createpost } from "../../../redux/actions/userAction";
 import Tags from "./Tags";
 
 export const CreatePost = ({ iscommnents, user }) => {

@@ -13,7 +13,7 @@ export const Profile = () => {
       postTitle: "Exciting Day at the Beach",
       postContent: "Had an amazing day at the beach with friends! The weather was perfect and we enjoyed swimming and playing beach volleyball.",
       postimage: "https://plus.unsplash.com/premium_photo-1680720885676-81e3bdee4237?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      postTag: "Travel",
+      postTag: ["Beach", "Friends"],
       likescount: 10,
       commentscount: 5
     },
@@ -24,7 +24,7 @@ export const Profile = () => {
       postTime: "5 hours ago",
       postTitle: "New Recipe Experiment",
       postContent: "Tried a new recipe today - spicy chicken curry with homemade naan bread. Turned out delicious!",
-      postTag: "Food",
+      postTag: ["Food", "Cooking"],
       likescount: 5,
       commentscount: 2
     },
@@ -36,7 +36,7 @@ export const Profile = () => {
       postTitle: "Hiking Adventure",
       postContent: "Went on an amazing hike in the mountains yesterday. The views were breathtaking!",
       postimage: "https://images.unsplash.com/photo-1503431153573-96e959f4d9b7?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      postTag: "Adventure",
+      postTag: ["Hiking", "Nature"],
       likescount: 20,
       commentscount: 8
     }

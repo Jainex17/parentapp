@@ -14,66 +14,6 @@ export const Home = () => {
   const dispatch = useDispatch();
   const { isAuthenticated, user, postsloading, posts, createpoststatus } = useSelector((state) => state.user);
 
-  const FollowingPosts = [
-    {
-      _id: "4",
-      username: "Alice Smith",
-      userImage: "https://randomuser.me/api/portraits/women/22.jpg",
-      postTime: "3 hours ago",
-      postTitle: "Exploring the Wilderness",
-      postContent:
-        "Today, I went on an amazing adventure through the forest. The sights and sounds of nature were truly breathtaking. I saw deer, rabbits, and even a majestic eagle soaring overhead. It was a reminder of the beauty of our planet and the importance of preserving it for future generations.",
-      postTag: "Nature",
-      likescount: 132,
-      commentscount: 100,
-    },
-    {
-      _id: "5",
-      username: "Bob Johnson",
-      userImage: "https://randomuser.me/api/portraits/men/11.jpg",
-      postTime: "6 hours ago",
-      postTitle: "Delicious Homemade Pizza Recipe",
-      postContent:
-        "Who doesn't love pizza? I just made the most amazing homemade pizza, and I have to share the recipe with you all. It's super easy and incredibly delicious. All you need is some pizza dough, tomato sauce, cheese, and your favorite toppings. Trust me, once you try this recipe, you'll never order pizza delivery again!",
-      postTag: "Food",
-      likescount: 150,
-      commentscount: 8,
-    },
-    {
-      _id: "6",
-      username: "Emily Brown",
-      userImage: "https://randomuser.me/api/portraits/women/42.jpg",
-      postTime: "Yesterday",
-      postTitle: "Tips for a Productive Workday",
-      postContent:
-        "As someone who works from home, I've learned a few tips and tricks to stay productive throughout the day. One thing that has really helped me is creating a dedicated workspace free from distractions. I also like to break up my day into smaller tasks and take regular breaks to avoid burnout. What are some of your favorite productivity tips?",
-      postTag: "Productivity",
-      likescount: 14,
-      commentscount: 5,
-    },
-    {
-      _id: "7",
-      username: "David Wilson",
-      userImage: "https://randomuser.me/api/portraits/men/32.jpg",
-      postTime: "2 days ago",
-      postTitle: "Traveling to Japan: A Cultural Experience",
-      postContent:
-        "Last week, I had the opportunity to travel to Japan, and it was an experience I'll never forget. From the bustling streets of Tokyo to the serene temples in Kyoto, Japan is a country full of rich culture and history. The food was amazing, the people were friendly, and the sights were breathtaking. I can't wait to go back and explore more of this beautiful country!",
-      postTag: "Travel",
-      likescount: 15,
-      commentscount: 1,
-    },
-  ];
-
-  useEffect(() => {
-    if (!postsloading) {
-      setIsPostsLoading(false);
-      setForYouPosts(posts);
-      console.log(posts);
-      
-    }
-  }, [postsloading]);
-
   useEffect(() => {
     if (isAuthenticated && posts.length === 0) {
       dispatch(getallposts());
@@ -84,9 +24,22 @@ export const Home = () => {
     if (createpoststatus) {
       toast.success("Post created successfully");
       dispatch(getallposts());
+
+      setTimeout(() => {
+        setForYouPosts(posts);
+      }, 500);
     }
   }, [createpoststatus]);
-  
+
+  useEffect(() => {
+    if (!postsloading) {
+      console.log("postloading changed");
+      
+      setIsPostsLoading(false);
+      setForYouPosts(posts);
+    }
+  }, [postsloading]);
+
   return (
     <>
     <ChatBot />
