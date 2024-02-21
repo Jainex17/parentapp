@@ -68,13 +68,16 @@ export const Post = ({
           <Link to={"/post/" + postId}>
             <h2 className="text-lg font-bold mb-1 text-black dark:text-white">
               {postTitle}
-
-              {postTag &&
-                postTag.map((tag, index) => (
+              
+              {postTag ?
+                
+                postTag.length > 1 ? postTag.map((tag) => (
                   <span className="text-xs bg-[#DBE2EF] text-gray-700 px-2 py-1 ml-2 rounded-full">
                     {tag}
                   </span>
-                ))}
+                )): <span className="text-xs bg-[#DBE2EF] text-gray-700 px-2 py-1 ml-2 rounded-full">
+                {postTag}
+              </span> : null}
             </h2>
             <p className="text-gray-700 dark:text-gray-300 text-base mt-2">
               {postContent}

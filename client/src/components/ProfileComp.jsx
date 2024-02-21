@@ -76,8 +76,8 @@ export const ProfileComp = ({ posts, user  }) => {
             {user?.bio}
           </p>
 
-          <div class="flex flex-wrap gap-x-3 gap-y-1 text-gray-500 mt-3">
-            <div class="flex items-center gap-2">
+          <div className="flex flex-wrap gap-x-3 gap-y-1 text-gray-500 mt-3">
+            <div className="flex items-center gap-2">
              
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -86,7 +86,7 @@ export const ProfileComp = ({ posts, user  }) => {
                   strokeWidth="1.5"
                   stroke="currentColor"
                   aria-hidden="true"
-                  class="h-5 w-5"
+                  className="h-5 w-5"
                 >
                   <path
                     strokeLinecap="round"
@@ -95,16 +95,16 @@ export const ProfileComp = ({ posts, user  }) => {
                   ></path>
                 </svg>
              
-              <button class="hover:underline group relative dark:text-gray-400">
+              <button className="hover:underline group relative dark:text-gray-400">
                 Joined February 2024
               </button>
             </div>
           </div>
           {/* tags */}
-          {/* <div class="flex items-center gap-2 mt-4">
-            <span className="py-1 px-3 bg-gray-500 rounded-full text-white">SomeTag</span>
-            <span className="py-1 px-3 bg-gray-500 rounded-full text-white">SomeTag</span>
-          </div> */}
+          <div className="flex items-center gap-2 mt-4">
+            <span className="py-1 px-3 bg-gray-500 rounded-full text-white">Maried</span>
+            <span className="py-1 px-3 bg-gray-500 rounded-full text-white">House Wife</span>
+          </div>
 
           <div className="flex items-center gap-3 mt-4">
             <div>
