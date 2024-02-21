@@ -29,7 +29,7 @@ export const Posts = ({ posts }) => {
             key={index}
             postId={post._id}
             username={post.usrname}
-            userImage={post.userImage}
+            userImage={post.usrpg}
             postTime={findPostTime(post.timestamp)}
             postTitle={post.title}
             postContent={post.disc}
