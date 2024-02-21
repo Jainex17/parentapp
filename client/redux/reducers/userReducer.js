@@ -1,11 +1,13 @@
 import { createReducer } from "@reduxjs/toolkit";
 import { signUpRequest, signUpSuccess, signUpFail, loginRequest, loginSuccess, loginFail, verifyuserRequest, verifyuserSuccess, verifyuserFail, getuserRequest, getuserSuccess, getuserFail } from "../actions/actionTypes";
-import { getallpostsRequest, getallpostsSuccess, getallpostsFail } from "../actions/actionTypes";
+import { getallpostsRequest, getallpostsSuccess, getallpostsFail, createpostRequest, createpostSuccess, createpostFail, logoutRequest, logoutSuccess, logoutFail } from "../actions/actionTypes";
 
 const initialState = {
   isAuthenticated: false,
   loading: false,
   postsloading: true,
+  createingpostloading: false,
+  createpoststatus: false,
   user: null,
   error: null,
   posts: [],
@@ -68,6 +70,29 @@ export const userReducer = createReducer(initialState, (builder) => {
     })
     .addCase(getallpostsFail.type, (state, action) => {
       state.postsloading = false;
+      state.error = action.payload;
+    })
+    .addCase(createpostRequest.type, (state, action) => {
+      state.createingpostloading = true;
+    })
+    .addCase(createpostSuccess.type, (state, action) => {
+      state.createingpostloading = false;
+      state.createpoststatus = true;
+    })
+    .addCase(createpostFail.type, (state, action) => {
+      state.createingpostloading = false;
+      state.error = action.payload;
+    })
+    .addCase(logoutRequest.type, (state, action) => {
+      state.loading = true;
+    })
+    .addCase(logoutSuccess.type, (state, action) => {
+      state.loading = false;
+      state.isAuthenticated = false;
+      state.user = null;
+    })
+    .addCase(logoutFail.type, (state, action) => {
+      state.loading = false;
       state.error = action.payload;
     });
 });

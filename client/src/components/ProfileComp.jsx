@@ -2,7 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Post } from "./posts/Post";
 
-export const ProfileComp = ({ posts }) => {
+export const ProfileComp = ({ posts, user  }) => {
+  
   return (
     <>
       <div className="bg-white dark:bg-black dark:text-white">
@@ -23,23 +24,23 @@ export const ProfileComp = ({ posts }) => {
               <path d="M19 12H6M12 5l-7 7 7 7" />
             </svg>
           </Link>
-          <h2 className="sm:text-2xl font-bold">UserName</h2>
+          <h2 className="sm:text-2xl font-bold">{user.usrname}</h2>
         </div>
 
         <div>
-          <div>
-            <img
+          <div className="w-full sm:h-60 h-28 object-cover bg-neutral-800">
+            {/* <img
               src="https://plus.unsplash.com/premium_photo-1664803966184-ab1a6d9e0fc4?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
               alt="profile"
               className="w-full sm:h-60 h-28 object-cover"
-            />
+            /> */}
           </div>
 
           <div className="sm:-my-[6.5rem] -my-10 sm:ml-10 ml-5 flex items-center">
             <img
-              src="https://randomuser.me/api/portraits/men/32.jpg"
+              src={user?.pimg}
               alt="profile"
-              className="sm:w-52 sm:h-52 w-20 h-20 rounded-full border-4 border-white cursor-pointer"
+              className="sm:w-52 sm:h-52 w-20 h-20 rounded-full border-4 border-white cursor-pointer object-cover"
             />
           </div>
 
@@ -69,10 +70,10 @@ export const ProfileComp = ({ posts }) => {
 
         <div className="sm:mt-16 mt-10 sm:ml-16 ml-5">
           <h2 className="sm:text-2xl font-bold text-black dark:text-white">
-            UserName
+            {user?.usrname}
           </h2>
           <p className="text-gray-500 dark:text-gray-300 mt-1">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            {user?.bio}
           </p>
 
           <div class="flex flex-wrap gap-x-3 gap-y-1 text-gray-500 mt-3">
@@ -108,13 +109,14 @@ export const ProfileComp = ({ posts }) => {
           <div className="flex items-center gap-3 mt-4">
             <div>
               <h2 className="font-bold text-black dark:text-white">
-                10
+                {user?.followerscount}
                 <span className="text-gray-500 ml-2">Followers</span>
               </h2>
             </div>
             <div>
               <h2 className="font-bold text-black dark:text-white">
-                20 <span className="text-gray-500 ml-1">Following</span>
+                 {user?.followingcount}
+                 <span className="text-gray-500 ml-1">Following</span>
               </h2>
             </div>
           </div>

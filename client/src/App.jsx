@@ -15,7 +15,7 @@ import { Profile } from "./pages/Profile";
 import { getuser, verifyuser } from "../redux/actions/userAction.js";
 
 function App() {
-  const { isAuthenticated, user } = useSelector((state) => state.user);
+  const { isAuthenticated=true , user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -55,7 +55,6 @@ function App() {
             
             <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} redirect={"/login"} />}>
               <Route path="/" element={<Home />} />
-            <Route path="/explore" element={<h1>Explore</h1>} />
             <Route path="/post/*" element={<DetailsPost />} />
             <Route path="/user/*" element={<Profile />} />
             </Route>

@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { ProfileComp } from "../components/ProfileComp";
+import { useSelector } from "react-redux";
 
 export const Profile = () => {
 
@@ -41,13 +42,15 @@ export const Profile = () => {
     }
   ];
 
+  const { user } = useSelector((state) => state.user);
+
   useEffect(() => {
     window.scrollTo(0, 0)
   }, []);
 
   return <>
     <div>
-      <ProfileComp posts={MyPosts} />
+      <ProfileComp posts={MyPosts} user={user} />
     </div>
   </>;
 };

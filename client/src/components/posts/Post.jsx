@@ -120,7 +120,7 @@ export const Post = ({
               {postcommentscount} Comments
             </span>
           </Link>
-          <div className="flex p-2 items-center hover:bg-gray-200 dark:hover:bg-neutral-800 rounded-lg ml-2">
+          <div className="flex p-2 items-center hover:bg-gray-200 dark:hover:bg-neutral-800 rounded-lg ml-2 cursor-not-allowed">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"

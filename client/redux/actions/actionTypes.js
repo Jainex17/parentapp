@@ -27,3 +27,11 @@ export const createAction = (type) => {
   // export const getpostbyidRequest = createAction('getpostbyidRequest');
   // export const getpostbyidSuccess = createAction('getpostbyidSuccess');
   // export const getpostbyidFail = createAction('getpostbyidFail');
+
+  export const createpostRequest = createAction('createpostRequest');
+  export const createpostSuccess = createAction('createpostSuccess');
+  export const createpostFail = createAction('createpostFail');
+
+  export const logoutRequest = createAction('logoutRequest');
+  export const logoutSuccess = createAction('logoutSuccess');
+  export const logoutFail = createAction('logoutFail');

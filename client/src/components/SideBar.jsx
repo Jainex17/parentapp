@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Model } from "./Model";
+import { useDispatch } from "react-redux";
+import { logout } from "../../redux/actions/userAction";
 
 export const SideBar = ({user}) => {
   const navigate = useNavigate();
@@ -8,6 +10,8 @@ export const SideBar = ({user}) => {
   const [isUserLogin, setIsUserLogin] = useState(true);
   const [moreModel, setMoreModel] = useState(false);
   const [themeOptionSelected, setThemeOptionSelected] = useState(localStorage.getItem("theme") || "light");
+
+  const dispatch = useDispatch();
 
   const handleToggle = () => {
     const sidebar = document.getElementById("default-sidebar");
@@ -123,7 +127,7 @@ export const SideBar = ({user}) => {
                   </span>
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link
                   to={"/explore"}
                   className="flex items-center p-3 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group pl-3"
@@ -148,7 +152,7 @@ export const SideBar = ({user}) => {
                     Explore
                   </span>
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Link
                   to={"/user/32"}
@@ -233,6 +237,7 @@ export const SideBar = ({user}) => {
 
           <div className="fixed bottom-2 w-64 p-4 bg-white dark:bg-neutral-900 border-r border-t border-[#DBE2EF] dark:border-gray-700 cursor-pointer">
             {isUserLogin ? (
+              <Link to={"/user/23"}>
               <div className="flex items-center space-x-4">
                 <img
                   src={user?.pimg || "https://randomuser.me/api/portraits/men/1.jpg"}
@@ -248,6 +253,9 @@ export const SideBar = ({user}) => {
                   </p>
                 </div>
               </div>
+              <button className="bg-[#3F72AF] text-white w-full py-2 mt-4 rounded-lg font-semibold dark:bg-[#3F72AF] dark:text-white" onClick={()=> dispatch(logout())}>
+                  logout</button>
+              </Link>
             ) : (
               <div>
                 <button
