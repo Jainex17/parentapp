@@ -188,20 +188,16 @@ def collaborative_filtering(recently_liked_posts, knn_model, post_user_df, unsee
 
     return post_recommendation_list
 
-def mixing(internal_content_based_list, external_content_based_list, collaborative_list):
-    # Take respective ratios for filtering aproaches and sourcing methods and perform mixing
-
+def mixing(internal_content_based_list, external_content_based_list, collaborative_list, all_post_json_list):
     zipped_lists = zip_longest(internal_content_based_list, external_content_based_list, collaborative_list, fillvalue=None)
 
-    post_recommendation_list = []
+    post_recommendation_set = set(filter(None, [post_id for post_id in zipped_lists]))
 
-    # Flatten the zipped lists and filter out None values
-    for elements in zipped_lists:
-        post_recommendation_list.extend(filter(None, elements))
+    post_json_dict = {post_json["postid"]: post_json for post_json in all_post_json_list}
 
-    post_recommendation_set = set(post_recommendation_list)
+    post_recommendation_list_json = [post_json_dict[post_id] for post_id in post_recommendation_set if post_id in post_json_dict]
 
-    return list(post_recommendation_set)
+    return post_recommendation_list_json
 
 # api will send call to 2 functions - user_recommendation and every_n_hours
 
@@ -254,7 +250,7 @@ def user_recommendation(rec_user):
 
     collab_list = collaborative_filtering(recently_liked_posts = recently_liked_posts, knn_model = loaded_model_knn, post_user_df = loaded_post_user_df, unseen_posts = internal_unseen_list + external_unseen_list)
 
-    final_post_list = mixing(internal_content_based_list = internal_content_list, external_content_based_list = external_content_list, collaborative_list = collab_list)
+    final_post_list = mixing(internal_content_based_list = internal_content_list, external_content_based_list = external_content_list, collaborative_list = collab_list, all_post_json_list = all_post_json_list)
 
     return final_post_list
 
@@ -274,4 +270,4 @@ def every_n_hours():
 
 every_n_hours()
 
-user_recommendation(rec_user="apifinaltest3")
+user_recommendation(rec_user="datauser2")
