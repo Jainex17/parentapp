@@ -23,7 +23,7 @@ export const CreatePost = ({ iscommnents, user }) => {
   function handletextareavalue(e) {
     setTextareavalue(e.target.value);
     e.target.style.height = "inherit";
-    e.target.style.height = `${Math.min(e.target.scrollHeight, 320)}px`;
+    e.target.style.height = `${Math.min(e.target.scrollHeight+50, 320)}px`;
   }
 
   const handleimageupload = (e) => {
@@ -171,7 +171,7 @@ export const CreatePost = ({ iscommnents, user }) => {
                   <textarea
                     className="w-full min-w-0 resize-none bg-transparent text-sm outline-none dark:text-white pl-2 pt-2 pr-14 dark:bg-neutral-800 rounded-md border border-gray-300 dark:border-gray-700"
                     placeholder={iscommnents ? "Write a comment..." : "Text"}
-                    style={{ height: "px !important" }}
+                    style={{ height: "100px !important" }}
                     value={textareavalue}
                     onChange={handletextareavalue}
                   ></textarea>

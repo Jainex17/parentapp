@@ -13,8 +13,6 @@ import {
   getuserRequest,
   getuserSuccess,
   getuserFail,
-} from "./actionTypes";
-import {
   getallpostsRequest,
   getallpostsSuccess,
   getallpostsFail,
@@ -24,8 +22,10 @@ import {
   logoutRequest,
   logoutSuccess,
   logoutFail,
+  getfaqRequest,
+  getfaqSuccess,
+  getfaqFail,
 } from "./actionTypes";
-
 export const signup =
   ({ username, password, email, pfpimage }) =>
   async (dispatch) => {
@@ -198,5 +198,15 @@ export const logout = () => async (dispatch) => {
     dispatch({ type: logoutSuccess.type });
   } catch (error) {
     dispatch({ type: logoutFail.type, payload: error.response.data });
+  }
+};
+
+export const getfaq = () => async (dispatch) => {
+  try {
+    dispatch({ type: getfaqRequest.type });
+    const { data } = await axios.get(`${server}/news?client=kadia`);
+    dispatch({ type: getfaqSuccess.type, payload: data });
+  } catch (error) {
+    dispatch({ type: getfaqFail.type, payload: error.response.data });
   }
 };

@@ -4,12 +4,14 @@ import { Model } from "./Model";
 import { useDispatch } from "react-redux";
 import { logout } from "../../redux/actions/userAction";
 
-export const SideBar = ({user}) => {
+export const SideBar = ({ user }) => {
   const navigate = useNavigate();
   const [sidebarisopen, setSidebarIsOpen] = useState(false);
   const [isUserLogin, setIsUserLogin] = useState(true);
   const [moreModel, setMoreModel] = useState(false);
-  const [themeOptionSelected, setThemeOptionSelected] = useState(localStorage.getItem("theme") || "light");
+  const [themeOptionSelected, setThemeOptionSelected] = useState(
+    localStorage.getItem("theme") || "light"
+  );
 
   const dispatch = useDispatch();
 
@@ -20,18 +22,18 @@ export const SideBar = ({user}) => {
   };
 
   useEffect(() => {
-    if(themeOptionSelected === "light"){
+    if (themeOptionSelected === "light") {
       document.documentElement.classList.remove("dark");
       localStorage.setItem("theme", "light");
-    }else{
+    } else {
       document.documentElement.classList.add("dark");
       localStorage.setItem("theme", "dark");
     }
   }, [themeOptionSelected]);
   useEffect(() => {
-    if(moreModel){
+    if (moreModel) {
       document.documentElement.style.overflow = "hidden";
-    }else{
+    } else {
       document.documentElement.style.overflow = "auto";
     }
   }, [moreModel]);
@@ -127,32 +129,24 @@ export const SideBar = ({user}) => {
                   </span>
                 </Link>
               </li>
-              {/* <li>
+              <li>
                 <Link
-                  to={"/explore"}
+                  to={"/faq"}
                   className="flex items-center p-3 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group pl-3"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
+                  <svg xmlns="http://www.w3.org/2000/svg"
+                    width="24" height="24"
+                    fill={themeOptionSelected === "dark" ? "white" : "black"}
+                    strokeWidth={0}
                     stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <line x1="4" y1="9" x2="20" y2="9"></line>
-                    <line x1="4" y1="15" x2="20" y2="15"></line>
-                    <line x1="10" y1="3" x2="8" y2="21"></line>
-                    <line x1="16" y1="3" x2="14" y2="21"></line>
+                   viewBox="0 0 24 24">
+                    <path d="M12,1A11,11,0,1,0,23,12,11.013,11.013,0,0,0,12,1Zm0,20a9,9,0,1,1,9-9A9.011,9.011,0,0,1,12,21Zm1-4.5v2H11v-2Zm3-7a3.984,3.984,0,0,1-1.5,3.122A3.862,3.862,0,0,0,13.063,15H11.031a5.813,5.813,0,0,1,2.219-3.936A2,2,0,0,0,13.1,7.832a2.057,2.057,0,0,0-2-.14A1.939,1.939,0,0,0,10,9.5,1,1,0,0,1,8,9.5V9.5a3.909,3.909,0,0,1,2.319-3.647,4.061,4.061,0,0,1,3.889.315A4,4,0,0,1,16,9.5Z" />
                   </svg>
                   <span className="flex-1 ms-3 whitespace-nowrap pl-2 font-bold">
-                    Explore
+                    Faq
                   </span>
                 </Link>
-              </li> */}
+              </li>
               <li>
                 <Link
                   to={"/user/32"}
@@ -238,23 +232,30 @@ export const SideBar = ({user}) => {
           <div className="fixed bottom-2 w-64 p-4 bg-white dark:bg-neutral-900 border-r border-t border-[#DBE2EF] dark:border-gray-700 cursor-pointer">
             {isUserLogin ? (
               <Link to={"/user/23"}>
-              <div className="flex items-center space-x-4">
-                <img
-                  src={user?.pimg || "https://randomuser.me/api/portraits/men/1.jpg"}
-                  alt="profile"
-                  className="w-12 h-12 rounded-full object-cover"
-                />
-                <div>
-                  <h4 className="font-semibold text-gray-800 dark:text-white">
-                    {user?.usrname || "username"}
-                  </h4>
-                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                    {user?.email || "email"}
-                  </p>
+                <div className="flex items-center space-x-4">
+                  <img
+                    src={
+                      user?.pimg ||
+                      "https://randomuser.me/api/portraits/men/1.jpg"
+                    }
+                    alt="profile"
+                    className="w-12 h-12 rounded-full object-cover"
+                  />
+                  <div>
+                    <h4 className="font-semibold text-gray-800 dark:text-white">
+                      {user?.usrname || "username"}
+                    </h4>
+                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                      {user?.email || "email"}
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <button className="bg-[#3F72AF] text-white w-full py-2 mt-4 rounded-lg font-semibold dark:bg-[#3F72AF] dark:text-white" onClick={()=> dispatch(logout())}>
-                  logout</button>
+                <button
+                  className="bg-[#3F72AF] text-white w-full py-2 mt-4 rounded-lg font-semibold dark:bg-[#3F72AF] dark:text-white"
+                  onClick={() => dispatch(logout())}
+                >
+                  logout
+                </button>
               </Link>
             ) : (
               <div>
@@ -283,7 +284,12 @@ export const SideBar = ({user}) => {
                 Background
               </p>
               <div className="flex items-center gap-2 justify-around mt-3 font-bold">
-                <div className={`flex items-center px-14 py-4 cursor-pointer bg-[#F9F7F7] text-black rounded-lg border-2 ${themeOptionSelected === "light" && " border-blue-600"}`} onClick={()=> setThemeOptionSelected("light")}>
+                <div
+                  className={`flex items-center px-14 py-4 cursor-pointer bg-[#F9F7F7] text-black rounded-lg border-2 ${
+                    themeOptionSelected === "light" && " border-blue-600"
+                  }`}
+                  onClick={() => setThemeOptionSelected("light")}
+                >
                   <input
                     type="radio"
                     id="option1"
@@ -298,14 +304,35 @@ export const SideBar = ({user}) => {
                   >
                     <div
                       className={`w-5 h-5 mr-3  rounded-full border-2 border-blue-600 ${
-                        themeOptionSelected === "light" ? "bg-blue-600" : "bg-white"
+                        themeOptionSelected === "light"
+                          ? "bg-blue-600"
+                          : "bg-white"
                       }`}
-                    ><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="white"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                    </div>
                     Light
                   </label>
                 </div>
-                <div className={`px-14 py-4 bg-black text-white rounded-lg cursor-pointer border-2 ${themeOptionSelected === "dark" && " border-blue-600"}`} onClick={()=> setThemeOptionSelected("dark")}>
-                <input
+                <div
+                  className={`px-14 py-4 bg-black text-white rounded-lg cursor-pointer border-2 ${
+                    themeOptionSelected === "dark" && " border-blue-600"
+                  }`}
+                  onClick={() => setThemeOptionSelected("dark")}
+                >
+                  <input
                     type="radio"
                     id="option1"
                     name="background"
@@ -319,9 +346,25 @@ export const SideBar = ({user}) => {
                   >
                     <div
                       className={`w-5 h-5 mr-3 rounded-full border-2 border-blue-600 ${
-                        themeOptionSelected === "dark" ? "bg-blue-600" : "bg-white"
+                        themeOptionSelected === "dark"
+                          ? "bg-blue-600"
+                          : "bg-white"
                       }`}
-                    ><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="white"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                    </div>
                     Dark
                   </label>
                 </div>
