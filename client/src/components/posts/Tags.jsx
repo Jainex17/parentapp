@@ -127,7 +127,7 @@ const Tags = ({ selected, setSelected }) => {
 
     return (
         <div className="w-full text-sm min-w-0 outline-none dark:text-white dark:bg-neutral-800 p-2 rounded-md border border-gray-300 dark:border-gray-700">
-            <div className="bg-white dark:bg-neutral-800 rounded-md p-2 flex gap-1 flex-wrap" onClick={() => document.getElementById('search_input').focus()} onClickOutside={() => setShowSelector(false)}>
+            <div className="bg-white dark:bg-neutral-800 rounded-md p-2 flex gap-1 flex-wrap" onClick={() => document.getElementById('search_input').focus()}>
                 {Object.entries(selected).map(([id, name]) => (
                     <div key={id} className="dark:bg-gray-700 rounded-md flex items-center border border-gray-300 dark:border-gray-700">
                         <div className="p-1.5">{name}</div>
@@ -140,7 +140,7 @@ const Tags = ({ selected, setSelected }) => {
                     </div>
                 ))}
                 <div className="flex-1 pl-1">
-                    <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} id="search_input" onInput={() => setTimeout(goSearch, 400)} placeholder="Search For Tag" className="w-full dark:bg-neutral-700 pl-2 border-0 focus:border-0 focus:outline-none focus:ring-0 py-2 rounded-md px-0" autocomplete="off" />
+                    <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} id="search_input" onInput={() => setTimeout(goSearch, 400)} placeholder="Search For Tag" className="w-full dark:bg-neutral-700 pl-2 border-0 focus:border-0 focus:outline-none focus:ring-0 py-2 rounded-md px-0" autoComplete="off" />
                     {showSelector && (
                         <div className="absolute overflow-y-scroll h-1/2 w-1/2 mt-2 bg-white dark:bg-neutral-700 z-30 rounded-md font-medium">
                             <div className="p-2 space-y-1">
