@@ -35,3 +35,7 @@ export const createAction = (type) => {
   export const logoutRequest = createAction('logoutRequest');
   export const logoutSuccess = createAction('logoutSuccess');
   export const logoutFail = createAction('logoutFail');
+
+  export const getfaqRequest = createAction('getfaqRequest');
+  export const getfaqSuccess = createAction('getfaqSuccess');
+  export const getfaqFail = createAction('getfaqFail');

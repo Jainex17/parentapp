@@ -1,5 +1,5 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { signUpRequest, signUpSuccess, signUpFail, loginRequest, loginSuccess, loginFail, verifyuserRequest, verifyuserSuccess, verifyuserFail, getuserRequest, getuserSuccess, getuserFail } from "../actions/actionTypes";
+import { signUpRequest, signUpSuccess, signUpFail, loginRequest, loginSuccess, loginFail, verifyuserRequest, verifyuserSuccess, verifyuserFail, getuserRequest, getuserSuccess, getuserFail, getfaqRequest, getfaqSuccess, getfaqFail } from "../actions/actionTypes";
 import { getallpostsRequest, getallpostsSuccess, getallpostsFail, createpostRequest, createpostSuccess, createpostFail, logoutRequest, logoutSuccess, logoutFail } from "../actions/actionTypes";
 
 const initialState = {
@@ -8,9 +8,11 @@ const initialState = {
   postsloading: true,
   createingpostloading: false,
   createpoststatus: false,
+  faqloading: false,
   user: null,
   error: null,
   posts: [],
+  faq: [],
 };
 
 export const userReducer = createReducer(initialState, (builder) => {
@@ -93,6 +95,17 @@ export const userReducer = createReducer(initialState, (builder) => {
     })
     .addCase(logoutFail.type, (state, action) => {
       state.loading = false;
+      state.error = action.payload;
+    })
+    .addCase(getfaqRequest.type, (state, action) => {
+      state.faqloading = true;
+    })
+    .addCase(getfaqSuccess.type, (state, action) => {
+      state.faqloading = false;
+      state.faq = action.payload;
+    })
+    .addCase(getfaqFail.type, (state, action) => {
+      state.faqloading = false;
       state.error = action.payload;
     });
 });
