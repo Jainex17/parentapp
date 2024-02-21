@@ -135,10 +135,10 @@ export const LoginComp = () => {
                       </svg>
                       <span className="sr-only">Loading...</span>
 
-                    <span>Signing up...</span>
+                    <span>Signing in...</span>
                   </div>
                 ) : (
-                  "Sign up"
+                  "Sign in"
                 )}
             </button>
           </div>

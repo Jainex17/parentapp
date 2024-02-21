@@ -14,6 +14,7 @@ export const Posts = ({ posts }) => {
 
   // samole timestamp 17/02/2024_19:42:19
   const findPostTime = (timestamp) => {
+    if (!timestamp) return;
     var date = timestamp.split("_")[0];
     return date
   }
@@ -33,7 +34,7 @@ export const Posts = ({ posts }) => {
             postTitle={post.title}
             postContent={post.disc}
             postimage={post.url}
-            postTag={post.tags[0]}
+            postTag={post.tags == "" ? null : post.tags}
             postLikescount={post.like.total}
             postcommentscount={post.comment.total}
             isPostLiked={isThisPostLiked(post._id)} 

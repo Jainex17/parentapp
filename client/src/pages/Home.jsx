@@ -3,6 +3,7 @@ import { CreatePost } from "../components/posts/CreatePost.jsx";
 import { Posts } from "../components/posts/Posts.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { getallposts } from "../../redux/actions/userAction.js";
+import { toast } from "react-toastify";
 
 export const Home = () => {
   const [PostsTab, setPostsTab] = useState(0);
@@ -10,7 +11,7 @@ export const Home = () => {
   const [ForYouPosts, setForYouPosts] = useState([]);
 
   const dispatch = useDispatch();
-  const { isAuthenticated, user, postsloading, posts } = useSelector((state) => state.user);
+  const { isAuthenticated, user, postsloading, posts, createpoststatus } = useSelector((state) => state.user);
 
   const FollowingPosts = [
     {
@@ -63,11 +64,6 @@ export const Home = () => {
     },
   ];
 
-  function handlepostbtn(e) {
-    e.preventDefault();
-    console.log("Post Created");
-  }
-
   useEffect(() => {
     if (!postsloading) {
       setIsPostsLoading(false);
@@ -76,10 +72,17 @@ export const Home = () => {
   }, [postsloading]);
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && posts.length === 0) {
       dispatch(getallposts());
     }
   }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (createpoststatus) {
+      toast.success("Post created successfully");
+      dispatch(getallposts());
+    }
+  }, [createpoststatus]);
   
   return (
     <>
@@ -109,7 +112,7 @@ export const Home = () => {
           </div>
         </div>
 
-        <CreatePost handlepost={handlepostbtn} user={user} />
+        <CreatePost user={user} />
 
         {ispostsloading ? (
           <div className="flex items-center justify-center mt-20">
@@ -134,7 +137,7 @@ export const Home = () => {
         ) : PostsTab === 0 ? (
           <Posts posts={ForYouPosts} />
         ) : (
-          <Posts posts={FollowingPosts} />
+          <Posts posts={ForYouPosts} />
         )}
       </div>
     </>
