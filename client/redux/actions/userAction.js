@@ -25,6 +25,12 @@ import {
   getfaqRequest,
   getfaqSuccess,
   getfaqFail,
+  getuserprofileRequest,
+  getuserprofileFail,
+  getuserprofileSuccess,
+  getpostbyidRequest,
+  getpostbyidSuccess,
+  getpostbyidFail,
 } from "./actionTypes";
 export const signup =
   ({ username, password, email, pfpimage }) =>
@@ -100,7 +106,7 @@ export const verifyuser = () => async (dispatch) => {
 export const getuser = (username) => async (dispatch) => {
   try {
     dispatch({ type: getuserRequest.type });
-
+    
     const { data } = await axios.get(
       `${server}/getusr?username=${username}&client=kadia`
     );
@@ -111,10 +117,22 @@ export const getuser = (username) => async (dispatch) => {
   }
 };
 
+export const getuserprofile = (username) => async (dispatch) => {
+  try {
+    dispatch({ type: getuserprofileRequest.type });
+    const { data } = await axios.get(
+      `${server}/getusr?username=${username}&client=kadia`
+    );
+    dispatch({ type: getuserprofileSuccess.type, payload: data });
+  } catch (error) {
+    dispatch({ type: getuserprofileFail.type, payload: error.response.data });
+  }
+};
+
+
 export const getallposts = () => async (dispatch) => {
   try {
     dispatch({ type: getallpostsRequest.type });
-    console.log("calling getallposts in action");
     
     const { data } = await axios.get(`${server}/getallposts?client=kadia`);
    
@@ -125,25 +143,24 @@ export const getallposts = () => async (dispatch) => {
   }
 };
 
-// export const getpostbyid = (id) => async (dispatch) => {
-//     try {
-//         dispatch({ type: getpostbyidRequest.type });
+export const getpostbyid = (pid, username) => async (dispatch) => {
+    try {
+        dispatch({ type: getpostbyidRequest.type });
 
-//         const { data } = await axios.get(`${server}/getpostbyid?id=${id}&client=kadia`);
+        const { data } = await axios.get(`${server}/getpost?username=${username}&client=kadia&pid=${pid}`);
 
-//         dispatch({ type: getpostbyidSuccess.type, payload: data });
-//     }
-//     catch (error) {
-//         dispatch({ type: getpostbyidFail.type, payload: error.response.data });
-//     }
-// }
+        dispatch({ type: getpostbyidSuccess.type, payload: data });
+    }
+    catch (error) {
+        dispatch({ type: getpostbyidFail.type, payload: error.response.data });
+    }
+}
 
 export const createpost =
   ({ postTitle, textareavalue, postimages, resultArray }) =>
   async (dispatch) => {
     try {
       dispatch({ type: createpostRequest.type });
-      console.log("calling createpost in action");
       
       const username = localStorage.getItem("username");
       let rawdata = {};

@@ -14,11 +14,11 @@ export const Post = ({
   postcommentscount,
   isPostLiked,
 }) => {
-  const [ispostsloading, setIsPostsLoading] = useState(true);
+  const [ispostsloading, setIsPostsLoading] = useState(false);
   const [likeCount, setLikeCount] = useState(postLikescount);
   const [isThisPostLiked, setIsThisPostLiked] = useState(isPostLiked);
 
-  function handlePostLike(postId, isPostLiked, userId) {
+  function handlePostLike(postId, isPostLiked, login_user_username) {
     if (isPostLiked) {
       // unlike post
       setLikeCount(likeCount - 1);
@@ -30,13 +30,7 @@ export const Post = ({
     }
   }
 
-  useEffect(() => {
-    // fake loading remove after backend integration
-    setTimeout(() => {
-      setIsPostsLoading(false);
-    }, 1000);
-  }, []);
-  const userId = "1"; // fake user id
+  const login_user_username = localStorage.getItem("username");
 
   return (
     <article
@@ -47,7 +41,7 @@ export const Post = ({
         <div className="pt-3">
           <div className="flex items-center text-xs mb-2">
             <Link
-              to={"/user/23"}
+              to={`/user/${username}`}
               className="font-semibold no-underline hover:underline text-black flex items-center dark:text-gray-300"
             >
               <img
@@ -65,14 +59,14 @@ export const Post = ({
               {postTime}
             </span>
           </div>
-          <Link to={"/post/" + postId}>
+          <Link to={`/post/${username}/${postId}`}>
             <h2 className="text-lg font-bold mb-1 text-black dark:text-white">
               {postTitle}
               
               {postTag ?
                 
-                postTag.length > 1 ? postTag.map((tag) => (
-                  <span className="text-xs bg-[#DBE2EF] text-gray-700 px-2 py-1 ml-2 rounded-full">
+                postTag.length > 1 ? postTag.map((tag,key) => (
+                  <span className="text-xs bg-[#DBE2EF] text-gray-700 px-2 py-1 ml-2 rounded-full" key={key}>
                     {tag}
                   </span>
                 )): <span className="text-xs bg-[#DBE2EF] text-gray-700 px-2 py-1 ml-2 rounded-full">
@@ -99,7 +93,7 @@ export const Post = ({
           <div className="inline-flex items-center my-3">
             <div
               className="flex p-2 items-center hover:bg-gray-200 dark:hover:bg-neutral-800 rounded-lg"
-              onClick={() => handlePostLike(postId, isThisPostLiked, userId)}
+              onClick={() => handlePostLike(postId, isThisPostLiked, login_user_username)}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

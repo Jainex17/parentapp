@@ -27,7 +27,7 @@ export const Posts = ({ posts }) => {
         {posts.map((post, index) => (
           <Post
             key={index}
-            postId={post._id}
+            postId={post.postid}
             username={post.usrname}
             userImage={post.usrpg}
             postTime={findPostTime(post.timestamp)}
@@ -37,7 +37,7 @@ export const Posts = ({ posts }) => {
             postTag={post.tags == "" ? null : post.tags}
             postLikescount={post.like.total}
             postcommentscount={post.comment.total}
-            isPostLiked={isThisPostLiked(post._id)} 
+            isPostLiked={isThisPostLiked(post.postid)} 
           />
         ))}
       </section>

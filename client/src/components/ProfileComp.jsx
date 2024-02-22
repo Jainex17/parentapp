@@ -24,7 +24,7 @@ export const ProfileComp = ({ posts, user  }) => {
               <path d="M19 12H6M12 5l-7 7 7 7" />
             </svg>
           </Link>
-          <h2 className="sm:text-2xl font-bold">{user.usrname}</h2>
+          <h2 className="sm:text-2xl font-bold">{user?.usrname}</h2>
         </div>
 
         <div>

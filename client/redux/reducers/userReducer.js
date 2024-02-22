@@ -1,6 +1,36 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { signUpRequest, signUpSuccess, signUpFail, loginRequest, loginSuccess, loginFail, verifyuserRequest, verifyuserSuccess, verifyuserFail, getuserRequest, getuserSuccess, getuserFail, getfaqRequest, getfaqSuccess, getfaqFail } from "../actions/actionTypes";
-import { getallpostsRequest, getallpostsSuccess, getallpostsFail, createpostRequest, createpostSuccess, createpostFail, logoutRequest, logoutSuccess, logoutFail } from "../actions/actionTypes";
+import {
+  signUpRequest,
+  signUpSuccess,
+  signUpFail,
+  loginRequest,
+  loginSuccess,
+  loginFail,
+  verifyuserRequest,
+  verifyuserSuccess,
+  verifyuserFail,
+  getuserRequest,
+  getuserSuccess,
+  getuserFail,
+  getfaqRequest,
+  getfaqSuccess,
+  getfaqFail,
+  getallpostsRequest,
+  getallpostsSuccess,
+  getallpostsFail,
+  createpostRequest,
+  createpostSuccess,
+  createpostFail,
+  logoutRequest,
+  logoutSuccess,
+  logoutFail,
+  getuserprofileRequest,
+  getuserprofileSuccess,
+  getuserprofileFail,
+  getpostbyidRequest,
+  getpostbyidFail,
+  getpostbyidSuccess,
+} from "../actions/actionTypes";
 
 const initialState = {
   isAuthenticated: false,
@@ -10,8 +40,10 @@ const initialState = {
   createpoststatus: false,
   faqloading: false,
   user: null,
+  userprofile: null,
   error: null,
   posts: [],
+  postbyid: {},
   faq: [],
 };
 
@@ -107,5 +139,28 @@ export const userReducer = createReducer(initialState, (builder) => {
     .addCase(getfaqFail.type, (state, action) => {
       state.faqloading = false;
       state.error = action.payload;
+    })
+    .addCase(getuserprofileRequest.type, (state, action) => {
+      state.loading = true;
+    })
+    .addCase(getuserprofileSuccess.type, (state, action) => {
+      state.loading = false;
+      state.userprofile = action.payload;
+    })
+    .addCase(getuserprofileFail.type, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    })
+    .addCase(getpostbyidRequest.type, (state, action) => {
+      state.postsloading = true;
+    })
+    .addCase(getpostbyidSuccess.type, (state, action) => {
+      state.postsloading = false;
+      state.postbyid = action.payload;
+    })
+    .addCase(getpostbyidFail.type, (state, action) => {
+      state.postsloading = false;
+      state.error = action.payload;
     });
+
 });
