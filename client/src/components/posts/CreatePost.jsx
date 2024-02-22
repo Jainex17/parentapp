@@ -99,7 +99,7 @@ export const CreatePost = ({ iscommnents, user }) => {
           htmlFor="post-input"
         >
           <Link
-            to={"/user/12"}
+            to={`/user/${user?.usrname || "user"}`}
             className="blur-picture flex self-start cursor-pointer"
           >
             <figure style={{ width: "48px" }}>

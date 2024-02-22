@@ -2,12 +2,13 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 export const Comment = () => {
+
   return (
     <>
       <div className="flex justify-between items-center w-full bg-white dark:bg-neutral-900 p-4 mt-3 border-b border-gray-300 dark:border-gray-700">
         <div>
         <div className="flex items-center">
-          <Link Link to={"/user/23"}>
+          <Link Link to={`/user/`}>
           <img
             className="rounded-full h-10 w-10"
             src="https://randomuser.me/api/portraits/women/12.jpg"

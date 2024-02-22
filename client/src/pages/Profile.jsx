@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ProfileComp } from "../components/ProfileComp";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getuserprofile } from "../../redux/actions/userAction";
 
 export const Profile = () => {
 
@@ -42,11 +43,28 @@ export const Profile = () => {
     }
   ];
 
-  const { user } = useSelector((state) => state.user);
+  const { userprofile } = useSelector((state) => state.user);
+  const [user, setUser] = useState();
+  
+  
+  const dispatch = useDispatch();
 
   useEffect(() => {
     window.scrollTo(0, 0)
+
+    const url = window.location.href;
+    const username = url.split("/").pop();
+    setUser(null);
+    dispatch(getuserprofile(username))
   }, []);
+
+  useEffect(() => {
+    if (userprofile) {
+      setUser(userprofile);
+    }
+  }, [userprofile]);
+
+  
 
   return <>
     <div>

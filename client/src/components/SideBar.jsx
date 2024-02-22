@@ -231,7 +231,7 @@ export const SideBar = ({ user }) => {
 
           <div className="fixed bottom-2 w-64 p-4 bg-white dark:bg-neutral-900 border-r border-t border-[#DBE2EF] dark:border-gray-700 cursor-pointer">
             {isUserLogin ? (
-              <Link to={"/user/23"}>
+              <Link to={`/user/${user?.usrname}`}>
                 <div className="flex items-center space-x-4">
                   <img
                     src={

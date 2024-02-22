@@ -24,9 +24,9 @@ export const createAction = (type) => {
   export const getallpostsSuccess = createAction('getallpostsSuccess');
   export const getallpostsFail = createAction('getallpostsFail');
 
-  // export const getpostbyidRequest = createAction('getpostbyidRequest');
-  // export const getpostbyidSuccess = createAction('getpostbyidSuccess');
-  // export const getpostbyidFail = createAction('getpostbyidFail');
+  export const getpostbyidRequest = createAction('getpostbyidRequest');
+  export const getpostbyidSuccess = createAction('getpostbyidSuccess');
+  export const getpostbyidFail = createAction('getpostbyidFail');
 
   export const createpostRequest = createAction('createpostRequest');
   export const createpostSuccess = createAction('createpostSuccess');
@@ -39,3 +39,7 @@ export const createAction = (type) => {
   export const getfaqRequest = createAction('getfaqRequest');
   export const getfaqSuccess = createAction('getfaqSuccess');
   export const getfaqFail = createAction('getfaqFail');
+
+  export const getuserprofileRequest = createAction('getuserprofileRequest');
+  export const getuserprofileSuccess = createAction('getuserprofileSuccess');
+  export const getuserprofileFail = createAction('getuserprofileFail');

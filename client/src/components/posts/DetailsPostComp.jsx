@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-export const DetailsPostComp = () => {
+export const DetailsPostComp = ({detailspost}) => {
 
-  const [likeCount, setLikeCount] = useState(23); //23 replace with actual like count
+  const [likeCount, setLikeCount] = useState(); //23 replace with actual like count
   const [isThisPostLiked, setIsThisPostLiked] = useState(false); // false replace with actual like status
 
   function handlePostLike(postId, isPostLiked, userId) {
@@ -17,7 +17,7 @@ export const DetailsPostComp = () => {
       setIsThisPostLiked(true);
     }
   }
-
+  
   const userId  = "1"; // fake user id and user id
   const postId  = "1"; // fake user id and post id
  
@@ -67,16 +67,7 @@ export const DetailsPostComp = () => {
               </h2>
             </div>
             <p className="dark:text-gray-300 text-gray-800 text-base mt-2">
-              As someone who works from home, I've learned a few tips and tricks
-              to stay productive throughout the day. One thing that has really
-              helped me is creating a dedicated workspace free from
-              distractions. I also like to break up my day into smaller tasks
-              and take regular breaks to avoid burnout. What are some of your
-              favorite productivity tips? Lorem ipsum dolor sit amet,
-              consectetur adipisicing elit. Nemo provident blanditiis, adipisci
-              animi ullam id suscipit temporibus a culpa possimus porro
-              quibusdam sit odit alias mollitia aliquid? Corporis, doloremque
-              blanditiis!
+              {detailspost?.disc}
             </p>
             <div className="flex justify-center lg:mx-24 lg:my-4">
               <img
@@ -120,7 +111,7 @@ export const DetailsPostComp = () => {
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
             </svg>
             <span className="ml-2 text-xs font-semibold text-gray-500 select-none">
-              23 Comments
+              {detailspost?.comment.total} Comments
             </span>
           </div>
           <div className="flex p-2 items-center hover:bg-gray-200 rounded-lg ml-2 cursor-pointer">
