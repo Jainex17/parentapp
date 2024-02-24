@@ -28,7 +28,7 @@ export const LoginComp = () => {
 
   useEffect(() => {
     if (error) {
-      toast.error(error);
+      toast.error("Invalid credentials");
     }
   }, [error]);
 

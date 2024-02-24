@@ -28,9 +28,12 @@ import {
   getuserprofileRequest,
   getuserprofileFail,
   getuserprofileSuccess,
-  getpostbyidRequest,
-  getpostbyidSuccess,
-  getpostbyidFail,
+  postdetailRequest,
+  postdetailSuccess,
+  postdetailFail,
+  getuserpostRequest,
+  getuserpostSuccess,
+  getuserpostFail,
 } from "./actionTypes";
 export const signup =
   ({ username, password, email, pfpimage }) =>
@@ -143,19 +146,6 @@ export const getallposts = () => async (dispatch) => {
   }
 };
 
-export const getpostbyid = (pid, username) => async (dispatch) => {
-    try {
-        dispatch({ type: getpostbyidRequest.type });
-
-        const { data } = await axios.get(`${server}/getpost?username=${username}&client=kadia&pid=${pid}`);
-
-        dispatch({ type: getpostbyidSuccess.type, payload: data });
-    }
-    catch (error) {
-        dispatch({ type: getpostbyidFail.type, payload: error.response.data });
-    }
-}
-
 export const createpost =
   ({ postTitle, textareavalue, postimages, resultArray }) =>
   async (dispatch) => {
@@ -227,3 +217,25 @@ export const getfaq = () => async (dispatch) => {
     dispatch({ type: getfaqFail.type, payload: error.response.data });
   }
 };
+
+export const getpostdetails = (pid,username) => async (dispatch) => {
+  try {
+    dispatch({ type: postdetailRequest.type });
+    const { data } = await axios.get(`${server}/getpost?username=${username}&client=kadia&pid=${pid}`);
+
+    dispatch({ type: postdetailSuccess.type, payload: data });
+  } catch (error) {
+    dispatch({ type: postdetailFail.type, payload: error.response.data });
+  }
+}
+
+export const getuserposts = (username) => async (dispatch) => {
+  try {
+    dispatch({ type: getuserpostRequest.type });
+    const { data } = await axios.get(`${server}/getallpostsbyuser?username=${username}&client=kadia`);
+
+    dispatch({ type: getuserpostSuccess.type, payload: data });
+  } catch (error) {
+    dispatch({ type: getuserpostFail.type, payload: error.response.data });
+  }
+}

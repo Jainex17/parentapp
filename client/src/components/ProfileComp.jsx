@@ -2,8 +2,24 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Post } from "./posts/Post";
 
-export const ProfileComp = ({ posts, user  }) => {
+export const ProfileComp = ({ posts, user, userloading }) => {
   
+  function isThisPostLiked(postId) {
+    // check if this post is liked by the user
+
+    // fake logic
+    if (postId === "1") {
+      return true;
+    }
+    return false;
+  }
+
+  const findPostTime = (timestamp) => {
+    if (!timestamp) return;
+    var date = timestamp.split("_")[0];
+    return date
+  }
+
   return (
     <>
       <div className="bg-white dark:bg-black dark:text-white">
@@ -37,11 +53,16 @@ export const ProfileComp = ({ posts, user  }) => {
           </div>
 
           <div className="sm:-my-[6.5rem] -my-10 sm:ml-10 ml-5 flex items-center">
-            <img
-              src={user?.pimg}
-              alt="profile"
-              className="sm:w-52 sm:h-52 w-20 h-20 rounded-full border-4 border-white cursor-pointer object-cover"
-            />
+            {userloading ? (
+              <div className="animate-pulse bg-gray-300 dark:bg-gray-600 sm:w-52 sm:h-52 w-20 h-20 rounded-full border-4 border-white"></div>
+            ) : (
+              <img
+                src={user?.pimg}
+                alt="profile"
+                className="sm:w-52 sm:h-52 w-20 h-20 rounded-full border-4 border-white cursor-pointer object-cover"
+              />
+            )}
+            
           </div>
 
           <div className="flex items-center justify-end gap-3 lg:mr-20 mr-5">
@@ -69,9 +90,13 @@ export const ProfileComp = ({ posts, user  }) => {
         </div>
 
         <div className="sm:mt-16 mt-10 sm:ml-16 ml-5">
+          {userloading ? (
+            <div className="animate-pulse bg-gray-300 h-6 w-20 rounded-full"></div>
+          ) : (
           <h2 className="sm:text-2xl font-bold text-black dark:text-white">
             {user?.usrname}
           </h2>
+          )}
           <p className="text-gray-500 dark:text-gray-300 mt-1">
             {user?.bio}
           </p>
@@ -100,7 +125,7 @@ export const ProfileComp = ({ posts, user  }) => {
               </button>
             </div>
           </div>
-          {/* tags */}
+          
           <div className="flex items-center gap-2 mt-4">
             <span className="py-1 px-3 bg-gray-500 rounded-full text-white">Maried</span>
             <span className="py-1 px-3 bg-gray-500 rounded-full text-white">House Wife</span>
@@ -128,18 +153,18 @@ export const ProfileComp = ({ posts, user  }) => {
           
           {posts.map((post, index) => (
           <Post
-            key={index}
-            postId={post._id}
-            username={post.username}
-            userImage={post.userImage}
-            postTime={post.postTime}
-            postTitle={post.postTitle}
-            postContent={post.postContent}
-            postimage={post.postimage}
-            postTag={post.postTag}
-            postLikescount={post.likescount}
-            postcommentscount={post.commentscount}
-            isPostLiked={true} // isPostLiked={userId === post.likes.find((like) => like === userId)} check if user has liked the post
+          key={index}
+          postId={post.postid}
+          username={post.usrname}
+          userImage={post.usrpg}
+          postTime={findPostTime(post.timestamp)}
+          postTitle={post.title}
+          postContent={post.disc}
+          postimage={post.url}
+          postTag={post.tags == "" ? null : post.tags}
+          postLikescount={post.like.total}
+          postcommentscount={post.comment.total}
+          isPostLiked={isThisPostLiked(post.postid)} 
           />
         ))}
         </div>
