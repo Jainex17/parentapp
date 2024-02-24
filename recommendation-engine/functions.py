@@ -202,7 +202,7 @@ def mixing(internal_content_based_list, external_content_based_list, collaborati
 # api will send call to 2 functions - user_recommendation and every_n_hours
 
 def user_recommendation(rec_user):
-    user_json = requests.get(url = f"https://kadia.pythonanywhere.com/api/getusr?username={rec_user}&client=kadia").json()
+    user_json = requests.get(url = f"https://kadia.pythonanywhere.com/api/getusr?username={rec_user}&client=v2").json()
 
     with open(os.path.join(script_dir,'all_posts_json_dump.json'), 'r') as json_file:
         all_post_json_list = json.load(json_file)
@@ -255,13 +255,13 @@ def user_recommendation(rec_user):
     return final_post_list
 
 def every_n_hours():
-    all_post_json_list_raw = requests.get(url = "https://kadia.pythonanywhere.com/api/getallposts?client=kadia").content
+    all_post_json_list_raw = requests.get(url = "https://kadia.pythonanywhere.com/api/getallposts?client=v2").content
     all_post_json_list = json.loads(all_post_json_list_raw)
     for post in all_post_json_list:
         post['title'] = post['title'].encode('unicode-escape').decode('utf-8')
         post['disc'] = post['disc'].encode('unicode-escape').decode('utf-8')
 
-    all_user_json_list = requests.get(url="https://kadia.pythonanywhere.com/api/getallusers?client=kadia").json()
+    all_user_json_list = requests.get(url="https://kadia.pythonanywhere.com/api/getallusers?client=v2").json()
 
     collab_df, content_df = json_to_df(all_posts_json = all_post_json_list, all_users_json=all_user_json_list)
     post_user_dataset_model(collab_df)
@@ -270,4 +270,4 @@ def every_n_hours():
 
 # every_n_hours()
 
-# print(user_recommendation(rec_user="datauser2"))
+# print(user_recommendation(rec_user="datauser1"))
