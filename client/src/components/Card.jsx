@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export const Card = ({ title, desc, time, link }) => {
+export const Card = ({ title, desc, time, link, username, userpfp }) => {
   return (
     <>
       <article
@@ -45,7 +45,7 @@ export const Card = ({ title, desc, time, link }) => {
                       }}
                     ></span>
                     <img
-                      src={"https://randomuser.me/api/portraits/men/32.jpg"}
+                      src={userpfp}
                       alt="profile"
                       className="rounded-full object-cover"
                       style={{
@@ -70,7 +70,7 @@ export const Card = ({ title, desc, time, link }) => {
               <div className="flex flex-col ml-3 w-full">
                 <div className="flex items-center gap-3">
                   <h3 className="text-lg font-bold dark:text-slate-100 text-black">
-                    <Link to={`/`}>John Doe</Link>
+                    <Link to={`/`}>{username}</Link>
                   </h3>
                   <span className="text-gray-700 dark:text-gray-400 text-sm pt-0.5">
                     {time}
