@@ -4,7 +4,6 @@ import { Posts } from "../components/posts/Posts.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { getallposts } from "../../redux/actions/userAction.js";
 import { toast } from "react-toastify";
-import ChatBot from "../components/ChatBot.jsx";
 
 export const Home = () => {
   const [PostsTab, setPostsTab] = useState(0);
@@ -22,7 +21,7 @@ export const Home = () => {
 
   useEffect(() => {
     if (createpoststatus) {
-      toast.success("Post created successfully");
+      toast.success("Post Moderation passed. Post Created Successfully");
       dispatch(getallposts());
 
       setTimeout(() => {
@@ -33,8 +32,6 @@ export const Home = () => {
 
   useEffect(() => {
     if (!postsloading) {
-      console.log("postloading changed");
-      
       setIsPostsLoading(false);
       setForYouPosts(posts);
     }
@@ -42,7 +39,6 @@ export const Home = () => {
 
   return (
     <>
-    <ChatBot />
       <div className="mx-8 sm:my-6 my-2 mr-20">
         <div className="flex bg-white border border-gray-300 rounded mb-5 cursor-pointer dark:bg-neutral-900 dark:border-gray-700">
           <div

@@ -170,6 +170,29 @@ export const SideBar = ({ user }) => {
                     Profile
                   </span>
                 </Link>
+              </li><li>
+                <Link
+                  to={`/chatbot`}
+                  className="flex items-center p-3 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group pl-3"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                  <span className="flex-1 ms-3 whitespace-nowrap pl-2 font-bold">
+                    ChatBot
+                  </span>
+                </Link>
               </li>
               <li onClick={() => setMoreModel(true)}>
                 <div className="flex items-center p-3 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group pl-3 cursor-pointer">

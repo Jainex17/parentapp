@@ -32,6 +32,7 @@ export const DetailsPost = () => {
     setDetailsPostLoading(getpostdetailloading);
   }, [getpostdetailloading]);
 
+
   
 return <>
     <div className="mx-8 sm:my-6 my-2">

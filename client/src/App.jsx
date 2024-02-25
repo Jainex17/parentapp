@@ -14,6 +14,7 @@ import { DetailsPost } from "./DetailsPost";
 import { Profile } from "./pages/Profile";
 import { getuser, verifyuser } from "../redux/actions/userAction.js";
 import { Faq } from "./components/Faq.jsx";
+import ChatBot from "./components/ChatBot.jsx";
 
 function App() {
   const { isAuthenticated=true , user } = useSelector((state) => state.user);
@@ -59,6 +60,7 @@ function App() {
               <Route path="/post/*" element={<DetailsPost />} />
               <Route path="/user/*" element={<Profile />} />
               <Route path="/faq" element={<Faq />} />
+              <Route path="/chatbot" element={<ChatBot />} />
               <Route path="*" element={<h1 className="text-4xl text-center mt-20">404 Not Found</h1>} />
             </Route>
             

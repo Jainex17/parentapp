@@ -173,7 +173,7 @@ export const createpost =
           title: postTitle,
           disc: textareavalue,
           ptype: "post",
-          tags: resultArray,
+          tags: resultArray.join(','),
         };
       } else {
         rawdata = {
@@ -182,12 +182,11 @@ export const createpost =
           title: postTitle,
           disc: textareavalue,
           ptype: "post",
-          tags: resultArray
+          tags: resultArray.join(',')
         };
       }
-
+      
       const { data } = await axios.post(`${server}/createpost`, rawdata);
-      console.log(data);
       
       dispatch({ type: createpostSuccess.type, payload: data });
     } catch (error) {

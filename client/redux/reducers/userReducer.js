@@ -45,6 +45,8 @@ const initialState = {
   getpostdetailloading: false,
   getuserloading: false,
   getuserpostloading: false,
+  getuserprofileloading: false,
+  usergetstatus: false,
   user: null,
   userprofile: null,
   error: null,
@@ -148,14 +150,16 @@ export const userReducer = createReducer(initialState, (builder) => {
       state.error = action.payload;
     })
     .addCase(getuserprofileRequest.type, (state, action) => {
-      state.loading = true;
+      state.getuserprofileloading = true;
     })
     .addCase(getuserprofileSuccess.type, (state, action) => {
-      state.loading = false;
+      state.getuserprofileloading = false;
       state.userprofile = action.payload;
+      state.usergetstatus = true;
     })
     .addCase(getuserprofileFail.type, (state, action) => {
-      state.loading = false;
+      state.getuserprofileloading = false;
+      state.usergetstatus = false;
       state.error = action.payload;
     })
     .addCase(postdetailRequest.type, (state, action) => {

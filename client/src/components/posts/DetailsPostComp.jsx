@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export const DetailsPostComp = ({detailspost, detailspostLoading}) => {
 
-  const [likeCount, setLikeCount] = useState(); //23 replace with actual like count
+  const [likeCount, setLikeCount] = useState(detailspost?.like.total | 0); //23 replace with actual like count
   const [isThisPostLiked, setIsThisPostLiked] = useState(false); // false replace with actual like status
 
   function handlePostLike(postId, isPostLiked, userId) {
@@ -92,7 +92,7 @@ export const DetailsPostComp = ({detailspost, detailspostLoading}) => {
                 />
                 <div className="ml-2">
                   <h3 className="sm:text-base text-sm font-semibold">{detailspost?.usrname}</h3>
-                  <p className="sm:text-sm text-xs text-gray-500">{detailspost?.timestamp}</p>
+                  <p className="sm:text-sm text-xs text-gray-500">{detailspost?.timestamp.split("_")[0]}</p>
                 </div>
               </div>
             </div>
@@ -141,7 +141,7 @@ export const DetailsPostComp = ({detailspost, detailspostLoading}) => {
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
             </svg>
             <span className="ml-2 text-xs font-semibold text-gray-500 select-none">
-              {detailspost?.like.total} Likes
+              {likeCount} Likes
             </span>
           </div>
           <div className="flex p-2 items-center hover:bg-gray-200 dark:hover:bg-neutral-800 rounded-lg ml-2 cursor-pointer">
@@ -162,7 +162,7 @@ export const DetailsPostComp = ({detailspost, detailspostLoading}) => {
               {detailspost?.comment.total} Comments
             </span>
           </div>
-          <div className="flex p-2 items-center hover:bg-gray-200 dark:hover:bg-neutral-800 rounded-lg ml-2 cursor-pointer">
+          <div className="flex p-2 items-center hover:bg-gray-200 dark:hover:bg-neutral-800 rounded-lg ml-2 cursor-not-allowed">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"

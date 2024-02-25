@@ -62,7 +62,7 @@ export const CreatePost = ({ iscommnents, user }) => {
   const handlepost = (e) => {
     e.preventDefault();
     if (textareavalue.trim() === "" && postimages.length === 0) {
-      toast.error("Please write something or add a media");
+      toast.error("Please write something");
       return;
     }
     if (!iscommnents) {
@@ -72,7 +72,6 @@ export const CreatePost = ({ iscommnents, user }) => {
       for (const key in selected) {
         resultArray.push(selected[key]);
       }
-      console.log(resultArray);
       
 
       dispatch(createpost({ postTitle, textareavalue, postimages, resultArray }));

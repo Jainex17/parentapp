@@ -6,10 +6,12 @@ import { getuserposts, getuserprofile } from "../../redux/actions/userAction";
 export const Profile = () => {
 
 
-  const { userprofile, getuserloading, getuserpostloading, userposts } = useSelector((state) => state.user);
+  const { userprofile, getuserpostloading, userposts, usergetstatus, getuserprofileloading } = useSelector((state) => state.user);
+
   const [user, setUser] = useState();
   const [UserPosts, setUserPosts] = useState([]);
   const [userloading, setUserLoading] = useState(true);
+  const [userfound, setUserFound] = useState(false);
   
   const dispatch = useDispatch();
 
@@ -30,17 +32,24 @@ export const Profile = () => {
   }, [userprofile]);
 
   useEffect(() => {
-    setUserLoading(getuserloading);
+    setUserLoading(getuserprofileloading);
     if (!getuserpostloading) {
       setUserPosts(userposts);
     }
-  }, [getuserloading, getuserpostloading]);
+  }, [getuserprofileloading, getuserpostloading]);
 
-  
+  useEffect(() => {
+    setUserFound(usergetstatus);
+  }, [usergetstatus]);
+
 
   return <>
-    <div>
-      <ProfileComp posts={UserPosts} user={user} userloading={userloading} />
-    </div>
-  </>;
-};
+      {userfound ?
+        <ProfileComp posts={UserPosts} user={user} userloading={userloading} />
+        :
+        <div className="flex justify-center items-center h-screen">
+          <h1 className="text-2xl font-bold">User not found</h1>
+        </div>
+      }
+    </>;
+}
