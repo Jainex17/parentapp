@@ -33,6 +33,7 @@ import {
   getuserpostRequest,
   getuserpostSuccess,
   getuserpostFail,
+  likepostRequest,
 } from "../actions/actionTypes";
 
 const initialState = {
@@ -183,5 +184,5 @@ export const userReducer = createReducer(initialState, (builder) => {
     .addCase(getuserpostFail.type, (state, action) => {
       state.getuserpostloading = false;
       state.error = action.payload;
-    });
+    })
 });

@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { likepost, unlikepost } from "../../../redux/actions/userAction";
 
 export const Post = ({
   postId,
@@ -18,13 +20,17 @@ export const Post = ({
   const [likeCount, setLikeCount] = useState(postLikescount);
   const [isThisPostLiked, setIsThisPostLiked] = useState(isPostLiked);
 
+  const dispatch = useDispatch();
+  const loginusername = localStorage.getItem("username");
   function handlePostLike(postId, isPostLiked, login_user_username) {
     if (isPostLiked) {
       // unlike post
+      dispatch(unlikepost(postId, username, loginusername));
       setLikeCount(likeCount - 1);
       setIsThisPostLiked(false);
     } else {
       // like post
+      dispatch(likepost(postId, username, loginusername));
       setLikeCount(likeCount + 1);
       setIsThisPostLiked(true);
     }

@@ -34,6 +34,9 @@ import {
   getuserpostRequest,
   getuserpostSuccess,
   getuserpostFail,
+  likepostRequest,
+  likepostSuccess,
+  likepostFail,
 } from "./actionTypes";
 export const signup =
   ({ username, password, email, pfpimage }) =>
@@ -189,9 +192,7 @@ export const createpost =
       const { data } = await axios.post(`${server}/createpost`, rawdata);
       
       dispatch({ type: createpostSuccess.type, payload: data });
-    } catch (error) {
-        console.log(error);
-        
+    } catch (error) {    
       dispatch({ type: createpostFail.type, payload: error.response });
     }
   };
@@ -236,5 +237,31 @@ export const getuserposts = (username) => async (dispatch) => {
     dispatch({ type: getuserpostSuccess.type, payload: data });
   } catch (error) {
     dispatch({ type: getuserpostFail.type, payload: error.response.data });
+  }
+}
+
+export const likepost = (pid,username,currentusername) => async (dispatch) => {
+  try {
+    dispatch({ type: likepostRequest.type });
+    console.log(pid,username,currentusername);
+    
+    const { data } = await axios.get(`${server}/likepost?username=${username}&client=kadia&pid=${pid}&uu=${currentusername}`);
+
+    dispatch({ type: likepostSuccess.type, payload: data });
+  } catch (error) {
+    dispatch({ type: likepostFail.type, payload: error.response.data });
+  }
+}
+
+export const unlikepost = (pid,username,currentusername) => async (dispatch) => {
+  try {
+    dispatch({ type: likepostRequest.type });
+    console.log(pid,username,currentusername);
+    
+    const { data } = await axios.get(`${server}/unlikepost?username=${username}&client=kadia&pid=${pid}&uu=${currentusername}`);
+
+    dispatch({ type: likepostSuccess.type, payload: data });
+  } catch (error) {
+    dispatch({ type: likepostFail.type, payload: error.response.data });
   }
 }

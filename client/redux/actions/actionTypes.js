@@ -46,4 +46,12 @@ export const createAction = (type) => {
 
   export const getuserpostRequest = createAction('getuserpostRequest');
   export const getuserpostSuccess = createAction('getuserpostSuccess');
-  export const getuserpostFail = createAction('getuserpostFail'); 
+  export const getuserpostFail = createAction('getuserpostFail');
+  
+  export const likepostRequest = createAction('likepostRequest');
+  export const likepostSuccess = createAction('likepostSuccess');
+  export const likepostFail = createAction('likepostFail');
+
+  export const unlikepostRequest = createAction('unlikepostRequest');
+  export const unlikepostSuccess = createAction('unlikepostSuccess');
+  export const unlikepostFail = createAction('unlikepostFail');

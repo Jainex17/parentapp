@@ -131,7 +131,7 @@ export const SideBar = ({ user }) => {
               </li>
               <li>
                 <Link
-                  to={"/faq"}
+                  to={"/articles"}
                   className="flex items-center p-3 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group pl-3"
                 >
                   <svg
@@ -146,7 +146,7 @@ export const SideBar = ({ user }) => {
                     <path d="M12,1A11,11,0,1,0,23,12,11.013,11.013,0,0,0,12,1Zm0,20a9,9,0,1,1,9-9A9.011,9.011,0,0,1,12,21Zm1-4.5v2H11v-2Zm3-7a3.984,3.984,0,0,1-1.5,3.122A3.862,3.862,0,0,0,13.063,15H11.031a5.813,5.813,0,0,1,2.219-3.936A2,2,0,0,0,13.1,7.832a2.057,2.057,0,0,0-2-.14A1.939,1.939,0,0,0,10,9.5,1,1,0,0,1,8,9.5V9.5a3.909,3.909,0,0,1,2.319-3.647,4.061,4.061,0,0,1,3.889.315A4,4,0,0,1,16,9.5Z" />
                   </svg>
                   <span className="flex-1 ms-3 whitespace-nowrap pl-2 font-bold">
-                    Faq
+                    Articles
                   </span>
                 </Link>
               </li>
@@ -174,30 +174,7 @@ export const SideBar = ({ user }) => {
                   </span>
                 </Link>
               </li>
-              <li>
-                <Link
-                  to={`/chatbot`}
-                  className="flex items-center p-3 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group pl-3"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                  </svg>
-                  <span className="flex-1 ms-3 whitespace-nowrap pl-2 font-bold">
-                    ChatBot
-                  </span>
-                </Link>
-              </li>
+             
               <li>
                 <Link
                   to={`/gettogether`}
@@ -210,10 +187,10 @@ export const SideBar = ({ user }) => {
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="lucide lucide-radio"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="lucide lucide-radio"
                   >
                     <path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9" />
                     <path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5" />
@@ -223,6 +200,17 @@ export const SideBar = ({ user }) => {
                   </svg>
                   <span className="flex-1 ms-3 whitespace-nowrap pl-2 font-bold">
                     GetToGether
+                  </span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to={`/chatbot`}
+                  className="flex items-center p-3 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group pl-3"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-bot"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+                  <span className="flex-1 ms-3 whitespace-nowrap pl-2 font-bold">
+                    ChatBot
                   </span>
                 </Link>
               </li>

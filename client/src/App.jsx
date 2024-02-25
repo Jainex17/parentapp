@@ -48,6 +48,8 @@ function App() {
           
           <Route element={<ProtectedRoute isAuthenticated={!isAuthenticated} redirect={"/"} />}>
             <Route path="/login" element={<Login />} />
+          </Route>
+          <Route element={<ProtectedRoute isAuthenticated={!isAuthenticated} redirect={"/"} />}>
             <Route path="/signup" element={<Signup />} />
           </Route>
           
@@ -60,7 +62,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/post/*" element={<DetailsPost />} />
               <Route path="/user/*" element={<Profile />} />
-              <Route path="/faq" element={<Faq />} />
+              <Route path="/articles" element={<Faq />} />
               <Route path="/chatbot" element={<ChatBot />} />
               <Route path="/gettogether" element={<GetToGether />} />
               <Route path="*" element={<h1 className="text-4xl text-center mt-20">404 Not Found</h1>} />
