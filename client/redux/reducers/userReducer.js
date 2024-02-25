@@ -27,9 +27,12 @@ import {
   getuserprofileRequest,
   getuserprofileSuccess,
   getuserprofileFail,
-  getpostbyidRequest,
-  getpostbyidFail,
-  getpostbyidSuccess,
+  postdetailRequest,
+  postdetailSuccess,
+  postdetailFail,
+  getuserpostRequest,
+  getuserpostSuccess,
+  getuserpostFail,
 } from "../actions/actionTypes";
 
 const initialState = {
@@ -39,11 +42,17 @@ const initialState = {
   createingpostloading: false,
   createpoststatus: false,
   faqloading: false,
+  getpostdetailloading: false,
+  getuserloading: false,
+  getuserpostloading: false,
+  getuserprofileloading: false,
+  usergetstatus: false,
   user: null,
   userprofile: null,
   error: null,
   posts: [],
-  postbyid: {},
+  userposts: [],
+  postdetails: null,
   faq: [],
 };
 
@@ -83,15 +92,15 @@ export const userReducer = createReducer(initialState, (builder) => {
       state.error = action.payload;
     })
     .addCase(getuserRequest.type, (state, action) => {
-      state.loading = true;
+      state.getuserloading = true;
     })
     .addCase(getuserSuccess.type, (state, action) => {
-      state.loading = false;
+      state.getuserloading = false;
       state.isAuthenticated = true;
       state.user = action.payload;
     })
     .addCase(getuserFail.type, (state, action) => {
-      state.loading = false;
+      state.getuserloading = false;
       state.error = action.payload;
     })
     .addCase(getallpostsRequest.type, (state, action) => {
@@ -141,26 +150,38 @@ export const userReducer = createReducer(initialState, (builder) => {
       state.error = action.payload;
     })
     .addCase(getuserprofileRequest.type, (state, action) => {
-      state.loading = true;
+      state.getuserprofileloading = true;
     })
     .addCase(getuserprofileSuccess.type, (state, action) => {
-      state.loading = false;
+      state.getuserprofileloading = false;
       state.userprofile = action.payload;
+      state.usergetstatus = true;
     })
     .addCase(getuserprofileFail.type, (state, action) => {
-      state.loading = false;
+      state.getuserprofileloading = false;
+      state.usergetstatus = false;
       state.error = action.payload;
     })
-    .addCase(getpostbyidRequest.type, (state, action) => {
-      state.postsloading = true;
+    .addCase(postdetailRequest.type, (state, action) => {
+      state.getpostdetailloading = true;
     })
-    .addCase(getpostbyidSuccess.type, (state, action) => {
-      state.postsloading = false;
-      state.postbyid = action.payload;
+    .addCase(postdetailSuccess.type, (state, action) => {
+      state.getpostdetailloading = false;
+      state.postdetails = action.payload;
     })
-    .addCase(getpostbyidFail.type, (state, action) => {
-      state.postsloading = false;
+    .addCase(postdetailFail.type, (state, action) => {
+      state.getpostdetailloading = false;
+      state.error = action.payload;
+    })
+    .addCase(getuserpostRequest.type, (state, action) => {
+      state.getuserpostloading = true;
+    })
+    .addCase(getuserpostSuccess.type, (state, action) => {
+      state.getuserpostloading = false;
+      state.userposts = action.payload;
+    })
+    .addCase(getuserpostFail.type, (state, action) => {
+      state.getuserpostloading = false;
       state.error = action.payload;
     });
-
 });

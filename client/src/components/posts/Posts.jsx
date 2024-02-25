@@ -11,8 +11,6 @@ export const Posts = ({ posts }) => {
     }
     return false;
   }
-
-  // samole timestamp 17/02/2024_19:42:19
   const findPostTime = (timestamp) => {
     if (!timestamp) return;
     var date = timestamp.split("_")[0];

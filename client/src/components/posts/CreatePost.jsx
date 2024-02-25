@@ -62,7 +62,7 @@ export const CreatePost = ({ iscommnents, user }) => {
   const handlepost = (e) => {
     e.preventDefault();
     if (textareavalue.trim() === "" && postimages.length === 0) {
-      toast.error("Please write something or add a media");
+      toast.error("Please write something");
       return;
     }
     if (!iscommnents) {
@@ -72,7 +72,6 @@ export const CreatePost = ({ iscommnents, user }) => {
       for (const key in selected) {
         resultArray.push(selected[key]);
       }
-      console.log(resultArray);
       
 
       dispatch(createpost({ postTitle, textareavalue, postimages, resultArray }));
@@ -161,6 +160,7 @@ export const CreatePost = ({ iscommnents, user }) => {
             <div className="flex min-h-[48px] w-full flex-col justify-center gap-4">
               <div className="flex flex-col gap-2">
                 <div className="flex flex-col items-center gap-5 pt-2">
+                {!iscommnents && 
                   <input
                     type="text"
                     placeholder="Title"
@@ -168,6 +168,7 @@ export const CreatePost = ({ iscommnents, user }) => {
                     onChange={(e) => setPostTitle(e.target.value)}
                     className="w-full text-sm min-w-0 outline-none dark:text-white dark:bg-neutral-800 p-2 rounded-md border border-gray-300 dark:border-gray-700"
                   />
+                }
                   <textarea
                     className="w-full min-w-0 resize-none bg-transparent text-sm outline-none dark:text-white pl-2 pt-2 pr-14 dark:bg-neutral-800 rounded-md border border-gray-300 dark:border-gray-700"
                     placeholder={iscommnents ? "Write a comment..." : "Text"}
@@ -175,8 +176,9 @@ export const CreatePost = ({ iscommnents, user }) => {
                     value={textareavalue}
                     onChange={handletextareavalue}
                   ></textarea>
-                  
+                  {!iscommnents && 
                   <Tags selected={selected} setSelected={setSelected} />
+                  }
                 </div>
 
                 {!iscommnents && postimages.length > 0 && (

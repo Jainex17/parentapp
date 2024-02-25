@@ -46,15 +46,13 @@ export const Faq = () => {
               >
                 <div className="w-full">
                   <div className="pt-3">
-                    
-                    <Link to={faqs?.link}>
+                    <Link to={faq?.link}>
                       <h2 className="text-lg font-bold mb-1 text-black dark:text-white">
                         {faq?.title}
                        
                       </h2>
                       <p className="text-gray-700 dark:text-gray-300 text-base mt-2 mb-3">
                         {faq?.description}
-                        dsad
                       </p>
                     </Link>
                   </div>
