@@ -11,7 +11,7 @@ export const Profile = () => {
   const [user, setUser] = useState();
   const [UserPosts, setUserPosts] = useState([]);
   const [userloading, setUserLoading] = useState(true);
-  const [userfound, setUserFound] = useState(false);
+  const [userfound, setUserFound] = useState(true);
   
   const dispatch = useDispatch();
 

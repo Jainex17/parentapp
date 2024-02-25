@@ -46,7 +46,7 @@ const initialState = {
   getuserloading: false,
   getuserpostloading: false,
   getuserprofileloading: false,
-  usergetstatus: false,
+  usergetstatus: true,
   user: null,
   userprofile: null,
   error: null,

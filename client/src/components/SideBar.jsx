@@ -7,8 +7,8 @@ import { logout } from "../../redux/actions/userAction";
 export const SideBar = ({ user }) => {
   const navigate = useNavigate();
   const [sidebarisopen, setSidebarIsOpen] = useState(false);
-  const [isUserLogin, setIsUserLogin] = useState(true);
   const [moreModel, setMoreModel] = useState(false);
+  const [logoutModel, setLogoutModel] = useState(false);
   const [themeOptionSelected, setThemeOptionSelected] = useState(
     localStorage.getItem("theme") || "light"
   );
@@ -134,12 +134,15 @@ export const SideBar = ({ user }) => {
                   to={"/faq"}
                   className="flex items-center p-3 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group pl-3"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg"
-                    width="24" height="24"
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
                     fill={themeOptionSelected === "dark" ? "white" : "black"}
                     strokeWidth={0}
                     stroke="currentColor"
-                   viewBox="0 0 24 24">
+                    viewBox="0 0 24 24"
+                  >
                     <path d="M12,1A11,11,0,1,0,23,12,11.013,11.013,0,0,0,12,1Zm0,20a9,9,0,1,1,9-9A9.011,9.011,0,0,1,12,21Zm1-4.5v2H11v-2Zm3-7a3.984,3.984,0,0,1-1.5,3.122A3.862,3.862,0,0,0,13.063,15H11.031a5.813,5.813,0,0,1,2.219-3.936A2,2,0,0,0,13.1,7.832a2.057,2.057,0,0,0-2-.14A1.939,1.939,0,0,0,10,9.5,1,1,0,0,1,8,9.5V9.5a3.909,3.909,0,0,1,2.319-3.647,4.061,4.061,0,0,1,3.889.315A4,4,0,0,1,16,9.5Z" />
                   </svg>
                   <span className="flex-1 ms-3 whitespace-nowrap pl-2 font-bold">
@@ -170,7 +173,8 @@ export const SideBar = ({ user }) => {
                     Profile
                   </span>
                 </Link>
-              </li><li>
+              </li>
+              <li>
                 <Link
                   to={`/chatbot`}
                   className="flex items-center p-3 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group pl-3"
@@ -191,6 +195,34 @@ export const SideBar = ({ user }) => {
                   </svg>
                   <span className="flex-1 ms-3 whitespace-nowrap pl-2 font-bold">
                     ChatBot
+                  </span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to={`/gettogether`}
+                  className="flex items-center p-3 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group pl-3"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-radio"
+                  >
+                    <path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9" />
+                    <path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5" />
+                    <circle cx="12" cy="12" r="2" />
+                    <path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5" />
+                    <path d="M19.1 4.9C23 8.8 23 15.1 19.1 19" />
+                  </svg>
+                  <span className="flex-1 ms-3 whitespace-nowrap pl-2 font-bold">
+                    GetToGether
                   </span>
                 </Link>
               </li>
@@ -218,42 +250,10 @@ export const SideBar = ({ user }) => {
               </li>
             </ul>
 
-            {/* <div className="mt-8">
-              <h3 className="px-3 text-xs text-gray-500 uppercase dark:text-gray-400 font-semibold">
-                Some Title
-              </h3>
-              <ul className="mt-3 space-y-2">
-                <li>
-                  <Link
-                    to={"/"}
-                    className="flex items-center p-3 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group pl-3"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                      <path d="M2 17l10 5 10-5"></path>
-                      <path d="M2 12l10 5 10-5"></path>
-                    </svg>
-                    <span className="flex-1 ms-3 whitespace-nowrap pl-2 font-bold">
-                      Can Add Somting
-                    </span>
-                  </Link>
-                </li>
-              </ul>
-            </div> */}
           </div>
 
           <div className="fixed bottom-2 w-64 p-4 bg-white dark:bg-neutral-900 border-r border-t border-[#DBE2EF] dark:border-gray-700 cursor-pointer">
-            {isUserLogin ? (
+            
               <Link to={`/user/${user?.usrname}`}>
                 <div className="flex items-center space-x-4">
                   <img
@@ -273,23 +273,15 @@ export const SideBar = ({ user }) => {
                     </p>
                   </div>
                 </div>
+              </Link>
                 <button
                   className="bg-[#3F72AF] text-white w-full py-2 mt-4 rounded-lg font-semibold dark:bg-[#3F72AF] dark:text-white"
-                  onClick={() => dispatch(logout())}
+                  // onClick={() => dispatch(logout())}
+                  onClick={() => setLogoutModel(true)}
                 >
                   logout
                 </button>
-              </Link>
-            ) : (
-              <div>
-                <button
-                  className="bg-[#3F72AF] text-white w-full py-2 mt-4 rounded-lg font-semibold dark:bg-[#3F72AF] dark:text-white"
-                  onClick={handleSidebarSignIn}
-                >
-                  SignIn
-                </button>
-              </div>
-            )}
+            
           </div>
         </div>
       </aside>
@@ -396,6 +388,35 @@ export const SideBar = ({ user }) => {
           </div>
         </Model>
       )}
+
+      {logoutModel && (
+        <Model status={logoutModel} setclose={setLogoutModel}>
+          <div className="p-5">
+            <h1 className="text-2xl text-center font-semibold text-gray-800 dark:text-white">
+              Logout
+            </h1>
+            <p className="text-center text-gray-500 dark:text-gray-400 mt-2">
+              Are you sure you want to logout?
+            </p>
+            <div className="mt-6">
+              <button
+                className="bg-neutral-900 dark:bg-white text-white w-full py-3 mt-4 rounded-xl font-bold  dark:text-black"
+                onClick={() => dispatch(logout())}
+              >
+                Log out
+              </button>
+              <button
+                className="bg-white dark:bg-transparent border border-neutral-800 dark:border-white text-black w-full py-3 mt-4 rounded-xl font-bold dark:text-white"
+                onClick={() => setLogoutModel(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </Model>  
+      )}
+
+
     </>
   );
 };
