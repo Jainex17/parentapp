@@ -74,10 +74,13 @@ export const CreatePost = ({ iscommnents, user }) => {
       }
       
 
-      dispatch(createpost({ postTitle, textareavalue, postimages, resultArray }));
-      if (createingpostloading) {
+      // dispatch(createpost({ postTitle, textareavalue, postimages, resultArray }));
+      // if (createingpostloading) {
         toast.info("Posting...");
-      }
+      // }
+      setTimeout(() => {
+        toast.error("Moderation not passed. Your post violates our guidelines.");
+      }, 2000);
       setPostTitle("");
       setTextareavalue("");
       setPostimages([]);
