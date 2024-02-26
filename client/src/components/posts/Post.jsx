@@ -22,6 +22,7 @@ export const Post = ({
 
   const dispatch = useDispatch();
   const loginusername = localStorage.getItem("username");
+  
   function handlePostLike(postId, isPostLiked, login_user_username) {
     if (isPostLiked) {
       // unlike post

@@ -22,7 +22,6 @@ export const GetToGether = () => {
                     title="GuardianConnect: Bridging Parents and Meetings for Student Success"
                     desc="GuardianConnect is a feature designed to bridge the gap between parents and meetings, thereby ensuring the success of students."
                     time="2 hours ago"
-                    link="https://meet.google.com/mwe-wqah-bvt"
                     username="dan_abramov"
                     userpfp="https://randomuser.me/api/portraits/men/3.jpg"
 
