@@ -34,6 +34,7 @@ import {
   getuserpostSuccess,
   getuserpostFail,
   likepostRequest,
+  clearerror,
 } from "../actions/actionTypes";
 
 const initialState = {
@@ -90,7 +91,6 @@ export const userReducer = createReducer(initialState, (builder) => {
     })
     .addCase(verifyuserFail.type, (state, action) => {
       state.loading = false;
-      state.error = action.payload;
     })
     .addCase(getuserRequest.type, (state, action) => {
       state.getuserloading = true;
@@ -185,4 +185,7 @@ export const userReducer = createReducer(initialState, (builder) => {
       state.getuserpostloading = false;
       state.error = action.payload;
     })
+    .addCase(clearerror.type, (state, action) => {
+      state.error = null;
+    });
 });

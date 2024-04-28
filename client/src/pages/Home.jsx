@@ -4,6 +4,7 @@ import { Posts } from "../components/posts/Posts.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { getallposts } from "../../redux/actions/userAction.js";
 import { toast } from "react-toastify";
+import { SideBar } from "../components/SideBar.jsx";
 
 export const Home = () => {
   const [PostsTab, setPostsTab] = useState(0);
@@ -39,6 +40,7 @@ export const Home = () => {
 
   return (
     <>
+      <SideBar user={user} />
       <div className="mx-8 sm:my-6 my-2 mr-20">
         <div className="flex bg-white border border-gray-300 rounded mb-5 cursor-pointer dark:bg-neutral-900 dark:border-gray-700">
           <div

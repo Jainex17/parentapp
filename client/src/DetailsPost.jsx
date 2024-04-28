@@ -3,6 +3,7 @@ import { DetailsPostComp } from "./components/posts/DetailsPostComp";
 import { CommentsComp } from "./components/posts/CommentsComp";
 import { useDispatch, useSelector } from "react-redux";
 import { getpostdetails } from "../redux/actions/userAction";
+import { SideBar } from "./components/SideBar";
 
 export const DetailsPost = () => {
 
@@ -35,6 +36,7 @@ export const DetailsPost = () => {
 
   
 return <>
+  <SideBar user={user} />
     <div className="mx-8 sm:my-6 my-2">
       <DetailsPostComp detailspost={detailspost} detailspostLoading={detailspostLoading} />
       <CommentsComp user={user} />

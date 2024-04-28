@@ -55,3 +55,6 @@ export const createAction = (type) => {
   export const unlikepostRequest = createAction('unlikepostRequest');
   export const unlikepostSuccess = createAction('unlikepostSuccess');
   export const unlikepostFail = createAction('unlikepostFail');
+
+  export const clearerror = createAction('clearerror');
+  

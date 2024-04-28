@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getfaq } from "../../redux/actions/userAction";
+import { SideBar } from "./SideBar";
 
 export const Faq = () => {
 
-    const { faq, isfaqsloading } = useSelector((state) => state.user);
+    const { faq, isfaqsloading, user } = useSelector((state) => state.user);
     const dispatch = useDispatch();
     
     const [faqs, setFaqs] = useState([]);
@@ -24,6 +25,7 @@ export const Faq = () => {
     
     return (
     <>
+      <SideBar user={user} />
       <div className="container">
         <form className="my-8 mx-20 flex">
           <input

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ProfileComp } from "../components/ProfileComp";
 import { useDispatch, useSelector } from "react-redux";
 import { getuserposts, getuserprofile } from "../../redux/actions/userAction";
+import { SideBar } from "../components/SideBar";
 
 export const Profile = () => {
 
@@ -44,6 +45,7 @@ export const Profile = () => {
 
 
   return <>
+      <SideBar user={user} />
       {userfound ?
         <ProfileComp posts={UserPosts} user={user} userloading={userloading} />
         :

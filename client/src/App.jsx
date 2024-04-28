@@ -18,7 +18,7 @@ import ChatBot from "./components/ChatBot.jsx";
 import { GetToGether } from "./components/GetToGether.jsx";
 
 function App() {
-  const { isAuthenticated=true , user } = useSelector((state) => state.user);
+  const { isAuthenticated = true, user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -29,7 +29,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if(localStorage.getItem("token")) {
+    if (localStorage.getItem("token")) {
       dispatch(verifyuser());
     }
   }, []);
@@ -43,31 +43,47 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <Routes>
-          <Route path="/*" element={<SideBar user={user} />} />
+        {/* <Routes>
           
-          <Route element={<ProtectedRoute isAuthenticated={!isAuthenticated} redirect={"/"} />}>
-            <Route path="/login" element={<Login />} />
+          <Route element={<ProtectedRoute isAuthenticated={!isAuthenticated} redirect={"/"} path="/login" />}>
+          <Route path="/login" element={<Login />} />
           </Route>
-          <Route element={<ProtectedRoute isAuthenticated={!isAuthenticated} redirect={"/"} />}>
+          <Route element={<ProtectedRoute isAuthenticated={!isAuthenticated} redirect={"/"} path="/signup" />}>
+          <Route path="/signup" element={<Signup />} />
+          </Route>
+          
+        </Routes> */}
+        <Routes>
+          <Route
+            element={
+              <ProtectedRoute
+                isAuthenticated={!isAuthenticated}
+                redirect={"/"}
+              />
+            }
+          >
+            <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
           </Route>
-          
         </Routes>
 
         <div className="sm:ml-64 dark:bg-black dark:text-white">
           <Routes>
-            
-            <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} redirect={"/login"} />}>
+            <Route
+              element={
+                <ProtectedRoute
+                isAuthenticated={isAuthenticated}
+                redirect={"/login"}
+                />
+              }
+            >
               <Route path="/" element={<Home />} />
               <Route path="/post/*" element={<DetailsPost />} />
               <Route path="/user/*" element={<Profile />} />
               <Route path="/articles" element={<Faq />} />
               <Route path="/chatbot" element={<ChatBot />} />
               <Route path="/gettogether" element={<GetToGether />} />
-              <Route path="*" element={<h1 className="text-4xl text-center mt-20">404 Not Found</h1>} />
             </Route>
-            
           </Routes>
         </div>
       </BrowserRouter>
@@ -77,6 +93,7 @@ function App() {
         autoClose={2000}
         hideProgressBar={false}
         newestOnTop={false}
+        theme="dark"
         closeOnClick
         rtl={false}
         draggable

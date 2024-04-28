@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../../redux/actions/userAction";
 import { useEffect } from "react";
+import { clearerror } from "../../../redux/actions/actionTypes";
 
 export const LoginComp = () => {
 
@@ -29,6 +30,7 @@ export const LoginComp = () => {
   useEffect(() => {
     if (error) {
       toast.error("Invalid credentials");
+      dispatch({ type: clearerror.type });
     }
   }, [error]);
 

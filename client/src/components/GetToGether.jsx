@@ -1,9 +1,15 @@
 import React from "react";
 import { Card } from "./Card";
+import { SideBar } from "./SideBar";
+import { useSelector } from "react-redux";
 
 export const GetToGether = () => {
+
+  const { user } = useSelector((state) => state.user);
+
   return (
     <>
+    <SideBar user={user} />
       <div className="container">
         <div className="text-center mx-5 pb-5 border-b border-neutral-800">
           <h1 className="text-4xl font-bold mt-10 text-black dark:text-slate-100">
